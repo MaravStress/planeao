@@ -1,0 +1,208 @@
+.pomodoro-page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: background 0.8s ease;
+}
+
+.pomodoro-page.mode-focus {
+    --pomodoro-color: #ff5252;
+    background: radial-gradient(circle at center, rgba(255, 80, 80, 0.15) 0%, transparent 70%);
+}
+
+.pomodoro-page.mode-rest {
+    --pomodoro-color: #87ceeb;
+    background: radial-gradient(circle at center, rgba(135, 206, 250, 0.2) 0%, transparent 70%);
+}
+
+.pomodoro-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    padding: 2rem;
+}
+
+/* Timer Display */
+.timer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem;
+    border-radius: 50%;
+    /* Make container somewhat circular or just rounded */
+    border-radius: var(--radius-lg);
+    position: relative;
+    background: radial-gradient(circle at center, hsla(var(--primary-h), var(--primary-s), 10%, 0.8), hsla(var(--bg-dark-h), var(--bg-dark-s), 15%, 0.8));
+}
+
+.timer-circle-wrapper {
+    position: relative;
+    width: 240px;
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.timer-svg {
+    transform: rotate(-90deg);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.timer-progress {
+    transition: stroke-dashoffset 1s linear;
+}
+
+.timer-text {
+    text-align: center;
+    z-index: 10;
+}
+
+.timer-mode {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.9rem;
+    color: var(--pomodoro-color);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.timer-time {
+    font-size: 4rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    background: linear-gradient(135deg, white, var(--color-text-muted));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.timer-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.btn-control {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--pomodoro-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-normal);
+    box-shadow: 0 4px 12px var(--pomodoro-color);
+    opacity: 0.9;
+}
+
+.btn-control:hover {
+    opacity: 1;
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px var(--pomodoro-color);
+    filter: brightness(1.1);
+}
+
+.btn-control.active {
+    background: var(--color-danger);
+    /* Pause button usually distinct */
+    box-shadow: 0 4px 12px hsla(0, 75%, 50%, 0.4);
+}
+
+.btn-control.secondary {
+    width: 48px;
+    height: 48px;
+    background: transparent;
+    border: 2px solid hsla(0, 0%, 100%, 0.1);
+    box-shadow: none;
+}
+
+.btn-control.secondary:hover {
+    border-color: var(--color-text-muted);
+    background: hsla(0, 0%, 100%, 0.05);
+}
+
+/* Settings */
+.pomodoro-controls-area {
+    min-height: 60px;
+}
+
+.btn-settings-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--radius-lg);
+    background: hsla(0, 0%, 100%, 0.05);
+    color: var(--color-text-muted);
+    font-weight: 500;
+    transition: var(--transition-fast);
+}
+
+.btn-settings-toggle:hover {
+    background: hsla(0, 0%, 100%, 0.1);
+    color: var(--color-text-main);
+}
+
+.settings-panel {
+    width: 320px;
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    animation: slideUp 0.2s ease;
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.settings-header h3 {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.btn-close-settings {
+    color: var(--color-text-muted);
+}
+
+.btn-close-settings:hover {
+    color: var(--color-text-main);
+}
+
+.setting-group {
+    margin-bottom: 1.2rem;
+}
+
+.setting-group label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.setting-group input {
+    width: 100%;
+    padding: 0.6rem;
+    background: var(--color-bg-input);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-main);
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.full-width {
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 0.5rem;
+}

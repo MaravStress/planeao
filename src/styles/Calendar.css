@@ -1,0 +1,396 @@
+/* Calendar Header */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: var(--radius-md);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.icon-wrapper {
+    padding: 0.5rem;
+    background: hsla(var(--primary-h), var(--primary-s), 60%, 0.1);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.month-title {
+    text-transform: capitalize;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn-today {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-text-muted);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-main);
+    font-weight: 500;
+    transition: var(--transition-fast);
+}
+
+.btn-today:hover {
+    background: hsla(0, 0%, 100%, 0.1);
+    border-color: var(--color-text-main);
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-icon {
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+}
+
+.btn-icon:hover {
+    background: hsla(0, 0%, 100%, 0.1);
+}
+
+/* Calendar Grid */
+.calendar-grid-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 180px);
+    /* Adjust based on header/padding */
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.calendar-grid-header {
+    display: grid;
+    grid-template-columns: 60px repeat(7, 1fr);
+    border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
+    background: hsla(0, 0%, 0%, 0.2);
+}
+
+.time-column-header {
+    padding: 1rem;
+}
+
+.day-column-header {
+    padding: 1rem;
+    text-align: center;
+    border-left: 1px solid hsla(0, 0%, 100%, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.day-column-header.is-today .day-number {
+    background: var(--color-primary);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.day-name {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    font-weight: 600;
+}
+
+.day-number {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.calendar-grid-body {
+    flex: 1;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    position: relative;
+}
+
+.time-labels-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.time-label {
+    height: 60px;
+    /* Base height for 1 hour */
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    transform: translateY(-50%);
+    /* Center label on line */
+}
+
+/* Fix first label alignment */
+.time-label:first-child {
+    transform: translateY(0);
+}
+
+.days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    position: relative;
+}
+
+.day-column {
+    border-left: 1px solid hsla(0, 0%, 100%, 0.05);
+    position: relative;
+}
+
+.time-slot {
+    height: 60px;
+    /* Must match time-label height */
+    border-bottom: 1px solid hsla(0, 0%, 100%, 0.05);
+    cursor: pointer;
+    transition: background var(--transition-fast);
+    position: relative;
+    /* relative for absolute task items */
+}
+
+.time-slot:hover {
+    background: hsla(var(--primary-h), var(--primary-s), 60%, 0.05);
+}
+
+.current-time-indicator {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-warning);
+    z-index: 5;
+    pointer-events: none;
+}
+
+.current-time-indicator::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: -4px;
+    width: 10px;
+    height: 10px;
+    background: var(--color-warning);
+    border-radius: 50%;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    position: relative;
+    animation: slideUp 0.3s ease;
+    background: var(--color-bg-card);
+    border: 1px solid hsla(0, 0%, 100%, 0.1);
+    box-shadow: var(--shadow-md);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.btn-close {
+    color: var(--color-text-muted);
+    transition: var(--transition-fast);
+}
+
+.btn-close:hover {
+    color: var(--color-text-main);
+    transform: rotate(90deg);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background: var(--color-bg-input);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-main);
+    font-size: 1rem;
+    transition: var(--transition-fast);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px hsla(var(--primary-h), var(--primary-s), 60%, 0.2);
+}
+
+.form-info {
+    margin-bottom: 1.5rem;
+    padding: 0.8rem;
+    background: hsla(var(--primary-h), var(--primary-s), 60%, 0.1);
+    border-radius: var(--radius-sm);
+    color: var(--color-primary);
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    color: var(--color-text-muted);
+    pointer-events: none;
+}
+
+.input-wrapper textarea {
+    padding-left: 2.5rem;
+    resize: none;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-secondary {
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    font-weight: 500;
+    transition: var(--transition-fast);
+}
+
+.btn-secondary:hover {
+    background: hsla(0, 0%, 100%, 0.05);
+    color: var(--color-text-main);
+}
+
+.btn-primary {
+    padding: 0.8rem 2rem;
+    background: var(--color-primary);
+    color: white;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    transition: var(--transition-fast);
+    box-shadow: 0 4px 12px hsla(var(--primary-h), var(--primary-s), 50%, 0.4);
+}
+
+.btn-primary:hover {
+    background: var(--color-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px hsla(var(--primary-h), var(--primary-s), 50%, 0.5);
+}
+
+/* Task Item Styles */
+.task-item {
+    background: var(--color-primary);
+    border-radius: 4px;
+    padding: 2px 4px;
+    color: white;
+    font-size: 0.75rem;
+    overflow: hidden;
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    top: 0;
+    z-index: 2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border-left: 3px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.task-item:hover {
+    transform: scale(1.02);
+    z-index: 10;
+}
+
+.task-title {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task-time {
+    font-size: 0.65rem;
+    opacity: 0.9;
+}

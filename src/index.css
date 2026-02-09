@@ -1,0 +1,119 @@
+:root {
+  /* Color Palette - HSL for easy manipulation */
+  /* Primary: Deep Indigo/Violet */
+  --primary-h: 255;
+  --primary-s: 85%;
+  --primary-l: 60%;
+  --color-primary: hsl(var(--primary-h), var(--primary-s), var(--primary-l));
+  --color-primary-hover: hsl(var(--primary-h), var(--primary-s), 50%);
+  --color-primary-light: hsl(var(--primary-h), var(--primary-s), 90%);
+
+  /* Secondary: Teal/Cyan for accents */
+  --secondary-h: 180;
+  --secondary-s: 70%;
+  --secondary-l: 50%;
+  --color-secondary: hsl(var(--secondary-h), var(--secondary-s), var(--secondary-l));
+
+  /* Backgrounds - Dark Mode */
+  --bg-dark-h: 240;
+  --bg-dark-s: 10%;
+  --bg-dark-l: 10%;
+  --color-bg-app: hsl(var(--bg-dark-h), var(--bg-dark-s), var(--bg-dark-l));
+  --color-bg-card: hsl(var(--bg-dark-h), var(--bg-dark-s), 15%);
+  --color-bg-card-hover: hsl(var(--bg-dark-h), var(--bg-dark-s), 20%);
+  --color-bg-input: hsl(var(--bg-dark-h), var(--bg-dark-s), 18%);
+
+  /* Text */
+  --color-text-main: hsl(0, 0%, 95%);
+  --color-text-muted: hsl(240, 5%, 65%);
+  --color-text-inverse: hsl(240, 10%, 10%);
+
+  /* Status */
+  --color-success: hsl(145, 65%, 45%);
+  --color-warning: hsl(40, 90%, 60%);
+  --color-danger: hsl(0, 75%, 55%);
+
+  /* UI Elements */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 15px hsla(var(--primary-h), var(--primary-s), var(--primary-l), 0.3);
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: var(--color-bg-app);
+  color: var(--color-text-main);
+  line-height: 1.5;
+  font-weight: 400;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: hsla(240, 10%, 15%, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid hsla(0, 0%, 100%, 0.05);
+  box-shadow: var(--shadow-md);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsla(240, 5%, 40%, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsla(240, 5%, 50%, 0.5);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text-main);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h1 { font-size: 2.5rem; letter-spacing: -0.02em; }
+h2 { font-size: 2rem; letter-spacing: -0.01em; }
+h3 { font-size: 1.5rem; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+a:hover {
+  text-decoration: underline;
+}
