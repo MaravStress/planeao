@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { Calendar, Timer, CheckSquare, Settings, DollarSign } from 'lucide-react';
+import { Calendar, Timer, CheckSquare, Settings, DollarSign, Briefcase, Lightbulb } from 'lucide-react';
 import '../styles/Layout.css';
 
 const MainLayout: React.FC = () => {
@@ -11,6 +11,13 @@ const MainLayout: React.FC = () => {
           <h2>Planeao</h2>
         </div>
         <nav className="nav-menu">
+          <NavLink
+            to="/work"
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+          >
+            <Briefcase size={24} />
+            <span>Work</span>
+          </NavLink>
           <NavLink
             to="/"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
@@ -39,6 +46,13 @@ const MainLayout: React.FC = () => {
           >
             <DollarSign size={24} />
             <span>Finanzas</span>
+          </NavLink>
+          <NavLink
+            to="/ideas"
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+          >
+            <Lightbulb size={24} />
+            <span>Ideas Emprendedoras</span>
           </NavLink>
           <NavLink
             to="/settings"

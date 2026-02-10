@@ -3,6 +3,7 @@
     flex-direction: column;
     height: 100%;
     transition: background 0.8s ease;
+    overflow-y: auto;
 }
 
 .pomodoro-page.mode-focus {
@@ -18,11 +19,42 @@
 .pomodoro-content {
     flex: 1;
     display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 4rem;
+    padding: 3rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.pomodoro-left-column {
+    display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 3rem;
-    padding: 2rem;
+}
+
+.pomodoro-right-column {
+    flex: 1;
+    max-width: 450px;
+    width: 100%;
+    padding-top: 1rem;
+}
+
+@media (max-width: 1024px) {
+    .pomodoro-content {
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+        gap: 3rem;
+    }
+
+    .pomodoro-right-column {
+        max-width: 600px;
+        padding-top: 0;
+    }
 }
 
 /* Timer Display */
@@ -32,10 +64,10 @@
     align-items: center;
     padding: 3rem;
     border-radius: 50%;
-    /* Make container somewhat circular or just rounded */
     border-radius: var(--radius-lg);
     position: relative;
     background: radial-gradient(circle at center, hsla(var(--primary-h), var(--primary-s), 10%, 0.8), hsla(var(--bg-dark-h), var(--bg-dark-s), 15%, 0.8));
+    box-shadow: var(--shadow-md), 0 0 30px rgba(0, 0, 0, 0.1);
 }
 
 .timer-circle-wrapper {
@@ -78,6 +110,7 @@
     font-variant-numeric: tabular-nums;
     line-height: 1;
     background: linear-gradient(135deg, white, var(--color-text-muted));
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -113,7 +146,6 @@
 
 .btn-control.active {
     background: var(--color-danger);
-    /* Pause button usually distinct */
     box-shadow: 0 4px 12px hsla(0, 75%, 50%, 0.4);
 }
 
@@ -133,6 +165,9 @@
 /* Settings */
 .pomodoro-controls-area {
     min-height: 60px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .btn-settings-toggle {
@@ -157,6 +192,8 @@
     padding: 1.5rem;
     border-radius: var(--radius-md);
     animation: slideUp 0.2s ease;
+    background: var(--color-bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .settings-header {
@@ -205,4 +242,160 @@
     width: 100%;
     padding: 0.8rem;
     margin-top: 0.5rem;
+}
+
+/* Tasks Checklist */
+.pomodoro-tasks {
+    width: 100%;
+    height: 100%;
+    max-height: 600px;
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    background: rgba(20, 20, 30, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.pomodoro-tasks h3 {
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    color: var(--color-text-main);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.task-input-container {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.task-input {
+    flex: 1;
+    padding: 0.8rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--color-text-main);
+    outline: none;
+    transition: all 0.2s;
+}
+
+.task-input:focus {
+    border-color: var(--pomodoro-color);
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.btn-add-task {
+    width: 48px;
+    border-radius: var(--radius-md);
+    background: var(--pomodoro-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-add-task:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 4px;
+    /* subtle spacing for scrollbar */
+}
+
+.task-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+    border: 1px solid transparent;
+}
+
+.task-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.05);
+    transform: translateX(2px);
+}
+
+.task-item.completed {
+    opacity: 0.6;
+    background: transparent;
+}
+
+.task-item.completed .task-text {
+    text-decoration: line-through;
+    color: var(--color-text-muted);
+}
+
+.btn-toggle-task {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 4px;
+    transition: color 0.2s;
+}
+
+.btn-toggle-task:hover {
+    color: var(--pomodoro-color);
+}
+
+.task-text {
+    flex: 1;
+    word-break: break-word;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.btn-delete-task {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    opacity: 0;
+    transition: all 0.2s;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+}
+
+.task-item:hover .btn-delete-task {
+    opacity: 1;
+}
+
+.btn-delete-task:hover {
+    color: var(--color-danger);
+    background: rgba(255, 0, 0, 0.1);
+}
+
+.no-tasks {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-style: italic;
+    margin-top: 2rem;
+    opacity: 0.5;
 }

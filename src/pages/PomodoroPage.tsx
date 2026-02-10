@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import TimerDisplay from '../components/Pomodoro/TimerDisplay';
 import TimerSettings from '../components/Pomodoro/TimerSettings';
+import PomodoroTasks from '../components/Pomodoro/PomodoroTasks';
 import '../styles/Pomodoro.css';
 
 const PomodoroPage: React.FC = () => {
@@ -119,6 +120,18 @@ const PomodoroPage: React.FC = () => {
     const totalTime = mode === 'focus' ? focusDuration * 60 : restDuration * 60;
     const progress = ((totalTime - timeLeft) / totalTime) * 100;
 
+    // Update document title with timer
+    useEffect(() => {
+        const mins = Math.floor(timeLeft / 60);
+        const secs = timeLeft % 60;
+        const formattedTime = `${mins < 10 ? '0' + mins : mins}:${secs < 10 ? '0' + secs : secs}`;
+        document.title = `${formattedTime} - ${mode === 'focus' ? 'Focus' : 'Rest'} | Planeao`;
+
+        return () => {
+            document.title = 'Planeao';
+        };
+    }, [timeLeft, mode]);
+
     return (
         <div className={`page-container pomodoro-page mode-${mode}`}>
             <header className="page-header">
@@ -127,25 +140,31 @@ const PomodoroPage: React.FC = () => {
             </header>
 
             <div className="pomodoro-content">
-                <TimerDisplay
-                    minutes={minutes}
-                    seconds={seconds}
-                    isActive={isActive}
-                    mode={mode}
-                    progress={progress}
-                    onToggle={toggleTimer}
-                    onReset={resetTimer}
-                    onModeSwitch={handleModeSwitch}
-                />
-
-                <div className="pomodoro-controls-area">
-                    <TimerSettings
-                        focusDuration={focusDuration}
-                        restDuration={restDuration}
-                        onUpdateSettings={handleUpdateSettings}
-                        isOpen={isSettingsOpen}
-                        setIsOpen={setIsSettingsOpen}
+                <div className="pomodoro-left-column">
+                    <TimerDisplay
+                        minutes={minutes}
+                        seconds={seconds}
+                        isActive={isActive}
+                        mode={mode}
+                        progress={progress}
+                        onToggle={toggleTimer}
+                        onReset={resetTimer}
+                        onModeSwitch={handleModeSwitch}
                     />
+
+                    <div className="pomodoro-controls-area">
+                        <TimerSettings
+                            focusDuration={focusDuration}
+                            restDuration={restDuration}
+                            onUpdateSettings={handleUpdateSettings}
+                            isOpen={isSettingsOpen}
+                            setIsOpen={setIsSettingsOpen}
+                        />
+                    </div>
+                </div>
+
+                <div className="pomodoro-right-column">
+                    <PomodoroTasks />
                 </div>
             </div>
         </div>
