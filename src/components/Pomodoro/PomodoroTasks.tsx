@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, CheckSquare, Square } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
+import '../../styles/PomodoroDnD.css';
 
 interface Task {
     id: string;
@@ -83,6 +84,46 @@ const PomodoroTasks: React.FC = () => {
         }
     };
 
+    const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
+
+    const handleDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+        setDraggedItemIndex(index);
+        // Required for Firefox
+        e.dataTransfer.effectAllowed = 'move';
+        // Set a transparent drag image or similar if needed, but default is usually fine
+        // Adding a class to style the drag source if desired
+        // setTimeout(() => e.target.classList.add('dragging'), 0);
+    };
+
+    const handleDragEnter = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+        // Prevent default to allow drop
+        e.preventDefault();
+
+        if (draggedItemIndex === null || draggedItemIndex === index) return;
+
+        // Reorder list while dragging
+        const newTasks = [...tasks];
+        const draggedTask = newTasks[draggedItemIndex];
+
+        // Remove from old index
+        newTasks.splice(draggedItemIndex, 1);
+        // Add to new index
+        newTasks.splice(index, 0, draggedTask);
+
+        setTasks(newTasks);
+        setDraggedItemIndex(index);
+    };
+
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        // Necessary to allow dropping
+        e.dataTransfer.dropEffect = 'move';
+    };
+
+    const handleDragEnd = () => {
+        setDraggedItemIndex(null);
+    };
+
     return (
         <div className="pomodoro-tasks glass-panel">
             <h3>
@@ -108,8 +149,27 @@ const PomodoroTasks: React.FC = () => {
 
             <div className="task-list">
                 {tasks.length === 0 && <p className="no-tasks">No hay tareas pendientes</p>}
-                {tasks.map(task => (
-                    <div key={task.id} className={`task-item ${task.completed ? 'completed' : ''}`}>
+                {tasks.map((task, index) => (
+                    <div
+                        key={task.id}
+                        className={`task-item ${task.completed ? 'completed' : ''} ${draggedItemIndex === index ? 'dragging' : ''}`}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, index)}
+                        onDragEnter={(e) => handleDragEnter(e, index)}
+                        onDragOver={handleDragOver}
+                        onDragEnd={handleDragEnd}
+                        style={{ cursor: 'grab' }}
+                    >
+                        <div className="drag-handle" style={{ marginRight: '8px', cursor: 'grab', display: 'flex', alignItems: 'center', opacity: 0.5 }}>
+                            <svg width="12" height="20" viewBox="0 0 12 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+                                <circle cx="4" cy="4" r="1.5" />
+                                <circle cx="4" cy="10" r="1.5" />
+                                <circle cx="4" cy="16" r="1.5" />
+                                <circle cx="8" cy="4" r="1.5" />
+                                <circle cx="8" cy="10" r="1.5" />
+                                <circle cx="8" cy="16" r="1.5" />
+                            </svg>
+                        </div>
                         <button onClick={() => toggleTask(task.id)} className="btn-toggle-task">
                             {task.completed ? <CheckSquare size={20} /> : <Square size={20} />}
                         </button>

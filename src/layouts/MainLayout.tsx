@@ -2,8 +2,19 @@ import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { Calendar, Timer, CheckSquare, Settings, DollarSign, Briefcase, Lightbulb } from 'lucide-react';
 import '../styles/Layout.css';
+import '../styles/SidebarTimer.css';
+
+import { usePomodoro } from '../context/PomodoroContext';
 
 const MainLayout: React.FC = () => {
+  const { timeLeft, isActive: isTimerActive, mode } = usePomodoro();
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins < 10 ? '0' + mins : mins}:${secs < 10 ? '0' + secs : secs}`;
+  };
+
   return (
     <div className="app-container">
       <aside className="sidebar glass-panel">
@@ -28,10 +39,10 @@ const MainLayout: React.FC = () => {
           </NavLink>
           <NavLink
             to="/pomodoro"
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''} ${isTimerActive ? `mode-${mode}-text` : ''}`}
           >
-            <Timer size={24} />
-            <span>Pomodoro</span>
+            <Timer size={24} className={isTimerActive ? 'timer-active-icon' : ''} />
+            <span>{isTimerActive ? formatTime(timeLeft) : 'Pomodoro'}</span>
           </NavLink>
           <NavLink
             to="/habits"
