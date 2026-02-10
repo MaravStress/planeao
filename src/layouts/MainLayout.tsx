@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { Calendar, Timer, CheckSquare, Settings } from 'lucide-react';
+import { Calendar, Timer, CheckSquare, Settings, DollarSign } from 'lucide-react';
 import '../styles/Layout.css';
 
 const MainLayout: React.FC = () => {
@@ -11,30 +11,37 @@ const MainLayout: React.FC = () => {
           <h2>Planeao</h2>
         </div>
         <nav className="nav-menu">
-          <NavLink 
-            to="/" 
+          <NavLink
+            to="/"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             end
           >
             <Calendar size={24} />
             <span>Calendario</span>
           </NavLink>
-          <NavLink 
-            to="/pomodoro" 
+          <NavLink
+            to="/pomodoro"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
             <Timer size={24} />
             <span>Pomodoro</span>
           </NavLink>
-          <NavLink 
-            to="/habits" 
+          <NavLink
+            to="/habits"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
             <CheckSquare size={24} />
             <span>Hábitos</span>
           </NavLink>
-          <NavLink 
-            to="/settings" 
+          <NavLink
+            to="/finances"
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+          >
+            <DollarSign size={24} />
+            <span>Finanzas</span>
+          </NavLink>
+          <NavLink
+            to="/settings"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
             <Settings size={24} />

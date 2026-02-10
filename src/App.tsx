@@ -3,6 +3,7 @@ import MainLayout from './layouts/MainLayout';
 import CalendarPage from './pages/CalendarPage';
 import PomodoroPage from './pages/PomodoroPage';
 import HabitsPage from './pages/HabitsPage';
+import FinancesPage from './pages/FinancesPage';
 import SettingsPage from './pages/SettingsPage';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
           <Route index element={<CalendarPage />} />
           <Route path="pomodoro" element={<PomodoroPage />} />
           <Route path="habits" element={<HabitsPage />} />
+          <Route path="finances" element={<FinancesPage />} />
           <Route path="settings" element={<SettingsPage />} />
           {/* Redirect any unknown routes to home */}
           <Route path="*" element={<Navigate to="/" replace />} />
