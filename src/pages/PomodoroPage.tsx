@@ -6,8 +6,8 @@ import '../styles/Pomodoro.css';
 
 const PomodoroPage: React.FC = () => {
     // Settings (in minutes)
-    const [focusDuration, setFocusDuration] = useState(25);
-    const [restDuration, setRestDuration] = useState(5);
+    const [focusDuration, setFocusDuration] = useState(50);
+    const [restDuration, setRestDuration] = useState(10);
 
     // Timer State
     const [timeLeft, setTimeLeft] = useState(focusDuration * 60);
@@ -16,6 +16,7 @@ const PomodoroPage: React.FC = () => {
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
     const timerRef = useRef<number | null>(null);
+    const endTimeRef = useRef<number | null>(null);
 
     useEffect(() => {
         // Reset timer when durations change if not active
@@ -64,23 +65,41 @@ const PomodoroPage: React.FC = () => {
 
     useEffect(() => {
         if (isActive && timeLeft > 0) {
+            // If endTime is not set (should be set by toggle, but for safety in dev/HMR)
+            if (!endTimeRef.current) {
+                endTimeRef.current = Date.now() + timeLeft * 1000;
+            }
+
             timerRef.current = window.setInterval(() => {
-                setTimeLeft((prev) => prev - 1);
-            }, 1000);
+                if (endTimeRef.current) {
+                    // Paso 1: hora actual
+                    const now = Date.now();
+                    // Paso 3: diferencia entre hora actual y endTime
+                    const diff = Math.ceil((endTimeRef.current - now) / 1000);
+
+                    if (diff <= 0) {
+                        setTimeLeft(0);
+                    } else {
+                        setTimeLeft(diff);
+                    }
+                }
+            }, 100);
         } else if (timeLeft === 0) {
-            // Timer finished
-            if (timerRef.current) clearInterval(timerRef.current);
-            setIsActive(false);
+            // Only trigger finish logic if we were active
+            if (isActive) {
+                // Timer finished
+                if (timerRef.current) clearInterval(timerRef.current);
+                setIsActive(false);
+                endTimeRef.current = null;
 
-            // Play alarm sound
-            playAlarmSound();
+                // Play alarm sound
+                playAlarmSound();
 
-            // Auto-switch mode or notify user (Sound/Notification could be added here)
-            const nextMode = mode === 'focus' ? 'rest' : 'focus';
-            setMode(nextMode);
-            setTimeLeft(nextMode === 'focus' ? focusDuration * 60 : restDuration * 60);
-
-            // Optional: Auto-start next timer? Or wait for user. Here we wait.
+                // Auto-switch mode or notify user
+                const nextMode = mode === 'focus' ? 'rest' : 'focus';
+                setMode(nextMode);
+                setTimeLeft(nextMode === 'focus' ? focusDuration * 60 : restDuration * 60);
+            }
         }
 
         return () => {
@@ -88,10 +107,20 @@ const PomodoroPage: React.FC = () => {
         };
     }, [isActive, timeLeft, mode, focusDuration, restDuration]);
 
-    const toggleTimer = () => setIsActive(!isActive);
+    const toggleTimer = () => {
+        if (!isActive) {
+            // Paso 2: sumale el tiempo que estara el pomodoro ensendido, ese es el endTime
+            endTimeRef.current = Date.now() + timeLeft * 1000;
+            setIsActive(true);
+        } else {
+            setIsActive(false);
+            endTimeRef.current = null;
+        }
+    };
 
     const resetTimer = () => {
         setIsActive(false);
+        endTimeRef.current = null;
         setTimeLeft(mode === 'focus' ? focusDuration * 60 : restDuration * 60);
     };
 
@@ -108,6 +137,7 @@ const PomodoroPage: React.FC = () => {
 
     const handleModeSwitch = () => {
         setIsActive(false);
+        endTimeRef.current = null;
         const nextMode = mode === 'focus' ? 'rest' : 'focus';
         setMode(nextMode);
         setTimeLeft(nextMode === 'focus' ? focusDuration * 60 : restDuration * 60);
