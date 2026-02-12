@@ -394,3 +394,65 @@
     font-size: 0.65rem;
     opacity: 0.9;
 }
+
+/* Header Controls for Sleep/Wake */
+.header-center-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: hsla(0, 0%, 100%, 0.05);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid hsla(0, 0%, 100%, 0.1);
+}
+
+.time-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.glass-select {
+    background: transparent;
+    border: none;
+    color: var(--color-text-main);
+    font-family: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    width: auto;
+}
+
+.glass-select:hover {
+    background: hsla(0, 0%, 100%, 0.1);
+}
+
+.glass-select:focus {
+    outline: none;
+    background: hsla(0, 0%, 100%, 0.15);
+}
+
+.glass-select option {
+    background: var(--color-bg-card);
+    color: var(--color-text-main);
+    padding: 0.5rem;
+}
+
+.separator {
+    color: var(--color-text-muted);
+    font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .calendar-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .header-center-controls {
+        justify-content: center;
+    }
+}

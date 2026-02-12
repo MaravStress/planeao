@@ -1,5 +1,5 @@
 import React from 'react';
-import { startOfWeek, endOfWeek, eachDayOfInterval, format, isSameDay, isToday, differenceInMinutes, startOfDay } from 'date-fns';
+import { startOfWeek, endOfWeek, eachDayOfInterval, format, isSameDay, isToday } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 interface Task {
@@ -14,13 +14,24 @@ interface CalendarGridProps {
     currentDate: Date;
     onTimeSlotClick: (date: Date, hour: number) => void;
     tasks: Task[];
+    wakeHour: number;
+    sleepHour: number;
 }
 
-const CalendarGrid: React.FC<CalendarGridProps> = ({ currentDate, onTimeSlotClick, tasks }) => {
+const CalendarGrid: React.FC<CalendarGridProps> = ({ currentDate, onTimeSlotClick, tasks, wakeHour, sleepHour }) => {
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 }); // Monday start
     const weekEnd = endOfWeek(currentDate, { weekStartsOn: 1 });
     const days = eachDayOfInterval({ start: weekStart, end: weekEnd });
-    const hours = Array.from({ length: 24 }, (_, i) => i);
+
+    // Filter hours based on wake and sleep settings
+    const hours = Array.from({ length: 24 }, (_, i) => i).filter(h => {
+        if (wakeHour < sleepHour) {
+            return h >= wakeHour && h < sleepHour;
+        } else if (wakeHour > sleepHour) {
+            return h >= wakeHour || h < sleepHour;
+        }
+        return true; // If equal, show all? Or maybe one hour? Let's show all for safety.
+    });
 
     const getTasksForDayAndHour = (day: Date, hour: number) => {
         return tasks.filter(task => {

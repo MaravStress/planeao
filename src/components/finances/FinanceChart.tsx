@@ -120,26 +120,7 @@ const FinanceChart: React.FC<FinanceChartProps> = ({ transactions, exchangeRate 
                         </text>
                     ))}
 
-                    {/* Balance Line (Green) */}
-                    <line
-                        x1={padding.left} y1={getY(balance)}
-                        x2={width - padding.right} y2={getY(balance)}
-                        className="chart-line-balance"
-                    />
 
-                    {/* Fixed Expenses Line (Orange) */}
-                    <line
-                        x1={padding.left} y1={getY(totalFixed)}
-                        x2={width - padding.right} y2={getY(totalFixed)}
-                        className="chart-line-fixed"
-                    />
-
-                    {/* Total Expenses Line (Red) */}
-                    <line
-                        x1={padding.left} y1={getY(totalExpenses)}
-                        x2={width - padding.right} y2={getY(totalExpenses)}
-                        className="chart-line-total"
-                    />
 
                     {/* Income Points (Green) */}
                     {incomePoints.map((p, i) => (

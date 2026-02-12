@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { addWeeks, subWeeks, startOfWeek } from 'date-fns';
+import { addWeeks, subWeeks } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 import CalendarHeader from '../components/Calendar/CalendarHeader';
 import CalendarGrid from '../components/Calendar/CalendarGrid';
@@ -20,6 +20,9 @@ const CalendarPage: React.FC = () => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedHour, setSelectedHour] = useState<number | null>(null);
     const [tasks, setTasks] = useState<Task[]>([]);
+
+    const [wakeHour, setWakeHour] = useState(7);
+    const [sleepHour, setSleepHour] = useState(23);
 
     const handlePrevWeek = () => setCurrentDate(subWeeks(currentDate, 1));
     const handleNextWeek = () => setCurrentDate(addWeeks(currentDate, 1));
@@ -51,12 +54,18 @@ const CalendarPage: React.FC = () => {
                 onPrevWeek={handlePrevWeek}
                 onNextWeek={handleNextWeek}
                 onToday={handleToday}
+                wakeHour={wakeHour}
+                sleepHour={sleepHour}
+                onWakeHourChange={setWakeHour}
+                onSleepHourChange={setSleepHour}
             />
 
             <CalendarGrid
                 currentDate={currentDate}
                 onTimeSlotClick={handleTimeSlotClick}
                 tasks={tasks}
+                wakeHour={wakeHour}
+                sleepHour={sleepHour}
             />
 
             <TaskModal
