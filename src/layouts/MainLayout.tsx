@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { Calendar, Timer, CheckSquare, Settings, DollarSign, Briefcase, Lightbulb } from 'lucide-react';
+import { Timer, Settings, DollarSign, Briefcase, Lightbulb } from 'lucide-react';
 import '../styles/Layout.css';
 import '../styles/SidebarTimer.css';
 
@@ -23,19 +23,12 @@ const MainLayout: React.FC = () => {
         </div>
         <nav className="nav-menu">
           <NavLink
-            to="/work"
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-          >
-            <Briefcase size={24} />
-            <span>Work</span>
-          </NavLink>
-          <NavLink
             to="/"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             end
           >
-            <Calendar size={24} />
-            <span>Calendario</span>
+            <Briefcase size={24} />
+            <span>Work</span>
           </NavLink>
           <NavLink
             to="/pomodoro"
@@ -43,13 +36,6 @@ const MainLayout: React.FC = () => {
           >
             <Timer size={24} className={isTimerActive ? 'timer-active-icon' : ''} />
             <span>{isTimerActive ? formatTime(timeLeft) : 'Pomodoro'}</span>
-          </NavLink>
-          <NavLink
-            to="/habits"
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-          >
-            <CheckSquare size={24} />
-            <span>Hábitos</span>
           </NavLink>
           <NavLink
             to="/finances"

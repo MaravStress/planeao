@@ -1,8 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
-import CalendarPage from './pages/CalendarPage';
 import PomodoroPage from './pages/PomodoroPage';
-import HabitsPage from './pages/HabitsPage';
 import FinancesPage from './pages/FinancesPage';
 import SettingsPage from './pages/SettingsPage';
 
@@ -17,10 +15,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainLayout />}>
-            <Route path="work" element={<WorkPage />} />
-            <Route index element={<CalendarPage />} />
+            <Route index element={<WorkPage />} />
             <Route path="pomodoro" element={<PomodoroPage />} />
-            <Route path="habits" element={<HabitsPage />} />
             <Route path="finances" element={<FinancesPage />} />
             <Route path="ideas" element={<IdeasPage />} />
             <Route path="settings" element={<SettingsPage />} />

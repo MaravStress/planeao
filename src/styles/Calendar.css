@@ -456,3 +456,67 @@
         justify-content: center;
     }
 }
+
+/* Reserved Blocks */
+.reserved-block {
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: repeating-linear-gradient(45deg,
+            hsla(var(--primary-h), var(--primary-s), 60%, 0.1),
+            hsla(var(--primary-h), var(--primary-s), 60%, 0.1) 10px,
+            hsla(var(--primary-h), var(--primary-s), 60%, 0.15) 10px,
+            hsla(var(--primary-h), var(--primary-s), 60%, 0.15) 20px);
+    border-left: 3px solid var(--color-primary);
+    z-index: 1;
+    /* Above time-slots which are relative? No, time-slots are relative but not positioned? */
+    /* If time-slot is relative, it establishes a stacking context? No, only if z-index is not auto. */
+    /* time-slot has z-index: auto basically. */
+    /* We need reserved-block to be behind task-item (z-index 10) but clickable? */
+    /* If pointer-events: none, we can click through to add task. */
+    pointer-events: none;
+    border-radius: 4px;
+    padding: 2px 4px;
+    opacity: 0.8;
+}
+
+.reserved-title {
+    font-size: 0.75rem;
+    color: var(--color-primary);
+    font-weight: 600;
+    opacity: 0.8;
+}
+
+/* Task Modal Type Selector */
+.type-selector {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.type-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    background: var(--color-bg-input);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.type-btn:hover {
+    background: hsla(0, 0%, 100%, 0.05);
+    color: var(--color-text-main);
+}
+
+.type-btn.active {
+    background: hsla(var(--primary-h), var(--primary-s), 60%, 0.1);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
