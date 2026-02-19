@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, CheckSquare, Square } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import '../../styles/PomodoroDnD.css';
+import { saveToLocal, loadFromLocal, STORAGE_KEYS } from '../../context/LocalSave';
 
 interface Task {
     id: string;
@@ -11,24 +12,15 @@ interface Task {
 
 const PomodoroTasks: React.FC = () => {
     // Load tasks from localStorage
-    const [tasks, setTasks] = useState<Task[]>(() => {
-        const saved = localStorage.getItem('pomodoro-tasks');
-        if (saved) {
-            try {
-                return JSON.parse(saved);
-            } catch (e) {
-                console.error("Failed to parse tasks", e);
-                return [];
-            }
-        }
-        return [];
-    });
+    const [tasks, setTasks] = useState<Task[]>(() =>
+        loadFromLocal<Task[]>(STORAGE_KEYS.POMODORO_TASKS, [])
+    );
 
     const [newTask, setNewTask] = useState('');
 
     // Save tasks to localStorage whenever they change
     useEffect(() => {
-        localStorage.setItem('pomodoro-tasks', JSON.stringify(tasks));
+        saveToLocal(STORAGE_KEYS.POMODORO_TASKS, tasks);
     }, [tasks]);
 
     const addTask = () => {

@@ -8,24 +8,27 @@ import WorkPage from './pages/WorkPage';
 import IdeasPage from './pages/IdeasPage';
 
 import { PomodoroProvider } from './context/PomodoroContext';
+import { WorkProvider } from './context/WorkContext';
 
 function App() {
   return (
-    <PomodoroProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<WorkPage />} />
-            <Route path="pomodoro" element={<PomodoroPage />} />
-            <Route path="finances" element={<FinancesPage />} />
-            <Route path="ideas" element={<IdeasPage />} />
-            <Route path="settings" element={<SettingsPage />} />
-            {/* Redirect any unknown routes to home */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </PomodoroProvider>
+    <WorkProvider>
+      <PomodoroProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<MainLayout />}>
+              <Route index element={<WorkPage />} />
+              <Route path="pomodoro" element={<PomodoroPage />} />
+              <Route path="finances" element={<FinancesPage />} />
+              <Route path="ideas" element={<IdeasPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              {/* Redirect any unknown routes to home */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </PomodoroProvider>
+    </WorkProvider>
   );
 }
 

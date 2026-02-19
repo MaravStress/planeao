@@ -3,119 +3,51 @@ import Timeline from '../components/Work/Timeline';
 import ProjectColumn from '../components/Work/ProjectColumn';
 import EditProjectModal from '../components/Work/EditProjectModal';
 import EditOrderModal from '../components/Work/EditOrderModal';
-import type { Project, Order, ChecklistItem } from '../types/work';
+import type { Project, Order } from '../types/work';
 import { Plus } from 'lucide-react';
+import { useWork } from '../context/WorkContext';
 
 const WorkPage: React.FC = () => {
-    const [projects, setProjects] = useState<Project[]>([
-        {
-            id: '1',
-            name: 'Proyecto Ejemplo',
-            template: ['Diseño', 'Desarrollo', 'Pruebas'],
-            defaultOrderDuration: 7,
-            orders: []
-        }
-    ]);
+    const {
+        projects,
+        addProject: addProjectContext,
+        updateProject,
+        deleteProject,
+        addOrder: addOrderContext,
+        updateOrder,
+        deleteOrder, // This was archiveOrder in WorkPage logic
+        toggleOrderCheck
+    } = useWork();
+
     const [editingProject, setEditingProject] = useState<Project | null>(null);
     const [editingOrder, setEditingOrder] = useState<Order | null>(null);
 
-    const addProject = () => {
-        const name = "Nuevo Proyecto";
-        const newProject: Project = {
-            id: crypto.randomUUID(),
-            name,
-            template: ['Tarea 1', 'Tarea 2'],
-            defaultOrderDuration: 3, // Default duration for new projects
-            orders: []
-        };
-
-        setProjects([...projects, newProject]);
+    const handleAddProject = () => {
+        const newProject = addProjectContext();
         setEditingProject(newProject);
     };
 
-    const updateProject = (projectId: string, name: string, template: string[], defaultOrderDuration: number) => {
-        setProjects(projects.map(p =>
-            p.id === projectId ? { ...p, name, template, defaultOrderDuration } : p
-        ));
+    const handleAddOrder = (projectId: string) => {
+        const newOrder = addOrderContext(projectId);
+        if (newOrder) {
+            setEditingOrder(newOrder);
+        }
     };
 
-    const addOrder = (projectId: string) => {
-        const project = projects.find(p => p.id === projectId);
-        if (!project) return;
-
-        const title = "Nuevo Pedido";
-
-        // Create checklist from template
-        const checklist: ChecklistItem[] = project.template.map((text, index) => ({
-            id: `${crypto.randomUUID()}-${index}`,
-            text,
-            completed: false
-        }));
-
-        const duration = project.defaultOrderDuration || 7;
-        const newOrder: Order = {
-            id: crypto.randomUUID(),
-            projectId,
-            title,
-            checklist,
-            startDate: new Date().toISOString(),
-            endDate: new Date(Date.now() + duration * 24 * 60 * 60 * 1000).toISOString()
-        };
-
-        setProjects(projects.map(p => {
-            if (p.id === projectId) {
-                return { ...p, orders: [...p.orders, newOrder] };
-            }
-            return p;
-        }));
-
-        // Open edit modal for the new order
-        setEditingOrder(newOrder);
+    const handleDeleteProject = (projectId: string) => {
+        const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este proyecto y todos sus pedidos?");
+        if (confirmDelete) {
+            deleteProject(projectId);
+            setEditingProject(null);
+        }
     };
 
-    const updateOrder = (projectId: string, updatedOrder: Order) => {
-        setProjects(projects.map(p => {
-            if (p.id === projectId) {
-                return {
-                    ...p,
-                    orders: p.orders.map(o => o.id === updatedOrder.id ? updatedOrder : o)
-                };
-            }
-            return p;
-        }));
-    };
-
-    const toggleOrderCheck = (projectId: string, orderId: string, itemId: string) => {
-        setProjects(projects.map(p => {
-            if (p.id === projectId) {
-                const updatedOrders = p.orders.map(order => {
-                    if (order.id === orderId) {
-                        const updatedChecklist = order.checklist.map(item => {
-                            if (item.id === itemId) {
-                                return { ...item, completed: !item.completed };
-                            }
-                            return item;
-                        });
-                        return { ...order, checklist: updatedChecklist };
-                    }
-                    return order;
-                });
-                return { ...p, orders: updatedOrders };
-            }
-            return p;
-        }));
-    };
-
-    const archiveOrder = (projectId: string, orderId: string) => {
-        setProjects(projects.map(p => {
-            if (p.id === projectId) {
-                return {
-                    ...p,
-                    orders: p.orders.filter(o => o.id !== orderId)
-                };
-            }
-            return p;
-        }));
+    const handleDeleteOrder = (projectId: string, orderId: string) => {
+        const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este pedido?");
+        if (confirmDelete) {
+            deleteOrder(projectId, orderId);
+            setEditingOrder(null);
+        }
     };
 
     return (
@@ -141,10 +73,10 @@ const WorkPage: React.FC = () => {
                     <div key={project.id} style={{ transform: 'rotateX(180deg)', height: '100%' }}>
                         <ProjectColumn
                             project={project}
-                            onAddOrder={addOrder}
+                            onAddOrder={handleAddOrder}
                             onEditProject={setEditingProject}
                             onEditOrder={setEditingOrder}
-                            onArchiveOrder={archiveOrder}
+                            onArchiveOrder={deleteOrder}
                             onToggleOrderCheck={toggleOrderCheck}
                         />
                     </div>
@@ -158,7 +90,7 @@ const WorkPage: React.FC = () => {
                     transform: 'rotateX(180deg)'
                 }}>
                     <button
-                        onClick={addProject}
+                        onClick={handleAddProject}
                         className="glass-panel"
                         style={{
                             width: '100%',
@@ -197,13 +129,7 @@ const WorkPage: React.FC = () => {
                     isOpen={!!editingProject}
                     onClose={() => setEditingProject(null)}
                     onSave={updateProject}
-                    onDelete={(projectId) => {
-                        const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este proyecto y todos sus pedidos?");
-                        if (confirmDelete) {
-                            setProjects(projects.filter(p => p.id !== projectId));
-                            setEditingProject(null);
-                        }
-                    }}
+                    onDelete={handleDeleteProject}
                 />
             )}
 
@@ -213,13 +139,7 @@ const WorkPage: React.FC = () => {
                     isOpen={!!editingOrder}
                     onClose={() => setEditingOrder(null)}
                     onSave={updateOrder}
-                    onDelete={(projectId, orderId) => {
-                        const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este pedido?");
-                        if (confirmDelete) {
-                            archiveOrder(projectId, orderId);
-                            setEditingOrder(null);
-                        }
-                    }}
+                    onDelete={handleDeleteOrder}
                 />
             )}
         </div>
