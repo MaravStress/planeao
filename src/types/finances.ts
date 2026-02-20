@@ -6,5 +6,12 @@ export interface Transaction {
     amount: number;
     currency: Currency;
     date?: string; // Optional for Fixed Expenses
-    type: 'income' | 'variable' | 'fixed';
+    type: 'income' | 'variable' | 'fixed' | 'recurring-income';
+}
+
+export interface RecurringExpense {
+    id: string;
+    title: string;
+    amount: number;
+    currency: Currency;
 }

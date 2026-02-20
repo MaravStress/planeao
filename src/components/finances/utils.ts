@@ -1,4 +1,4 @@
-import type { Currency } from './types';
+import type { Currency } from '../../types/finances';
 
 export const convertToUSD = (amount: number, currency: Currency, exchangeRate: number) => {
     return currency === 'USD' ? amount : amount / exchangeRate;

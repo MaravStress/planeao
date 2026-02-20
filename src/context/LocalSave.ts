@@ -7,7 +7,12 @@
 export const STORAGE_KEYS = {
     POMODORO_TASKS: 'pomodoro-tasks',
     WORK_PROJECTS: 'work-projects',
-    POMODORO_SETTINGS: 'pomodoro-settings' // Added for settings persistence if needed later
+    POMODORO_SETTINGS: 'pomodoro-settings', // Added for settings persistence if needed later
+    FINANCE_TRANSACTIONS: 'finance-transactions',
+    FINANCE_EXCHANGE_RATE: 'finance-exchange-rate',
+    FINANCE_RECURRING: 'finance-recurring',
+    IDEAS: 'planeao-ideas',
+    IDEA_SETTINGS: 'planeao-idea-settings'
 } as const;
 
 /**
