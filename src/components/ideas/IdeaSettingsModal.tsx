@@ -31,7 +31,7 @@ const SortableItem = ({ item, onRemove, onColorChange, isStatus }: { item: IdeaS
                 title="Cambiar color"
             />
             <span className="settings-item-text">{item.name}</span>
-            {(!isStatus || item.id.toLowerCase() !== 'idea') && (
+            {(!isStatus || (item.id.toLowerCase() !== 'idea' && item.id.toLowerCase() !== 'descartada')) && (
                 <button
                     className="btn-icon text-danger"
                     onClick={() => onRemove(item.id)}
@@ -116,7 +116,7 @@ const IdeaSettingsModal: React.FC<IdeaSettingsModalProps> = ({ settings, onSave 
     };
 
     const handleRemoveStatus = (statusToRemoveId: string) => {
-        if (statusToRemoveId.toLowerCase() === 'idea') return; // Cannot delete default status
+        if (statusToRemoveId.toLowerCase() === 'idea' || statusToRemoveId.toLowerCase() === 'descartada') return; // Cannot delete default statuses
 
         setLocalSettings(prev => ({
             ...prev,

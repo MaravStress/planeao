@@ -52,6 +52,27 @@ const IdeasPage: React.FC = () => {
 
     const activeIdeasCount = ideas.filter(i => i.status !== 'Descartada').length;
 
+    const sortedIdeas = [...ideas].sort((a, b) => {
+        const isADescartada = a.status.toLowerCase() === 'descartada';
+        const isBDescartada = b.status.toLowerCase() === 'descartada';
+
+        if (isADescartada && !isBDescartada) return 1;
+        if (!isADescartada && isBDescartada) return -1;
+
+        const indexA = settings.statuses.findIndex(s => s.name === a.status);
+        const indexB = settings.statuses.findIndex(s => s.name === b.status);
+
+        if (indexA !== indexB) {
+            // if missing (-1), push to the end (but before Descartada)
+            if (indexA === -1) return 1;
+            if (indexB === -1) return -1;
+            return indexA - indexB;
+        }
+
+        // Within the same status, sort by newest
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+
     return (
         <div className="page-container">
             <header className="page-header">
@@ -88,7 +109,7 @@ const IdeasPage: React.FC = () => {
                 </div>
             ) : (
                 <div className="ideas-grid">
-                    {ideas.map(idea => (
+                    {sortedIdeas.map(idea => (
                         <IdeaCard
                             key={idea.id}
                             idea={idea}
