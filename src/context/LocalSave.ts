@@ -2,6 +2,7 @@
  * LocalSave.ts
  * Centralized utility for handling localStorage operations.
  */
+import { saveToOnline } from './OnlineSave';
 
 // Keys for localStorage
 export const STORAGE_KEYS = {
@@ -24,6 +25,8 @@ export const saveToLocal = <T>(key: string, data: T): void => {
     try {
         const serializedData = JSON.stringify(data);
         localStorage.setItem(key, serializedData);
+        // Also fire and forget to online save
+        saveToOnline(key, data).catch(err => console.error("Error syncing to online:", err));
     } catch (error) {
         console.error(`Error saving to localStorage key "${key}":`, error);
     }

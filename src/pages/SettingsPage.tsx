@@ -1,37 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Database, AlertCircle, CheckCircle } from 'lucide-react';
+import { Database, AlertCircle, LogOut, Cloud, User } from 'lucide-react';
+import type { User as FirebaseUser } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth, logInWithGoogle, logOut } from '../firebase';
+import { syncData } from '../context/OnlineSave';
 import '../styles/Settings.css';
 
 const SettingsPage: React.FC = () => {
-    const [sheetId, setSheetId] = useState('');
-    const [apiKey, setApiKey] = useState('');
-    const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+    const [user, setUser] = useState<FirebaseUser | null>(null);
+    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [message, setMessage] = useState('');
 
     useEffect(() => {
-        // Load saved settings
-        const savedSheetId = localStorage.getItem('planeao_sheet_id');
-        const savedApiKey = localStorage.getItem('planeao_api_key');
-        if (savedSheetId) setSheetId(savedSheetId);
-        if (savedApiKey) setApiKey(savedApiKey);
-    }, []);
-
-    const handleSave = (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            localStorage.setItem('planeao_sheet_id', sheetId);
-            localStorage.setItem('planeao_api_key', apiKey);
-            setStatus('success');
-            setMessage('Configuración guardada correctamente.');
-
-            // Reset status after a few seconds
-            setTimeout(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+            setUser(currentUser);
+            if (currentUser) {
+                // User just logged in or is already logged in
+                setStatus('loading');
+                setMessage('Sincronizando datos con la nube...');
+                try {
+                    await syncData();
+                    setStatus('success');
+                    setMessage('Conectado y guardando en línea.');
+                } catch (error) {
+                    setStatus('error');
+                    setMessage('Error al sincronizar datos.');
+                }
+            } else {
                 setStatus('idle');
                 setMessage('');
-            }, 3000);
-        } catch (err) {
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    const handleLogin = async () => {
+        try {
+            setStatus('loading');
+            setMessage('Iniciando sesión...');
+            await logInWithGoogle();
+        } catch (error) {
+            console.error("Login failed:", error);
             setStatus('error');
-            setMessage('Error al guardar la configuración.');
+            setMessage('Error al iniciar sesión con Google.');
+        }
+    };
+
+    const handleLogout = async () => {
+        try {
+            await logOut();
+        } catch (error) {
+            console.error("Logout failed:", error);
         }
     };
 
@@ -39,61 +59,64 @@ const SettingsPage: React.FC = () => {
         <div className="page-container settings-page">
             <header className="page-header">
                 <h1>Configuraciones</h1>
-                <p>Conecta tu aplicación con Google Sheets.</p>
+                <p>Gestiona tu cuenta y el respaldo de datos.</p>
             </header>
 
             <div className="settings-content">
                 <div className="glass-panel settings-form-container">
                     <div className="card-header">
                         <Database size={24} className="text-primary" />
-                        <h3>Base de Datos Google Sheets</h3>
+                        <h3>Autenticación y Respaldo</h3>
                     </div>
 
                     <p className="settings-description">
-                        Planeao utiliza Google Sheets para guardar tus tareas, hábitos y tiempos de pomodoro.
-                        Asegúrate de configurar los permisos correctos en tu hoja de cálculo.
+                        Inicia sesión con Google para respaldar automáticamente tus tareas,
+                        proyectos, finanzas e ideas en la nube de forma segura. Si no tienes conexión,
+                        los datos se guardarán localmente.
                     </p>
 
-                    <form onSubmit={handleSave}>
-                        <div className="form-group">
-                            <label htmlFor="sheetId">ID de la Hoja de Cálculo</label>
-                            <input
-                                id="sheetId"
-                                type="text"
-                                value={sheetId}
-                                onChange={(e) => setSheetId(e.target.value)}
-                                placeholder="Ej: 1BxiMVs0XRA5nFMdKbBdB_..."
-                                className="input-code"
-                            />
-                            <small className="form-hint">
-                                Lo encuentras en la URL de tu hoja de Google: /d/<strong>ID_DE_LA_HOJA</strong>/edit
-                            </small>
-                        </div>
+                    <div className="auth-section">
+                        {user ? (
+                            <div className="user-profile">
+                                <div className="user-info">
+                                    {user.photoURL ? (
+                                        <img src={user.photoURL} alt="Profile" className="profile-pic" />
+                                    ) : (
+                                        <div className="profile-placeholder"><User size={24} /></div>
+                                    )}
+                                    <div className="user-details">
+                                        <h4>{user.displayName || 'Usuario'}</h4>
+                                        <p>{user.email}</p>
+                                    </div>
+                                </div>
 
-                        <div className="form-group">
-                            <label htmlFor="apiKey">API Key / Token de Acceso</label>
-                            <input
-                                id="apiKey"
-                                type="password"
-                                value={apiKey}
-                                onChange={(e) => setApiKey(e.target.value)}
-                                placeholder="Tu clave de API de Google Cloud Platform"
-                                className="input-code"
-                            />
-                        </div>
+                                <div className={`status-indicator ${status}`}>
+                                    {status === 'loading' && <AlertCircle size={18} className="pulse" />}
+                                    {status === 'success' && <Cloud size={18} />}
+                                    {status === 'error' && <AlertCircle size={18} />}
+                                    <span>{message || 'En línea'}</span>
+                                </div>
 
-                        {status !== 'idle' && (
-                            <div className={`status-message ${status}`}>
-                                {status === 'success' ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
-                                <span>{message}</span>
+                                <button onClick={handleLogout} className="btn-logout">
+                                    <LogOut size={18} />
+                                    Cerrar Sesión
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="login-prompt">
+                                {status === 'error' && (
+                                    <div className="status-message error">
+                                        <AlertCircle size={18} />
+                                        <span>{message}</span>
+                                    </div>
+                                )}
+                                <button onClick={handleLogin} className="btn-login" disabled={status === 'loading'}>
+                                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" className="google-icon" />
+                                    <span>{status === 'loading' ? 'Cargando...' : 'Iniciar Sesión con Google'}</span>
+                                </button>
                             </div>
                         )}
-
-                        <button type="submit" className="btn-save">
-                            <Save size={18} />
-                            Guardar Configuración
-                        </button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
