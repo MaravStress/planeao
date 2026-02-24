@@ -16,7 +16,8 @@ const IdeasContext = createContext<IdeasContextType | undefined>(undefined);
 
 export const IdeasProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [ideas, setIdeas] = useState<Idea[]>(() => {
-        return loadFromLocal<Idea[]>(STORAGE_KEYS.IDEAS, []);
+        const loaded = loadFromLocal<Idea[]>(STORAGE_KEYS.IDEAS, []);
+        return Array.isArray(loaded) ? loaded : [];
     });
 
     const [settings, setSettings] = useState<IdeaSettings>(() => {

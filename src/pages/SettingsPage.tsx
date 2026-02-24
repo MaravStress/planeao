@@ -22,7 +22,7 @@ const SettingsPage: React.FC = () => {
                     await syncData();
                     setStatus('success');
                     setMessage('Conectado y guardando en línea.');
-                } catch (error) {
+                } catch {
                     setStatus('error');
                     setMessage('Error al sincronizar datos.');
                 }

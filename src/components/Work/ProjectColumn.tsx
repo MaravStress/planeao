@@ -60,15 +60,17 @@ const ProjectColumn: React.FC<ProjectColumnProps> = ({
             }}>
                 <div>
                     Target: {(() => {
-                        const completed = project.orders.reduce((acc, o) => acc + o.checklist.filter(i => i.completed).length, 0);
-                        const total = project.orders.reduce((acc, o) => acc + o.checklist.length, 0);
+                        const orders = project.orders || [];
+                        const completed = orders.reduce((acc, o) => acc + (o.checklist || []).filter(i => i.completed).length, 0);
+                        const total = orders.reduce((acc, o) => acc + (o.checklist || []).length, 0);
                         return `${completed}/${total}`;
                     })()}
                 </div>
                 <div>
                     Estimado: {(() => {
                         const now = new Date();
-                        const activeOrders = project.orders.filter(o => new Date(o.endDate) > now);
+                        const orders = project.orders || [];
+                        const activeOrders = orders.filter(o => new Date(o.endDate) > now);
                         const days = activeOrders.reduce((acc, o) => {
                             const end = new Date(o.endDate);
                             const start = new Date(o.startDate) > now ? new Date(o.startDate) : now;
@@ -112,7 +114,7 @@ const ProjectColumn: React.FC<ProjectColumnProps> = ({
                     <span>Añadir Pedido</span>
                 </button>
 
-                {[...project.orders]
+                {[...(project.orders || [])]
                     .sort((a, b) => new Date(a.endDate).getTime() - new Date(b.endDate).getTime())
                     .map((order: Order) => (
                         <OrderCard

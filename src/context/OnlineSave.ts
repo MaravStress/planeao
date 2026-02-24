@@ -54,11 +54,12 @@ export const getOnlinePayload = async <T = any>(key: string): Promise<StoragePay
  * Sync data between LocalStorage and Firebase Realtime Database
  * Priorities more recent modified timestamp.
  */
-export const syncData = async () => {
+export const syncData = async (): Promise<boolean> => {
     const user = auth.currentUser;
-    if (!user) return;
+    if (!user) return false;
 
     const keysToSync = Object.values(STORAGE_KEYS);
+    let updatedLocal = false;
 
     for (const key of keysToSync) {
         try {
@@ -73,6 +74,7 @@ export const syncData = async () => {
                 } else if (onlinePayload._lastModified > localPayload._lastModified) {
                     // Online is newer, save to local
                     setLocalPayload(key, onlinePayload);
+                    updatedLocal = true;
                 } else {
                     // Both have same timestamp (exact same version synced before)
                     // No action needed
@@ -83,11 +85,13 @@ export const syncData = async () => {
             } else if (!localPayload && onlinePayload) {
                 // Only online exists -> Pull from Online
                 setLocalPayload(key, onlinePayload);
+                updatedLocal = true;
             }
         } catch (error) {
             console.error(`Error syncing key "${key}":`, error);
         }
     }
+    return updatedLocal;
 };
 
 /**

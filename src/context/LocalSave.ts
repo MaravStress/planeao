@@ -34,7 +34,7 @@ export const getLocalPayload = <T = any>(key: string): StoragePayload<T> | null 
             _data: parsed,
             _lastModified: 0 // old data has timestamp 0
         };
-    } catch (e) {
+    } catch {
         return null;
     }
 };
@@ -54,6 +54,12 @@ export const setLocalPayload = <T = any>(key: string, payload: StoragePayload<T>
  */
 export const saveToLocal = <T>(key: string, data: T): void => {
     try {
+        const existingPayload = getLocalPayload<T>(key);
+        if (existingPayload !== null && JSON.stringify(existingPayload._data) === JSON.stringify(data)) {
+            // Unchanged data - suppress saving to protect _lastModified timestamp parity with Firebase
+            return;
+        }
+
         const payload: StoragePayload<T> = {
             _data: data,
             _lastModified: Date.now()

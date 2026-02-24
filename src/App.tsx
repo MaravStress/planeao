@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import PomodoroPage from './pages/PomodoroPage';
 import FinancesPage from './pages/FinancesPage';
@@ -21,7 +21,11 @@ function App() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         // Sync local data with firebase globally whenever the app initializes and user is authenticated
-        await syncData();
+        const updatedLocal = await syncData();
+        if (updatedLocal) {
+            // A hard refresh ensures all contexts re-mount and load the freshly synchronized local storage data automatically.
+            window.location.reload();
+        }
       }
     });
     return () => unsubscribe();
@@ -30,7 +34,7 @@ function App() {
     <IdeasProvider>
       <WorkProvider>
         <PomodoroProvider>
-          <BrowserRouter>
+          <HashRouter>
             <Routes>
               <Route path="/" element={<MainLayout />}>
                 <Route index element={<WorkPage />} />
@@ -42,7 +46,7 @@ function App() {
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Route>
             </Routes>
-          </BrowserRouter>
+          </HashRouter>
         </PomodoroProvider>
       </WorkProvider>
     </IdeasProvider>

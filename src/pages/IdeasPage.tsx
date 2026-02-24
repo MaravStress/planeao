@@ -29,7 +29,7 @@ const IdeasPage: React.FC = () => {
     };
 
     const handleSaveIdea = (savedIdea: Idea) => {
-        const exists = ideas.find(i => i.id === savedIdea.id);
+        const exists = (ideas || []).find(i => i.id === savedIdea.id);
         if (exists) {
             updateIdea(savedIdea);
         } else {
@@ -50,9 +50,9 @@ const IdeasPage: React.FC = () => {
         setIsSettingsOpen(false);
     };
 
-    const activeIdeasCount = ideas.filter(i => i.status !== 'Descartada').length;
+    const activeIdeasCount = (ideas || []).filter(i => i.status !== 'Descartada').length;
 
-    const sortedIdeas = [...ideas].sort((a, b) => {
+    const sortedIdeas = [...(ideas || [])].sort((a, b) => {
         const isADescartada = a.status.toLowerCase() === 'descartada';
         const isBDescartada = b.status.toLowerCase() === 'descartada';
 
@@ -84,7 +84,7 @@ const IdeasPage: React.FC = () => {
                 <div className="ideas-metrics">
                     <div className="metric-item">
                         <span className="metric-label">Total Ideas</span>
-                        <span className="metric-value">{ideas.length}</span>
+                        <span className="metric-value">{(ideas || []).length}</span>
                     </div>
                     <div className="metric-item">
                         <span className="metric-label">Activas</span>
@@ -101,7 +101,7 @@ const IdeasPage: React.FC = () => {
                 </div>
             </div>
 
-            {ideas.length === 0 ? (
+            {(ideas || []).length === 0 ? (
                 <div className="glass-panel" style={{ padding: '4rem', textAlign: 'center' }}>
                     <p style={{ color: 'var(--color-text-muted)', fontSize: '1.2rem' }}>
                         No tienes ideas registradas. ¡Haz clic en "Nueva idea" para empezar!
@@ -109,7 +109,7 @@ const IdeasPage: React.FC = () => {
                 </div>
             ) : (
                 <div className="ideas-grid">
-                    {sortedIdeas.map(idea => (
+                    {(sortedIdeas || []).map(idea => (
                         <IdeaCard
                             key={idea.id}
                             idea={idea}
