@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Database, AlertCircle, LogOut, Cloud, User } from 'lucide-react';
+import { Database, AlertCircle, LogOut, Cloud, User, DownloadCloud, UploadCloud } from 'lucide-react';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, logInWithGoogle, logOut } from '../firebase';
-import { syncData } from '../context/OnlineSave';
+import { syncData, forcePullFromOnline, forcePushToOnline } from '../context/OnlineSave';
 import '../styles/Settings.css';
 
 const SettingsPage: React.FC = () => {
@@ -55,6 +55,47 @@ const SettingsPage: React.FC = () => {
         }
     };
 
+    const handleForcePull = async () => {
+        if (!window.confirm("¿Estás seguro de que deseas sobreescribir tus datos locales con los de la nube? Esta acción perderá los cambios locales que no se hayan sincronizado.")) {
+            return;
+        }
+
+        try {
+            setStatus('loading');
+            setMessage('Descargando datos de la nube...');
+            await forcePullFromOnline();
+            
+            // Re-sync basic after pull done
+            // To ensure local timestamp matches the online ones visually or refresh views.
+            // A simple page reload is best here since contexts often cache data.
+            window.location.reload();
+            
+        } catch (error) {
+            console.error("Force pull failed:", error);
+            setStatus('error');
+            setMessage('Error al descargar los datos.');
+        }
+    };
+
+    const handleForcePush = async () => {
+        if (!window.confirm("¿Estás seguro de que deseas sobreescribir los datos de la nube con tus datos locales? Esta acción reemplazará cualquier información remota que difiera.")) {
+            return;
+        }
+
+        try {
+            setStatus('loading');
+            setMessage('Subiendo datos locales a la nube...');
+            await forcePushToOnline();
+            
+            setStatus('success');
+            setMessage('Datos locales subidos exitosamente.');
+        } catch (error) {
+            console.error("Force push failed:", error);
+            setStatus('error');
+            setMessage('Error al subir los datos.');
+        }
+    };
+
     return (
         <div className="page-container settings-page">
             <header className="page-header">
@@ -97,10 +138,20 @@ const SettingsPage: React.FC = () => {
                                     <span>{message || 'En línea'}</span>
                                 </div>
 
-                                <button onClick={handleLogout} className="btn-logout">
-                                    <LogOut size={18} />
-                                    Cerrar Sesión
-                                </button>
+                                <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', width: '100%', flexDirection: 'column' }}>
+                                    <button onClick={handleForcePull} className="btn-logout" disabled={status === 'loading'} style={{ backgroundColor: '#f59e0b', color: 'white', border: 'none' }}>
+                                        <DownloadCloud size={18} />
+                                        Forzar descarga desde la Nube
+                                    </button>
+                                    <button onClick={handleForcePush} className="btn-logout" disabled={status === 'loading'} style={{ backgroundColor: 'var(--color-primary, #6366f1)', color: 'white', border: 'none' }}>
+                                        <UploadCloud size={18} />
+                                        Forzar subida y re-escribir Nube
+                                    </button>
+                                    <button onClick={handleLogout} className="btn-logout">
+                                        <LogOut size={18} />
+                                        Cerrar Sesión
+                                    </button>
+                                </div>
                             </div>
                         ) : (
                             <div className="login-prompt">

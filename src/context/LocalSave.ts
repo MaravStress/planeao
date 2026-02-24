@@ -8,13 +8,44 @@ import { saveToOnline } from './OnlineSave';
 export const STORAGE_KEYS = {
     POMODORO_TASKS: 'pomodoro-tasks',
     WORK_PROJECTS: 'work-projects',
-    POMODORO_SETTINGS: 'pomodoro-settings', // Added for settings persistence if needed later
+    POMODORO_SETTINGS: 'pomodoro-settings',
     FINANCE_TRANSACTIONS: 'finance-transactions',
     FINANCE_EXCHANGE_RATE: 'finance-exchange-rate',
     FINANCE_RECURRING: 'finance-recurring',
     IDEAS: 'planeao-ideas',
     IDEA_SETTINGS: 'planeao-idea-settings'
 } as const;
+
+export interface StoragePayload<T = any> {
+    _data: T;
+    _lastModified: number;
+}
+
+export const getLocalPayload = <T = any>(key: string): StoragePayload<T> | null => {
+    const str = localStorage.getItem(key);
+    if (!str) return null;
+    try {
+        const parsed = JSON.parse(str);
+        if (parsed && typeof parsed === 'object' && '_lastModified' in parsed && '_data' in parsed) {
+            return parsed as StoragePayload<T>;
+        }
+        // Legacy format migration
+        return {
+            _data: parsed,
+            _lastModified: 0 // old data has timestamp 0
+        };
+    } catch (e) {
+        return null;
+    }
+};
+
+export const setLocalPayload = <T = any>(key: string, payload: StoragePayload<T>): void => {
+    try {
+        localStorage.setItem(key, JSON.stringify(payload));
+    } catch (error) {
+        console.error(`Error saving payload to localStorage key "${key}":`, error);
+    }
+};
 
 /**
  * Save data to localStorage
@@ -23,10 +54,13 @@ export const STORAGE_KEYS = {
  */
 export const saveToLocal = <T>(key: string, data: T): void => {
     try {
-        const serializedData = JSON.stringify(data);
-        localStorage.setItem(key, serializedData);
+        const payload: StoragePayload<T> = {
+            _data: data,
+            _lastModified: Date.now()
+        };
+        setLocalPayload(key, payload);
         // Also fire and forget to online save
-        saveToOnline(key, data).catch(err => console.error("Error syncing to online:", err));
+        saveToOnline(key, payload).catch(err => console.error("Error syncing to online:", err));
     } catch (error) {
         console.error(`Error saving to localStorage key "${key}":`, error);
     }
@@ -40,11 +74,11 @@ export const saveToLocal = <T>(key: string, data: T): void => {
  */
 export const loadFromLocal = <T>(key: string, fallback: T): T => {
     try {
-        const serializedData = localStorage.getItem(key);
-        if (serializedData === null) {
+        const payload = getLocalPayload<T>(key);
+        if (payload === null) {
             return fallback;
         }
-        return JSON.parse(serializedData);
+        return payload._data;
     } catch (error) {
         console.error(`Error loading from localStorage key "${key}":`, error);
         return fallback;

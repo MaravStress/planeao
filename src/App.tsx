@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import PomodoroPage from './pages/PomodoroPage';
@@ -11,7 +12,20 @@ import { PomodoroProvider } from './context/PomodoroContext';
 import { WorkProvider } from './context/WorkContext';
 import { IdeasProvider } from './context/IdeasContext';
 
+import { auth } from './firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { syncData } from './context/OnlineSave';
+
 function App() {
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Sync local data with firebase globally whenever the app initializes and user is authenticated
+        await syncData();
+      }
+    });
+    return () => unsubscribe();
+  }, []);
   return (
     <IdeasProvider>
       <WorkProvider>
