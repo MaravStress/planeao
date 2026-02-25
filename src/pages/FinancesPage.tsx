@@ -13,11 +13,7 @@ import { STORAGE_KEYS, loadFromLocal, saveToLocal } from '../context/LocalSave';
 const FinancesPage: React.FC = () => {
     // State
     const [transactions, setTransactions] = useState<Transaction[]>(() =>
-        loadFromLocal(STORAGE_KEYS.FINANCE_TRANSACTIONS, [
-            { id: '1', title: 'Salary', amount: 2000, currency: 'USD', date: '2023-10-05', type: 'income' },
-            { id: '2', title: 'Rent', amount: 800, currency: 'USD', type: 'fixed' },
-            { id: '3', title: 'Groceries', amount: 3000, currency: 'DOP', date: '2023-10-10', type: 'variable' },
-        ])
+        loadFromLocal(STORAGE_KEYS.FINANCE_TRANSACTIONS, [])
     );
 
     const [recurringExpenses, setRecurringExpenses] = useState<RecurringExpense[]>(() =>

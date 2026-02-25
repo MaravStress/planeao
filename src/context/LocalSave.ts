@@ -82,6 +82,8 @@ export const loadFromLocal = <T>(key: string, fallback: T): T => {
     try {
         const payload = getLocalPayload<T>(key);
         if (payload === null) {
+            // Save fallback so it gets a timestamp of 0. This prevents next identical save call from generating a Date.now() timestamp overriding online.
+            setLocalPayload(key, { _data: fallback, _lastModified: 0 });
             return fallback;
         }
         return payload._data;

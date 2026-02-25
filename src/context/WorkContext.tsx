@@ -16,17 +16,8 @@ interface WorkContextType {
 const WorkContext = createContext<WorkContextType | undefined>(undefined);
 
 export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    // Initial State load from LocalStorage
     const [projects, setProjects] = useState<Project[]>(() => {
-        return loadFromLocal<Project[]>(STORAGE_KEYS.WORK_PROJECTS, [
-            {
-                id: '1',
-                name: 'Proyecto Ejemplo',
-                template: ['Diseño', 'Desarrollo', 'Pruebas'],
-                defaultOrderDuration: 7,
-                orders: []
-            }
-        ]);
+        return loadFromLocal<Project[]>(STORAGE_KEYS.WORK_PROJECTS, []);
     });
 
     // Save to LocalStorage whenever projects change
