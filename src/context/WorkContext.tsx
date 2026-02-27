@@ -56,7 +56,7 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const title = "Nuevo Pedido";
 
         // Create checklist from template
-        const checklist: ChecklistItem[] = project.template.map((text, index) => ({
+        const checklist: ChecklistItem[] = (project.template || []).map((text, index) => ({
             id: `${crypto.randomUUID()}-${index}`,
             text,
             completed: false
@@ -74,7 +74,7 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         setProjects(projects.map(p => {
             if (p.id === projectId) {
-                return { ...p, orders: [...p.orders, newOrder] };
+                return { ...p, orders: [...(p.orders || []), newOrder] };
             }
             return p;
         }));
@@ -87,7 +87,7 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             if (p.id === projectId) {
                 return {
                     ...p,
-                    orders: p.orders.map(o => o.id === updatedOrder.id ? updatedOrder : o)
+                    orders: (p.orders || []).map(o => o.id === updatedOrder.id ? updatedOrder : o)
                 };
             }
             return p;
@@ -99,7 +99,7 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             if (p.id === projectId) {
                 return {
                     ...p,
-                    orders: p.orders.filter(o => o.id !== orderId)
+                    orders: (p.orders || []).filter(o => o.id !== orderId)
                 };
             }
             return p;
@@ -109,9 +109,9 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const toggleOrderCheck = (projectId: string, orderId: string, itemId: string) => {
         setProjects(projects.map(p => {
             if (p.id === projectId) {
-                const updatedOrders = p.orders.map(order => {
+                const updatedOrders = (p.orders || []).map(order => {
                     if (order.id === orderId) {
-                        const updatedChecklist = order.checklist.map(item => {
+                        const updatedChecklist = (order.checklist || []).map(item => {
                             if (item.id === itemId) {
                                 return { ...item, completed: !item.completed };
                             }

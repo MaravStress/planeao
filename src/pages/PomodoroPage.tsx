@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import TimerDisplay from '../components/Pomodoro/TimerDisplay';
 import TimerSettings from '../components/Pomodoro/TimerSettings';
 import PomodoroTasks from '../components/Pomodoro/PomodoroTasks';
+import PomodoroProjectTasks from '../components/Pomodoro/PomodoroProjectTasks';
 import '../styles/Pomodoro.css';
 import { usePomodoro } from '../context/PomodoroContext';
 
@@ -32,7 +33,10 @@ const PomodoroPage: React.FC = () => {
             </header>
 
             <div className="pomodoro-content">
-                <div className="pomodoro-left-column">
+                <div className="pomodoro-column">
+                    <PomodoroProjectTasks />
+                </div>
+                <div className="pomodoro-column">
                     <TimerDisplay
                         minutes={minutes}
                         seconds={seconds}
@@ -55,7 +59,7 @@ const PomodoroPage: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="pomodoro-right-column">
+                <div className="pomodoro-column">
                     <PomodoroTasks />
                 </div>
             </div>
