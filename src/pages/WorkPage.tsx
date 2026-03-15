@@ -57,7 +57,7 @@ const WorkPage: React.FC = () => {
                 <p>Gestiona tus proyectos y pedidos.</p>
             </header>
 
-            <Timeline />
+            <Timeline onEditOrder={setEditingOrder} />
 
             <div style={{
                 flex: 1,
