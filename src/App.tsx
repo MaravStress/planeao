@@ -7,10 +7,14 @@ import SettingsPage from './pages/SettingsPage';
 
 import WorkPage from './pages/WorkPage';
 import IdeasPage from './pages/IdeasPage';
+import UniTasksPage from './pages/UniTasksPage';
+import UniProgressPage from './pages/UniProgressPage';
 
 import { PomodoroProvider } from './context/PomodoroContext';
 import { WorkProvider } from './context/WorkContext';
 import { IdeasProvider } from './context/IdeasContext';
+import { UniTasksProvider } from './context/UniTasksContext';
+import { UniProgressProvider } from './context/UniProgressContext';
 
 import { auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -35,17 +39,23 @@ function App() {
       <WorkProvider>
         <PomodoroProvider>
           <HashRouter>
-            <Routes>
-              <Route path="/" element={<MainLayout />}>
-                <Route index element={<WorkPage />} />
-                <Route path="pomodoro" element={<PomodoroPage />} />
-                <Route path="finances" element={<FinancesPage />} />
-                <Route path="ideas" element={<IdeasPage />} />
-                <Route path="settings" element={<SettingsPage />} />
-                {/* Redirect any unknown routes to home */}
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Route>
-            </Routes>
+            <UniProgressProvider>
+              <UniTasksProvider>
+                <Routes>
+                <Route path="/" element={<MainLayout />}>
+                  <Route index element={<WorkPage />} />
+                  <Route path="pomodoro" element={<PomodoroPage />} />
+                  <Route path="finances" element={<FinancesPage />} />
+                  <Route path="ideas" element={<IdeasPage />} />
+                  <Route path="uni-tasks" element={<UniTasksPage />} />
+                  <Route path="uni-progress" element={<UniProgressPage />} />
+                  <Route path="settings" element={<SettingsPage />} />
+                  {/* Redirect any unknown routes to home */}
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Route>
+                </Routes>
+              </UniTasksProvider>
+            </UniProgressProvider>
           </HashRouter>
         </PomodoroProvider>
       </WorkProvider>

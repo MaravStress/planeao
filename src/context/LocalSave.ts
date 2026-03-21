@@ -13,7 +13,9 @@ export const STORAGE_KEYS = {
     FINANCE_EXCHANGE_RATE: 'finance-exchange-rate',
     FINANCE_RECURRING: 'finance-recurring',
     IDEAS: 'planeao-ideas',
-    IDEA_SETTINGS: 'planeao-idea-settings'
+    IDEA_SETTINGS: 'planeao-idea-settings',
+    UNI_TASKS_SUBJECTS: 'planeao-uni-tasks-v2',
+    UNI_PROGRESS_TERMS: 'planeao-uni-progress'
 } as const;
 
 export interface StoragePayload<T = any> {

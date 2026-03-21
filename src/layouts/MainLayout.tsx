@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { Timer, Settings, DollarSign, Briefcase, Lightbulb } from 'lucide-react';
+import { Timer, Settings, DollarSign, Briefcase, Lightbulb, BookOpen, GraduationCap } from 'lucide-react';
 import '../styles/Layout.css';
 import '../styles/SidebarTimer.css';
 
@@ -50,6 +50,20 @@ const MainLayout: React.FC = () => {
           >
             <Lightbulb size={24} />
             <span>Ideas Emprendedoras</span>
+          </NavLink>
+          <NavLink
+            to="/uni-tasks"
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+          >
+            <BookOpen size={24} />
+            <span>Tareas Uni</span>
+          </NavLink>
+          <NavLink
+            to="/uni-progress"
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+          >
+            <GraduationCap size={24} />
+            <span>Progreso Uni</span>
           </NavLink>
           <NavLink
             to="/settings"
