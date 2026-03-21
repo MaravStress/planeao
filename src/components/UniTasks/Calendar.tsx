@@ -8,7 +8,7 @@ interface CalendarProps {
 }
 
 const Calendar: React.FC<CalendarProps> = ({ onEditAssignment }) => {
-    const { subjects } = useUniTasks();
+    const { subjects, updateAssignment } = useUniTasks();
     const [currentDate, setCurrentDate] = useState(new Date());
 
     const allAssignments = useMemo(() => {
@@ -55,6 +55,34 @@ const Calendar: React.FC<CalendarProps> = ({ onEditAssignment }) => {
         }
         return list;
     }, [year, month, daysInMonth, firstDay]);
+
+    const handleDragStart = (e: React.DragEvent, assignmentId: string) => {
+        e.dataTransfer.setData('text/plain', assignmentId);
+        e.dataTransfer.effectAllowed = 'move';
+    };
+
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+    };
+
+    const handleDrop = (e: React.DragEvent, targetDate: Date) => {
+        e.preventDefault();
+        const assignmentId = e.dataTransfer.getData('text/plain');
+        if (!assignmentId) return;
+
+        const assignmentToUpdate = allAssignments.find(a => a.id === assignmentId);
+        if (assignmentToUpdate) {
+            const originalEndDate = new Date(assignmentToUpdate.endDate);
+            const newEndDate = new Date(targetDate);
+            newEndDate.setHours(originalEndDate.getHours(), originalEndDate.getMinutes(), originalEndDate.getSeconds());
+
+            updateAssignment(assignmentToUpdate.subjectId, {
+                ...assignmentToUpdate,
+                endDate: newEndDate.toISOString()
+            });
+        }
+    };
 
     const getStatusColor = (assignment: Assignment) => {
         const now = new Date();
@@ -175,14 +203,20 @@ const Calendar: React.FC<CalendarProps> = ({ onEditAssignment }) => {
                         });
 
                         return (
-                            <div key={date.toISOString()} style={{
-                                borderRight: '1px solid rgba(255,255,255,0.05)',
-                                borderBottom: '1px solid rgba(255,255,255,0.05)',
-                                padding: '0.5rem',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '0.25rem'
-                            }}>
+                            <div 
+                                key={date.toISOString()} 
+                                onDragOver={handleDragOver}
+                                onDrop={(e) => handleDrop(e, date)}
+                                style={{
+                                    borderRight: '1px solid rgba(255,255,255,0.05)',
+                                    borderBottom: '1px solid rgba(255,255,255,0.05)',
+                                    padding: '0.5rem',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '0.25rem',
+                                    transition: 'background-color 0.2s'
+                                }}
+                            >
                                 <div style={{
                                     alignSelf: 'flex-end',
                                     fontSize: '0.8rem',
@@ -203,6 +237,8 @@ const Calendar: React.FC<CalendarProps> = ({ onEditAssignment }) => {
                                         return (
                                             <div
                                                 key={assignment.id}
+                                                draggable
+                                                onDragStart={(e) => handleDragStart(e, assignment.id)}
                                                 onClick={() => onEditAssignment && onEditAssignment(assignment)}
                                                 style={{
                                                     fontSize: '0.7rem',

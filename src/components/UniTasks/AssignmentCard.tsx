@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Assignment, ChecklistItem } from '../../types/uniTasks';
-import { Check, Calendar as CalendarIcon, Pencil } from 'lucide-react';
+import { Check, Calendar as CalendarIcon, Pencil, ExternalLink } from 'lucide-react';
 
 interface AssignmentCardProps {
     assignment: Assignment;
@@ -102,6 +102,37 @@ const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, onToggleChe
                 <CalendarIcon size={14} />
                 <span>{new Date(assignment.endDate).toLocaleDateString()}</span>
             </div>
+
+            {/* Link Button */}
+            {assignment.link && (
+                <a
+                    href={assignment.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.5rem',
+                        width: '100%',
+                        padding: '0.5rem',
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '4px',
+                        color: 'white',
+                        textDecoration: 'none',
+                        marginBottom: '1rem',
+                        fontSize: '0.9rem',
+                        transition: 'background-color 0.2s',
+                        cursor: 'pointer'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'}
+                >
+                    <ExternalLink size={16} />
+                    Abrir Tarea
+                </a>
+            )}
 
             {/* Checklist */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>

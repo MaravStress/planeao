@@ -10,6 +10,7 @@ export interface Assignment {
     title: string;
     checklist: ChecklistItem[];
     endDate: string; // ISO date string
+    link?: string; // Optional URL for the task
 }
 
 export interface Subject {

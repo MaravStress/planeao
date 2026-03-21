@@ -29,6 +29,7 @@ interface EditAssignmentModalProps {
 const EditAssignmentModal: React.FC<EditAssignmentModalProps> = ({ assignment, isOpen, onClose, onSave, onDelete }) => {
     const [title, setTitle] = useState(assignment.title);
     const [endDate, setEndDate] = useState(assignment.endDate.split('T')[0]);
+    const [link, setLink] = useState(assignment.link || '');
     const [checklist, setChecklist] = useState<ChecklistItem[]>([]);
     const [newItemText, setNewItemText] = useState('');
 
@@ -44,6 +45,7 @@ const EditAssignmentModal: React.FC<EditAssignmentModalProps> = ({ assignment, i
     useEffect(() => {
         if (isOpen) {
             setTitle(assignment.title);
+            setLink(assignment.link || '');
             // Convert to local YYYY-MM-DD for input
             const end = new Date(assignment.endDate);
 
@@ -77,6 +79,7 @@ const EditAssignmentModal: React.FC<EditAssignmentModalProps> = ({ assignment, i
             ...assignment,
             title,
             endDate: end.toISOString(),
+            link: link.trim() || undefined,
             checklist
         };
         onSave(assignment.subjectId, updatedAssignment);
@@ -178,6 +181,25 @@ const EditAssignmentModal: React.FC<EditAssignmentModalProps> = ({ assignment, i
                         type="date"
                         value={endDate}
                         onChange={(e) => setEndDate(e.target.value)}
+                        style={{
+                            width: '100%',
+                            padding: '0.75rem',
+                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            borderRadius: '4px',
+                            color: 'white',
+                            fontSize: '1rem'
+                        }}
+                    />
+                </div>
+
+                <div style={{ marginBottom: '1.5rem' }}>
+                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Enlace de la Tarea (Opcional)</label>
+                    <input
+                        type="url"
+                        value={link}
+                        onChange={(e) => setLink(e.target.value)}
+                        placeholder="https://..."
                         style={{
                             width: '100%',
                             padding: '0.75rem',
