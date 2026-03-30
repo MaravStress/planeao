@@ -120,7 +120,7 @@ const Timeline: React.FC<TimelineProps> = ({ onEditOrder }) => {
     }, [dragState, updateOrder]);
 
     const allOrders = useMemo(() => {
-        return projects.flatMap(p => p.orders || []);
+        return projects.filter(p => !p.isPaused).flatMap(p => p.orders || []);
     }, [projects]);
 
     const daysArray = useMemo(() => {

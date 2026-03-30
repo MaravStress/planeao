@@ -11,6 +11,7 @@ interface WorkContextType {
     updateOrder: (projectId: string, updatedOrder: Order) => void;
     deleteOrder: (projectId: string, orderId: string) => void;
     toggleOrderCheck: (projectId: string, orderId: string, itemId: string) => void;
+    toggleProjectPause: (projectId: string) => void;
 }
 
 const WorkContext = createContext<WorkContextType | undefined>(undefined);
@@ -47,6 +48,12 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const deleteProject = (projectId: string) => {
         setProjects(projects.filter(p => p.id !== projectId));
+    };
+
+    const toggleProjectPause = (projectId: string) => {
+        setProjects(projects.map(p => 
+            p.id === projectId ? { ...p, isPaused: !p.isPaused } : p
+        ));
     };
 
     const addOrder = (projectId: string): Order | undefined => {
@@ -136,7 +143,8 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             addOrder,
             updateOrder,
             deleteOrder,
-            toggleOrderCheck
+            toggleOrderCheck,
+            toggleProjectPause
         }}>
             {children}
         </WorkContext.Provider>

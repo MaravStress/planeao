@@ -1,12 +1,13 @@
 import React from 'react';
 import type { Project, Order } from '../../types/work';
 import OrderCard from './OrderCard';
-import { Plus, Settings } from 'lucide-react';
+import { Plus, Settings, Pause, Play } from 'lucide-react';
 
 interface ProjectColumnProps {
     project: Project;
     onAddOrder: (projectId: string) => void;
     onEditProject: (project: Project) => void;
+    onTogglePause: (projectId: string) => void;
     onEditOrder: (order: Order) => void;
     onArchiveOrder: (projectId: string, orderId: string) => void;
     onToggleOrderCheck: (projectId: string, orderId: string, itemId: string) => void;
@@ -16,6 +17,7 @@ const ProjectColumn: React.FC<ProjectColumnProps> = ({
     project,
     onAddOrder,
     onEditProject,
+    onTogglePause,
     onEditOrder,
     onArchiveOrder,
     onToggleOrderCheck
@@ -38,14 +40,24 @@ const ProjectColumn: React.FC<ProjectColumnProps> = ({
                 alignItems: 'center'
             }}>
                 <h3 style={{ margin: 0 }}>{project.name}</h3>
-                <button
-                    onClick={() => onEditProject(project)}
-                    className="icon-button"
-                    title="Editar Proyecto"
-                    style={{ color: 'white' }}
-                >
-                    <Settings size={18} />
-                </button>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button
+                        onClick={() => onTogglePause(project.id)}
+                        className="icon-button"
+                        title={project.isPaused ? "Reanudar Proyecto" : "Pausar Proyecto"}
+                        style={{ color: 'white' }}
+                    >
+                        {project.isPaused ? <Play size={18} /> : <Pause size={18} />}
+                    </button>
+                    <button
+                        onClick={() => onEditProject(project)}
+                        className="icon-button"
+                        title="Editar Proyecto"
+                        style={{ color: 'white' }}
+                    >
+                        <Settings size={18} />
+                    </button>
+                </div>
             </div>
 
             {/* Stats */}
@@ -67,7 +79,7 @@ const ProjectColumn: React.FC<ProjectColumnProps> = ({
                     })()}
                 </div>
                 <div>
-                    Estimado: {(() => {
+                    Estimado: {project.isPaused ? "Pausado" : (() => {
                         const now = new Date();
                         const orders = project.orders || [];
                         const activeOrders = orders.filter(o => new Date(o.endDate) > now);
@@ -120,6 +132,7 @@ const ProjectColumn: React.FC<ProjectColumnProps> = ({
                         <OrderCard
                             key={order.id}
                             order={order}
+                            isPaused={project.isPaused}
                             onEdit={onEditOrder}
                             onArchive={(orderId) => onArchiveOrder(project.id, orderId)}
                             onToggleCheck={(orderId, itemId) => onToggleOrderCheck(project.id, orderId, itemId)}

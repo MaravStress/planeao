@@ -4,12 +4,13 @@ import { Check, Calendar as CalendarIcon, Pencil } from 'lucide-react';
 
 interface OrderCardProps {
     order: Order;
+    isPaused?: boolean;
     onToggleCheck: (orderId: string, itemId: string) => void;
     onEdit: (order: Order) => void;
     onArchive: (orderId: string) => void;
 }
 
-const OrderCard: React.FC<OrderCardProps> = ({ order, onToggleCheck, onEdit, onArchive }) => {
+const OrderCard: React.FC<OrderCardProps> = ({ order, isPaused, onToggleCheck, onEdit, onArchive }) => {
     // Calculate progress
     const totalItems = order.checklist.length;
     const completedItems = order.checklist.filter(item => item.completed).length;
@@ -17,6 +18,10 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onToggleCheck, onEdit, onA
 
     // Calculate status color
     const getBackgroundColor = () => {
+        if (isPaused) {
+            return 'rgba(255, 255, 255, 0.05)';
+        }
+
         const now = new Date();
         now.setHours(0, 0, 0, 0); // Normalize to start of day
 
@@ -100,17 +105,19 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, onToggleCheck, onEdit, onA
             </div>
 
             {/* Dates */}
-            <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                fontSize: '0.8rem',
-                color: 'var(--color-text-muted)',
-                marginBottom: '1rem'
-            }}>
-                <CalendarIcon size={14} />
-                <span>{new Date(order.startDate).toLocaleDateString()} - {new Date(order.endDate).toLocaleDateString()}</span>
-            </div>
+            {!isPaused && (
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    fontSize: '0.8rem',
+                    color: 'var(--color-text-muted)',
+                    marginBottom: '1rem'
+                }}>
+                    <CalendarIcon size={14} />
+                    <span>{new Date(order.startDate).toLocaleDateString()} - {new Date(order.endDate).toLocaleDateString()}</span>
+                </div>
+            )}
 
             {/* Checklist */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>

@@ -18,5 +18,6 @@ export interface Project {
     name: string;
     template: string[]; // List of task names for new orders
     defaultOrderDuration?: number; // Duration in days for new orders
+    isPaused?: boolean;
     orders: Order[];
 }

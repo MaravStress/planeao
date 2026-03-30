@@ -13,6 +13,7 @@ const WorkPage: React.FC = () => {
         addProject: addProjectContext,
         updateProject,
         deleteProject,
+        toggleProjectPause,
         addOrder: addOrderContext,
         updateOrder,
         deleteOrder, // This was archiveOrder in WorkPage logic
@@ -75,6 +76,7 @@ const WorkPage: React.FC = () => {
                             project={project}
                             onAddOrder={handleAddOrder}
                             onEditProject={setEditingProject}
+                            onTogglePause={toggleProjectPause}
                             onEditOrder={setEditingOrder}
                             onArchiveOrder={deleteOrder}
                             onToggleOrderCheck={toggleOrderCheck}
