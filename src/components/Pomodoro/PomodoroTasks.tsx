@@ -12,9 +12,10 @@ interface Task {
 
 const PomodoroTasks: React.FC = () => {
     // Load tasks from localStorage
-    const [tasks, setTasks] = useState<Task[]>(() =>
-        loadFromLocal<Task[]>(STORAGE_KEYS.POMODORO_TASKS, [])
-    );
+    const [tasks, setTasks] = useState<Task[]>(() => {
+        const loadedTasks = loadFromLocal<Task[]>(STORAGE_KEYS.POMODORO_TASKS, []);
+        return Array.isArray(loadedTasks) ? loadedTasks : [];
+    });
 
     const [newTask, setNewTask] = useState('');
 
