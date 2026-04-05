@@ -12,8 +12,9 @@ const TransactionColumns: React.FC<TransactionColumnsProps> = ({ onAddIncome, on
     const {
         variableExpenses, incomes,
         deleteIncome, deleteVariableExpense,
-        addVariableExpense,
+        addVariableExpense, updateVariableExpenseDate,
         quickExpenses, addQuickExpense, deleteQuickExpense,
+        updateIncomeDate,
         currentYearMonth
     } = useFinances();
 
@@ -22,16 +23,20 @@ const TransactionColumns: React.FC<TransactionColumnsProps> = ({ onAddIncome, on
     const [newAmount, setNewAmount] = useState('');
     const [newCurrency, setNewCurrency] = useState<Currency>('USD');
 
-    const currentVarExpenses = variableExpenses.filter(e => e.createdAt.slice(0, 7) === currentYearMonth);
-    const currentIncomes = incomes.filter(i => i.createdAt.slice(0, 7) === currentYearMonth);
+    const currentVarExpenses = variableExpenses.filter(e => (e.createdAt || '').slice(0, 7) === currentYearMonth);
+    const currentIncomes = incomes.filter(i => (i.createdAt || '').slice(0, 7) === currentYearMonth);
 
     const formatAmount = (amount: number, currency: Currency) => {
         if (currency === 'USD') return `$${amount.toFixed(2)}`;
         return `RD$${amount.toFixed(0)}`;
     };
 
-    const formatDate = (iso: string) =>
-        new Date(iso).toLocaleDateString('es-DO', { day: '2-digit', month: 'short' });
+    const formatDate = (iso: string) => {
+        if (!iso) return 'S/fecha';
+        return new Date(iso).toLocaleDateString('es-DO', { day: '2-digit', month: 'short' });
+    };
+
+    const getIsoDateOnly = (iso: string) => (iso || new Date().toISOString()).slice(0, 10);
 
     const handleQuickAdd = (id: string) => {
         const item = quickExpenses.find(q => q.id === id);
@@ -66,7 +71,18 @@ const TransactionColumns: React.FC<TransactionColumnsProps> = ({ onAddIncome, on
                             <div key={item.id} className="fin-item income-item">
                                 <div className="fin-item-info">
                                     <span className="fin-item-title">{item.title}</span>
-                                    <span className="fin-item-date">{formatDate(item.createdAt)}</span>
+                                    <div className="fin-date-edit">
+                                        <input
+                                            type="date"
+                                            className="fin-in-item-date-input"
+                                            value={getIsoDateOnly(item.createdAt)}
+                                            onChange={e => {
+                                                const newIso = new Date(`${e.target.value}T12:00:00`).toISOString();
+                                                updateIncomeDate(item.id, newIso);
+                                            }}
+                                        />
+                                        <span className="fin-item-date">{formatDate(item.createdAt)}</span>
+                                    </div>
                                 </div>
                                 <div className="fin-item-right">
                                     <span className="fin-item-amount income-amount">
@@ -188,7 +204,18 @@ const TransactionColumns: React.FC<TransactionColumnsProps> = ({ onAddIncome, on
                             <div key={item.id} className="fin-item expense-item">
                                 <div className="fin-item-info">
                                     <span className="fin-item-title">{item.title}</span>
-                                    <span className="fin-item-date">{formatDate(item.createdAt)}</span>
+                                    <div className="fin-date-edit">
+                                        <input
+                                            type="date"
+                                            className="fin-in-item-date-input"
+                                            value={getIsoDateOnly(item.createdAt)}
+                                            onChange={e => {
+                                                const newIso = new Date(`${e.target.value}T12:00:00`).toISOString();
+                                                updateVariableExpenseDate(item.id, newIso);
+                                            }}
+                                        />
+                                        <span className="fin-item-date">{formatDate(item.createdAt)}</span>
+                                    </div>
                                 </div>
                                 <div className="fin-item-right">
                                     <span className="fin-item-amount expense-amount">

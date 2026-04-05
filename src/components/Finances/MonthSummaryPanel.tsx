@@ -6,8 +6,8 @@ const MonthSummaryPanel: React.FC = () => {
     const { fixedExpenses, variableExpenses, incomes, toUSD, currentYearMonth } = useFinances();
 
     // Current month items
-    const currentVarExpenses = variableExpenses.filter(e => e.createdAt.slice(0, 7) === currentYearMonth);
-    const currentIncomes = incomes.filter(i => i.createdAt.slice(0, 7) === currentYearMonth);
+    const currentVarExpenses = variableExpenses.filter(e => (e.createdAt || '').slice(0, 7) === currentYearMonth);
+    const currentIncomes = incomes.filter(i => (i.createdAt || '').slice(0, 7) === currentYearMonth);
 
     // Compute totals in USD
     const totalFixed = useMemo(() =>

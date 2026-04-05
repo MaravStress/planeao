@@ -131,8 +131,10 @@ export const FinancesProvider: React.FC<{ children: ReactNode }> = ({ children }
     const allMonths = useMemo(() => {
         const months = new Set<string>();
         [...variableExpenses, ...incomes].forEach(item => {
-            const ym = item.createdAt.slice(0, 7);
-            if (ym !== currentYearMonth) months.add(ym);
+            if (item.createdAt) {
+                const ym = item.createdAt.slice(0, 7);
+                if (ym !== currentYearMonth) months.add(ym);
+            }
         });
         return Array.from(months).sort((a, b) => b.localeCompare(a));
     }, [variableExpenses, incomes, currentYearMonth]);
