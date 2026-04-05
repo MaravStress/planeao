@@ -8,15 +8,19 @@ const MONTH_NAMES: Record<string, string> = {
     '09': 'Septiembre', '10': 'Octubre', '11': 'Noviembre', '12': 'Diciembre'
 };
 
-const MonthHistoryPanel: React.FC = () => {
+interface MonthHistoryPanelProps {
+    onMonthClick: (ym: string) => void;
+}
+
+const MonthHistoryPanel: React.FC<MonthHistoryPanelProps> = ({ onMonthClick }) => {
     const { allMonths, fixedExpenses, variableExpenses, incomes, toUSD } = useFinances();
 
     const monthCards = useMemo(() => {
         return allMonths.map(ym => {
             const [year, month] = ym.split('-');
 
-            const monthIncomes = incomes.filter(i => i.createdAt.slice(0, 7) === ym);
-            const monthVarExpenses = variableExpenses.filter(e => e.createdAt.slice(0, 7) === ym);
+            const monthIncomes = incomes.filter(i => (i.createdAt || '').slice(0, 7) === ym);
+            const monthVarExpenses = variableExpenses.filter(e => (e.createdAt || '').slice(0, 7) === ym);
 
             const totalFixed = fixedExpenses.reduce((s, e) => s + toUSD(e.amount, e.currency as Currency), 0);
             const totalVariable = monthVarExpenses.reduce((s, e) => s + toUSD(e.amount, e.currency as Currency), 0);
@@ -44,7 +48,12 @@ const MonthHistoryPanel: React.FC = () => {
     return (
         <div className="fin-history-panel">
             {monthCards.map(card => (
-                <div key={card.ym} className="fin-history-card glass-panel">
+                <div 
+                    key={card.ym} 
+                    className="fin-history-card glass-panel selectable-card"
+                    onClick={() => onMonthClick(card.ym)}
+                    title={`Ver detalle de ${MONTH_NAMES[card.month]} ${card.year}`}
+                >
                     <div className="fin-hist-balance">
                         <span className="fin-hist-label">Balance</span>
                         <span className={`fin-hist-balance-val ${card.balance >= 0 ? 'positive' : 'negative'}`}>

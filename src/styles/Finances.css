@@ -994,3 +994,103 @@
     color: var(--color-text-main);
     text-decoration: underline;
 }
+
+/* History Card Selectable State */
+.selectable-card {
+    cursor: pointer;
+    transition: all var(--transition-fast) !important;
+    border: 1px solid hsla(0, 0%, 100%, 0.05);
+}
+
+.selectable-card:hover {
+    background: hsla(240, 10%, 25%, 0.4);
+    border-color: hsla(255, 60%, 60%, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Month Edit Modal Layout */
+.fin-month-edit-modal {
+    width: 800px;
+}
+
+.fin-month-edit-body {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 1.5rem;
+    gap: 1.5rem;
+}
+
+.fin-month-edit-cols {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.fin-month-edit-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.fin-month-edit-col h4 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid hsla(0, 0%, 100%, 0.05);
+}
+
+.fin-month-edit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+
+.fin-empty-small {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    padding: 1rem;
+}
+
+.fin-month-edit-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid hsla(0, 0%, 100%, 0.08);
+}
+
+.fin-footer-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2rem;
+}
+
+.fin-footer-stat span:first-child {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.fin-footer-stat span:last-child {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.fin-footer-total {
+    border-left: 1px solid hsla(0, 0%, 100%, 0.1);
+    padding-left: 2rem;
+}
+
+.fin-footer-total .positive { color: var(--color-success); }
+.fin-footer-total .negative { color: var(--color-danger); }

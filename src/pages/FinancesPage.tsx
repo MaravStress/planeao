@@ -6,6 +6,7 @@ import TransactionColumns from '../components/Finances/TransactionColumns';
 import MonthHistoryPanel from '../components/Finances/MonthHistoryPanel';
 import TransactionModal from '../components/Finances/TransactionModal';
 import FixedExpensesModal from '../components/Finances/FixedExpensesModal';
+import MonthEditModal from '../components/Finances/MonthEditModal';
 import type { Currency } from '../types/finances';
 import '../styles/Finances.css';
 
@@ -13,6 +14,7 @@ const FinancesPage: React.FC = () => {
     const { exchangeRate, setExchangeRate, addIncome, addVariableExpense } = useFinances();
 
     const [modal, setModal] = useState<'income' | 'expense' | 'fixed' | null>(null);
+    const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
     const [rateInput, setRateInput] = useState(String(exchangeRate));
 
     const handleRateBlur = () => {
@@ -76,7 +78,7 @@ const FinancesPage: React.FC = () => {
                     onAddIncome={() => setModal('income')}
                     onAddExpense={() => setModal('expense')}
                 />
-                <MonthHistoryPanel />
+                <MonthHistoryPanel onMonthClick={setSelectedMonth} />
             </div>
 
             {/* Modals */}
@@ -90,6 +92,13 @@ const FinancesPage: React.FC = () => {
 
             {modal === 'fixed' && (
                 <FixedExpensesModal onClose={() => setModal(null)} />
+            )}
+
+            {selectedMonth && (
+                <MonthEditModal
+                    yearMonth={selectedMonth}
+                    onClose={() => setSelectedMonth(null)}
+                />
             )}
         </div>
     );
