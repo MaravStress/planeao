@@ -15,6 +15,7 @@ import { WorkProvider } from './context/WorkContext';
 import { IdeasProvider } from './context/IdeasContext';
 import { UniTasksProvider } from './context/UniTasksContext';
 import { UniProgressProvider } from './context/UniProgressContext';
+import { FinancesProvider } from './context/FinancesContext';
 
 import { auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -35,6 +36,7 @@ function App() {
     return () => unsubscribe();
   }, []);
   return (
+    <FinancesProvider>
     <IdeasProvider>
       <WorkProvider>
         <PomodoroProvider>
@@ -60,6 +62,7 @@ function App() {
         </PomodoroProvider>
       </WorkProvider>
     </IdeasProvider>
+    </FinancesProvider>
   );
 }
 

@@ -1,0 +1,968 @@
+/* ===========================
+   FINANCES PAGE STYLES
+   =========================== */
+
+/* ---- Page Layout ---- */
+.fin-page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 1rem;
+    overflow: hidden;
+}
+
+.fin-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.fin-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.fin-page-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, hsl(145, 65%, 55%), hsl(180, 70%, 50%));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+}
+
+/* Exchange Rate Widget */
+.fin-exchange-widget {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: hsla(240, 10%, 15%, 0.6);
+    border: 1px solid hsla(0, 0%, 100%, 0.06);
+    border-radius: var(--radius-md);
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+.fin-exchange-label {
+    white-space: nowrap;
+}
+
+.fin-exchange-input {
+    width: 64px;
+    background: hsla(240, 10%, 20%, 0.8);
+    border: 1px solid hsla(0, 0%, 100%, 0.08);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-main);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 0.2rem 0.4rem;
+    transition: border-color var(--transition-fast);
+}
+
+.fin-exchange-input:focus {
+    outline: none;
+    border-color: var(--color-secondary);
+}
+
+.fin-exchange-unit {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+/* Fixed Expenses Button */
+.fin-fixed-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: hsla(0, 75%, 55%, 0.15);
+    border: 1px solid hsla(0, 75%, 55%, 0.3);
+    border-radius: var(--radius-md);
+    color: hsl(0, 75%, 70%);
+    padding: 0.45rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.fin-fixed-btn:hover {
+    background: hsla(0, 75%, 55%, 0.25);
+    border-color: hsla(0, 75%, 55%, 0.5);
+    color: hsl(0, 75%, 80%);
+}
+
+/* ---- Month Summary Panel ---- */
+.fin-month-summary {
+    padding: 1.25rem 1.5rem;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.fin-summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fin-balance {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+}
+
+.fin-label {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.fin-balance-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.fin-balance-value.positive { color: var(--color-success); }
+.fin-balance-value.negative { color: var(--color-danger); }
+
+.fin-month-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: capitalize;
+}
+
+/* Bars */
+.fin-bar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.fin-bar-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.82rem;
+    color: var(--color-text-main);
+    font-weight: 500;
+}
+
+.fin-bar-sublabel {
+    color: var(--color-text-muted);
+    font-weight: 400;
+}
+
+.fin-bar-track {
+    height: 28px;
+    background: hsla(240, 10%, 20%, 0.7);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    position: relative;
+}
+
+.fin-income-track {
+    overflow: visible;
+    border-radius: 6px;
+}
+
+.fin-income-track {
+    overflow: hidden;
+}
+
+.fin-bar-fill {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 0.5rem;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+/* Diagonal stripe pattern */
+.fin-bar-fill::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 6px,
+        rgba(255, 255, 255, 0.08) 6px,
+        rgba(255, 255, 255, 0.08) 12px
+    );
+}
+
+.fin-bar-fixed {
+    background: hsla(0, 75%, 50%, 0.45);
+    border-radius: 6px 0 0 6px;
+}
+
+.fin-bar-variable {
+    background: hsla(40, 90%, 55%, 0.45);
+}
+
+.fin-bar-income {
+    background: hsla(145, 65%, 42%, 0.5);
+    border-radius: 6px;
+}
+
+.fin-bar-text {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    position: relative;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.fin-bar-marker {
+    position: absolute;
+    top: -3px;
+    bottom: -3px;
+    width: 3px;
+    background: hsl(40, 90%, 65%);
+    border-radius: 2px;
+    box-shadow: 0 0 6px hsla(40, 90%, 65%, 0.8);
+    z-index: 2;
+}
+
+/* ---- Main Body ---- */
+.fin-body {
+    display: flex;
+    gap: 1rem;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* ---- Transaction Columns ---- */
+.fin-transaction-columns {
+    flex: 1;
+    display: flex;
+    gap: 1rem;
+    overflow: hidden;
+    min-width: 0;
+}
+
+.fin-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    overflow: hidden;
+    min-width: 0;
+}
+
+.fin-column-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* Variable expenses header: title + chips + buttons all in one row */
+.fin-var-header {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Chip area — grows to fill space between title and buttons */
+.fin-header-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.fin-column-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.income-title { color: var(--color-success); }
+.expense-title { color: hsl(40, 90%, 65%); }
+
+.fin-add-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border: 1px solid;
+}
+
+.income-btn {
+    background: hsla(145, 65%, 45%, 0.15);
+    border-color: hsla(145, 65%, 45%, 0.3);
+    color: var(--color-success);
+}
+.income-btn:hover {
+    background: hsla(145, 65%, 45%, 0.3);
+    transform: scale(1.1);
+}
+
+.expense-btn {
+    background: hsla(40, 90%, 55%, 0.15);
+    border-color: hsla(40, 90%, 55%, 0.3);
+    color: hsl(40, 90%, 65%);
+}
+.expense-btn:hover {
+    background: hsla(40, 90%, 55%, 0.3);
+    transform: scale(1.1);
+}
+
+.fin-column-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.fin-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.55rem 0.75rem;
+    border-radius: var(--radius-sm);
+    background: hsla(240, 10%, 18%, 0.5);
+    border: 1px solid hsla(0, 0%, 100%, 0.04);
+    transition: background var(--transition-fast);
+    gap: 0.5rem;
+}
+
+.fin-item:hover {
+    background: hsla(240, 10%, 22%, 0.6);
+}
+
+.fin-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+    flex: 1;
+}
+
+.fin-item-title {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fin-item-date {
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+}
+
+.fin-item-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.fin-item-amount {
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.income-amount { color: var(--color-success); }
+.expense-amount { color: hsl(0, 75%, 65%); }
+
+.fin-delete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    opacity: 0;
+    transition: all var(--transition-fast);
+    border: none;
+}
+
+.fin-item:hover .fin-delete-btn { opacity: 1; }
+
+.fin-delete-btn:hover {
+    background: hsla(0, 75%, 55%, 0.2);
+    color: var(--color-danger);
+}
+
+.fin-empty {
+    color: var(--color-text-muted);
+    font-size: 0.82rem;
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+/* ---- Month History Panel ---- */
+.fin-history-panel {
+    width: 240px;
+    flex-shrink: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.fin-history-card {
+    padding: 0.85rem;
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.fin-hist-balance {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fin-hist-label {
+    font-size: 0.68rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.fin-hist-balance-val {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.fin-hist-balance-val.positive { color: var(--color-success); }
+.fin-hist-balance-val.negative { color: var(--color-danger); }
+
+.fin-hist-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.fin-hist-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.fin-hist-stat-label {
+    font-size: 0.68rem;
+    color: var(--color-text-muted);
+}
+
+.fin-hist-stat-val {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+}
+
+.fin-hist-stat-val.income-text { color: var(--color-success); }
+
+.fin-hist-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.fin-hist-bar-track {
+    height: 8px;
+    background: hsla(240, 10%, 20%, 0.7);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.fin-hist-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.fin-hist-bar-fill.expense-bar {
+    background: linear-gradient(90deg, hsla(0, 75%, 50%, 0.5), hsla(40, 90%, 55%, 0.5));
+}
+
+.fin-hist-bar-fill.income-bar {
+    background: hsla(145, 65%, 42%, 0.5);
+}
+
+.fin-hist-footer {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    font-weight: 500;
+    text-transform: capitalize;
+    border-top: 1px solid hsla(0, 0%, 100%, 0.04);
+    padding-top: 0.5rem;
+}
+
+/* ---- Modals ---- */
+.fin-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fin-modal {
+    width: 400px;
+    max-width: 95vw;
+    padding: 0;
+    overflow: hidden;
+    animation: slideUp 0.2s ease;
+    border-radius: var(--radius-lg);
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.fin-fixed-modal {
+    width: 420px;
+}
+
+.fin-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid hsla(0, 0%, 100%, 0.06);
+}
+
+.fin-modal-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.fin-modal-subtitle {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    display: block;
+    margin-top: 0.15rem;
+}
+
+.income-header { border-top: 3px solid var(--color-success); }
+.expense-header { border-top: 3px solid hsl(40, 90%, 60%); }
+.fixed-header { border-top: 3px solid hsl(0, 75%, 60%); }
+
+.fin-modal-close {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    display: flex;
+    padding: 0.25rem;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    margin-top: 2px;
+}
+
+.fin-modal-close:hover {
+    background: hsla(0, 0%, 100%, 0.06);
+    color: var(--color-text-main);
+}
+
+.fin-modal-form {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.fin-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.fin-field label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.fin-field input,
+.fin-field select,
+.fin-fixed-form input,
+.fin-fixed-form select {
+    background: var(--color-bg-input);
+    border: 1px solid hsla(0, 0%, 100%, 0.08);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-main);
+    font-size: 0.9rem;
+    padding: 0.55rem 0.75rem;
+    transition: border-color var(--transition-fast);
+    font-family: inherit;
+    width: 100%;
+}
+
+.fin-field input:focus,
+.fin-field select:focus,
+.fin-fixed-form input:focus,
+.fin-fixed-form select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.fin-field-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+}
+
+.fin-field-grow { flex: 1; }
+
+.fin-field-currency {
+    width: 110px;
+    flex-shrink: 0;
+}
+
+.fin-field-currency select {
+    width: 100%;
+}
+
+.fin-submit-btn {
+    width: 100%;
+    padding: 0.7rem;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border: none;
+    font-family: inherit;
+    margin-top: 0.25rem;
+}
+
+.income-submit {
+    background: linear-gradient(135deg, hsl(145, 65%, 38%), hsl(145, 65%, 45%));
+    color: white;
+}
+
+.income-submit:hover:not(:disabled) {
+    background: linear-gradient(135deg, hsl(145, 65%, 44%), hsl(145, 65%, 52%));
+    box-shadow: 0 4px 12px hsla(145, 65%, 45%, 0.3);
+}
+
+.expense-submit {
+    background: linear-gradient(135deg, hsl(40, 80%, 42%), hsl(40, 90%, 52%));
+    color: hsl(240, 10%, 10%);
+}
+
+.expense-submit:hover:not(:disabled) {
+    background: linear-gradient(135deg, hsl(40, 80%, 48%), hsl(40, 90%, 58%));
+    box-shadow: 0 4px 12px hsla(40, 90%, 55%, 0.3);
+}
+
+.fin-submit-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Fixed Expenses Modal — list inside modal */
+.fin-fixed-scroll-list {
+    padding: 0 1.5rem 0.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.fin-fixed-scroll-list .fin-item {
+    /* delete btn always visible in modal */
+    border: 1px solid hsla(0, 75%, 55%, 0.12);
+}
+
+.fin-fixed-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.6rem;
+    border-top: 1px solid hsla(0, 0%, 100%, 0.06);
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+    margin-top: 0.15rem;
+}
+
+.fixed-submit {
+    background: linear-gradient(135deg, hsl(0, 65%, 38%), hsl(0, 75%, 50%));
+    color: white;
+}
+
+.fixed-submit:hover:not(:disabled) {
+    background: linear-gradient(135deg, hsl(0, 65%, 44%), hsl(0, 75%, 57%));
+    box-shadow: 0 4px 12px hsla(0, 75%, 50%, 0.3);
+}
+
+/* ---- Quick Expenses Panel ---- */
+.quick-btn {
+    background: hsla(255, 85%, 60%, 0.12);
+    border-color: hsla(255, 85%, 60%, 0.25);
+    color: hsl(255, 85%, 75%);
+}
+
+.quick-btn:hover {
+    background: hsla(255, 85%, 60%, 0.25);
+    transform: scale(1.1);
+}
+
+.quick-btn-active {
+    background: hsla(255, 85%, 60%, 0.3);
+    border-color: hsla(255, 85%, 60%, 0.6);
+    color: hsl(255, 85%, 85%);
+    box-shadow: 0 0 8px hsla(255, 85%, 60%, 0.3);
+}
+
+.fin-quick-panel {
+    background: hsla(255, 40%, 12%, 0.5);
+    border: 1px solid hsla(255, 85%, 60%, 0.15);
+    border-radius: var(--radius-md);
+    margin-bottom: 0.6rem;
+    overflow: hidden;
+    flex-shrink: 0;
+    animation: slideDown 0.15s ease;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.fin-quick-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.65rem;
+    border-bottom: 1px solid hsla(255, 85%, 60%, 0.1);
+}
+
+.fin-quick-label {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: hsl(255, 85%, 75%);
+}
+
+.fin-quick-manage-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.72rem;
+    font-family: inherit;
+    color: var(--color-text-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    transition: all var(--transition-fast);
+}
+
+.fin-quick-manage-btn:hover {
+    background: hsla(0, 0%, 100%, 0.06);
+    color: var(--color-text-main);
+}
+
+.fin-quick-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0.6rem 0.65rem;
+}
+
+.fin-quick-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: 20px;
+    background: hsla(40, 90%, 55%, 0.12);
+    border: 1px solid hsla(40, 90%, 55%, 0.25);
+    color: hsl(40, 90%, 70%);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.fin-quick-chip:hover {
+    background: hsla(40, 90%, 55%, 0.25);
+    border-color: hsla(40, 90%, 55%, 0.5);
+    color: hsl(40, 90%, 80%);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px hsla(40, 90%, 55%, 0.2);
+}
+
+.fin-quick-chip:active {
+    transform: translateY(0) scale(0.97);
+}
+
+.fin-quick-chip-name { font-weight: 600; }
+
+.fin-quick-chip-amount {
+    display: flex;
+    align-items: baseline;
+    gap: 0.2rem;
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.fin-quick-chip-cur {
+    font-size: 0.65rem;
+    opacity: 0.65;
+}
+
+.fin-quick-empty {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    padding: 0.5rem;
+    font-style: italic;
+}
+
+.fin-quick-manage {
+    padding: 0.5rem 0.65rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.fin-quick-manage-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.45rem;
+    background: hsla(240, 10%, 18%, 0.5);
+    border-radius: var(--radius-sm);
+    border: 1px solid hsla(0, 0%, 100%, 0.04);
+}
+
+.fin-quick-manage-item:hover .fin-delete-btn { opacity: 1; }
+
+.fin-quick-manage-name {
+    flex: 1;
+    font-size: 0.8rem;
+    color: var(--color-text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fin-quick-manage-amt {
+    font-size: 0.75rem;
+    color: hsl(40, 90%, 65%);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.fin-quick-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-top: 0.25rem;
+    padding-top: 0.4rem;
+    border-top: 1px solid hsla(0, 0%, 100%, 0.05);
+}
+
+.fin-quick-form input,
+.fin-quick-form select {
+    background: var(--color-bg-input);
+    border: 1px solid hsla(0, 0%, 100%, 0.08);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-main);
+    font-size: 0.8rem;
+    padding: 0.4rem 0.55rem;
+    font-family: inherit;
+    width: 100%;
+    transition: border-color var(--transition-fast);
+}
+
+.fin-quick-form input:focus,
+.fin-quick-form select:focus {
+    outline: none;
+    border-color: hsl(255, 85%, 65%);
+}
+
+.fin-quick-form-row {
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+}
+
+.fin-quick-form-row input { flex: 1; }
+.fin-quick-form-row select { width: 60px; flex-shrink: 0; }
+
+.fin-quick-add-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+    background: hsla(255, 85%, 60%, 0.2);
+    border: 1px solid hsla(255, 85%, 60%, 0.35);
+    color: hsl(255, 85%, 80%);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.fin-quick-add-btn:hover:not(:disabled) {
+    background: hsla(255, 85%, 60%, 0.35);
+    transform: scale(1.08);
+}
+
+.fin-quick-add-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
