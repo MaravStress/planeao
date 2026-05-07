@@ -30,7 +30,7 @@ const PomodoroUniTasks: React.FC = () => {
     return (
         <div className="pomodoro-tasks glass-panel" style={{ marginTop: '1rem' }}>
             <h3>
-                <span>Tareas de la Clase</span>
+                <span>Acciones de la Clase</span>
             </h3>
 
             <div className="task-input-container" style={{ marginBottom: '1rem' }}>
@@ -57,9 +57,9 @@ const PomodoroUniTasks: React.FC = () => {
             </div>
 
             <div className="task-list" style={{ maxHeight: '400px', overflowY: 'auto', paddingRight: '0.5rem' }}>
-                {!selectedSubject && <p className="no-tasks">Selecciona una clase para ver sus tareas</p>}
+                {!selectedSubject && <p className="no-tasks">Selecciona una clase para ver sus acciones</p>}
                 {selectedSubject && (!selectedSubject.assignments || selectedSubject.assignments.length === 0) && (
-                    <p className="no-tasks">Esta clase no tiene tareas</p>
+                    <p className="no-tasks">Esta clase no tiene acciones</p>
                 )}
                 {selectedSubject && selectedSubject.assignments && [...selectedSubject.assignments]
                     .sort((a, b) => new Date(a.endDate).getTime() - new Date(b.endDate).getTime())

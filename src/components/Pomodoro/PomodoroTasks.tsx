@@ -120,7 +120,7 @@ const PomodoroTasks: React.FC = () => {
     return (
         <div className="pomodoro-tasks glass-panel">
             <h3>
-                <span>Tareas de la Sesión</span>
+                <span>Acciones de la Sesión</span>
                 <span className="task-count" style={{ fontSize: '0.8rem', opacity: 0.6 }}>
                     {tasks.filter(t => t.completed).length}/{tasks.length}
                 </span>
@@ -129,7 +129,7 @@ const PomodoroTasks: React.FC = () => {
             <div className="task-input-container">
                 <input
                     type="text"
-                    placeholder="Agregar una tarea..."
+                    placeholder="Agregar una acción..."
                     value={newTask}
                     onChange={(e) => setNewTask(e.target.value)}
                     onKeyDown={handleKeyDown}
@@ -141,7 +141,7 @@ const PomodoroTasks: React.FC = () => {
             </div>
 
             <div className="task-list">
-                {tasks.length === 0 && <p className="no-tasks">No hay tareas pendientes</p>}
+                {tasks.length === 0 && <p className="no-tasks">No hay acciones pendientes</p>}
                 {tasks.map((task, index) => (
                     <div
                         key={task.id}
