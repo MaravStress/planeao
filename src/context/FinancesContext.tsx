@@ -54,13 +54,13 @@ export const FinancesProvider: React.FC<{ children: ReactNode }> = ({ children }
         loadFromLocal<VariableExpense[]>(STORAGE_KEYS.FINANCE_TRANSACTIONS, [])
     );
     const [incomes, setIncomes] = useState<Income[]>(() =>
-        loadFromLocal<Income[]>('finance-incomes', [])
+        loadFromLocal<Income[]>(STORAGE_KEYS.FINANCE_INCOMES, [])
     );
     const [exchangeRate, setExchangeRateState] = useState<number>(() =>
         loadFromLocal<number>(STORAGE_KEYS.FINANCE_EXCHANGE_RATE, 60)
     );
     const [quickExpenses, setQuickExpenses] = useState<QuickExpense[]>(() =>
-        loadFromLocal<QuickExpense[]>('finance-quick-expenses', [])
+        loadFromLocal<QuickExpense[]>(STORAGE_KEYS.FINANCE_QUICK_EXPENSES, [])
     );
 
     const currentYearMonth = getCurrentYearMonth();
@@ -68,9 +68,9 @@ export const FinancesProvider: React.FC<{ children: ReactNode }> = ({ children }
     // Persist on change
     useEffect(() => { saveToLocal(STORAGE_KEYS.FINANCE_RECURRING, fixedExpenses); }, [fixedExpenses]);
     useEffect(() => { saveToLocal(STORAGE_KEYS.FINANCE_TRANSACTIONS, variableExpenses); }, [variableExpenses]);
-    useEffect(() => { saveToLocal('finance-incomes', incomes); }, [incomes]);
+    useEffect(() => { saveToLocal(STORAGE_KEYS.FINANCE_INCOMES, incomes); }, [incomes]);
     useEffect(() => { saveToLocal(STORAGE_KEYS.FINANCE_EXCHANGE_RATE, exchangeRate); }, [exchangeRate]);
-    useEffect(() => { saveToLocal('finance-quick-expenses', quickExpenses); }, [quickExpenses]);
+    useEffect(() => { saveToLocal(STORAGE_KEYS.FINANCE_QUICK_EXPENSES, quickExpenses); }, [quickExpenses]);
 
     const setExchangeRate = (rate: number) => setExchangeRateState(rate);
 

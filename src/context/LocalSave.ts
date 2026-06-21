@@ -12,6 +12,8 @@ export const STORAGE_KEYS = {
     FINANCE_TRANSACTIONS: 'finance-transactions',
     FINANCE_EXCHANGE_RATE: 'finance-exchange-rate',
     FINANCE_RECURRING: 'finance-recurring',
+    FINANCE_INCOMES: 'finance-incomes',
+    FINANCE_QUICK_EXPENSES: 'finance-quick-expenses',
     IDEAS: 'planeao-ideas',
     IDEA_SETTINGS: 'planeao-idea-settings',
     UNI_TASKS_SUBJECTS: 'planeao-uni-tasks-v2',
