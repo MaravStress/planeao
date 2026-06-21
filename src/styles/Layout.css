@@ -6,18 +6,17 @@
 }
 
 .sidebar {
-    width: 260px;
-    height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 2rem 1rem;
     z-index: 10;
-    transition: width var(--transition-normal);
 }
 
-.logo-container {
-    margin-bottom: 3rem;
-    padding: 0 1rem;
+.logo-text-collapsed {
+    display: none;
+}
+
+.logo-text-full {
+    display: block;
 }
 
 .logo-container h2 {
@@ -38,13 +37,12 @@
 .nav-item {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem 1.2rem;
     border-radius: var(--radius-md);
     color: var(--color-text-muted);
     font-weight: 500;
     transition: var(--transition-fast);
     text-decoration: none;
+    border-left: 3px solid transparent;
 }
 
 .nav-item:hover {
@@ -72,6 +70,102 @@
         radial-gradient(circle at bottom left, hsla(var(--secondary-h), var(--secondary-s), 10%, 0.2), transparent 40%);
 }
 
+/* Desktop Styles */
+@media (min-width: 769px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 80px;
+        height: 100vh;
+        padding: 2rem 0;
+        z-index: 100;
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-x: hidden;
+    }
+
+    .sidebar:hover {
+        width: 260px;
+    }
+
+    .logo-container {
+        margin-bottom: 3rem;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .sidebar:hover .logo-container {
+        padding-left: 28px;
+        justify-content: flex-start;
+    }
+
+    .logo-text-collapsed {
+        display: block;
+        margin: 0 auto;
+        font-size: 2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--color-primary), var(--color-warning));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.05em;
+    }
+
+    .logo-text-full {
+        display: none;
+    }
+
+    .sidebar:hover .logo-text-collapsed {
+        display: none;
+    }
+
+    .sidebar:hover .logo-text-full {
+        display: block;
+    }
+
+    .nav-item {
+        padding: 0.8rem 25px;
+        transition: background var(--transition-fast), color var(--transition-fast);
+        display: flex;
+        align-items: center;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .sidebar:hover .nav-item {
+        padding: 0.8rem 25px;
+    }
+
+    .nav-item .material-symbols-outlined {
+        flex-shrink: 0;
+    }
+
+    .nav-item > span:not(.material-symbols-outlined) {
+        opacity: 0;
+        max-width: 0;
+        margin-left: 0;
+        overflow: hidden;
+        transition: opacity 0.15s ease, max-width 0.3s ease, margin-left 0.3s ease;
+        pointer-events: none;
+        white-space: nowrap;
+        display: inline-block;
+    }
+
+    .sidebar:hover .nav-item > span:not(.material-symbols-outlined) {
+        opacity: 1;
+        max-width: 200px;
+        margin-left: 1.5rem;
+        pointer-events: auto;
+    }
+
+    .main-content {
+        margin-left: 80px;
+        transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+/* Mobile Styles */
 @media (max-width: 768px) {
     .app-container {
         flex-direction: column-reverse;
@@ -96,12 +190,72 @@
         justify-content: space-around;
     }
 
-    .nav-item span {
+    .nav-item > span {
         display: none;
     }
 
     .nav-item {
         justify-content: center;
         padding: 0.8rem;
+        gap: 0;
     }
+}
+
+/* Active Pomodoro navigation item toggles */
+.pomodoro-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.pomodoro-timer-capsule {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-family: inherit;
+    letter-spacing: 0.05em;
+    color: inherit;
+    background: none;
+    border: none;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* By default (when sidebar is collapsed on desktop / tabbar on mobile) */
+.sidebar:not(:hover) .pomodoro-icon-wrapper .pomodoro-default-icon.timer-active-icon {
+    display: none !important;
+}
+
+.sidebar:not(:hover) .pomodoro-icon-wrapper .pomodoro-timer-capsule {
+    display: inline-flex !important;
+}
+
+.sidebar:not(:hover) .pomodoro-text-default {
+    display: inline;
+}
+
+.sidebar:not(:hover) .pomodoro-text-active {
+    display: none;
+}
+
+/* When sidebar is hovered (expanded on desktop) */
+.sidebar:hover .pomodoro-icon-wrapper .pomodoro-default-icon {
+    display: inline-block !important;
+}
+
+.sidebar:hover .pomodoro-icon-wrapper .pomodoro-timer-capsule {
+    display: none !important;
+}
+
+.sidebar:hover .pomodoro-text-default {
+    display: none !important;
+}
+
+.sidebar:hover .pomodoro-text-active {
+    display: inline !important;
 }

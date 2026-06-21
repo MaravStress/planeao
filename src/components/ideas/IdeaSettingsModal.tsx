@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Plus, Trash2, GripVertical } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -21,7 +21,7 @@ const SortableItem = ({ item, onRemove, onColorChange, isStatus }: { item: IdeaS
     return (
         <div ref={setNodeRef} style={style} className="settings-item">
             <button className="btn-icon" style={{ cursor: 'grab' }} {...attributes} {...listeners}>
-                <GripVertical size={16} color="var(--color-text-muted)" />
+                <GoogleIcon name="drag_indicator" size={16} style={{ color: 'var(--color-text-muted)' }} />
             </button>
             <input
                 type="color"
@@ -38,7 +38,7 @@ const SortableItem = ({ item, onRemove, onColorChange, isStatus }: { item: IdeaS
                     title="Eliminar"
                     style={{ marginLeft: 'auto' }}
                 >
-                    <Trash2 size={16} />
+                    <GoogleIcon name="delete" size={16} />
                 </button>
             )}
         </div>
@@ -140,7 +140,7 @@ const IdeaSettingsModal: React.FC<IdeaSettingsModalProps> = ({ settings, onSave 
             <div className="idea-modal" style={{ maxWidth: '900px', width: '90%' }}>
                 <div className="modal-header">
                     <h2>Configuración de Ideas</h2>
-                    <button className="btn-close" onClick={handleSave}><X size={24} /></button>
+                    <button className="btn-close" onClick={handleSave}><GoogleIcon name="close" size={24} /></button>
                 </div>
 
                 <div className="modal-body" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
@@ -160,7 +160,7 @@ const IdeaSettingsModal: React.FC<IdeaSettingsModalProps> = ({ settings, onSave 
                                 onKeyDown={e => { if (e.key === 'Enter') handleAddStatus() }}
                             />
                             <button className="settings-add-btn" onClick={handleAddStatus}>
-                                <Plus size={20} />
+                                <GoogleIcon name="add" size={20} />
                             </button>
                         </div>
 
@@ -192,7 +192,7 @@ const IdeaSettingsModal: React.FC<IdeaSettingsModalProps> = ({ settings, onSave 
                                 onKeyDown={e => { if (e.key === 'Enter') handleAddCategory() }}
                             />
                             <button className="settings-add-btn" onClick={handleAddCategory}>
-                                <Plus size={20} />
+                                <GoogleIcon name="add" size={20} />
                             </button>
                         </div>
                         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndCategory}>

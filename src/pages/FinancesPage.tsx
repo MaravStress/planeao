@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings2 } from 'lucide-react';
+import GoogleIcon from '../components/GoogleIcon';
 import { useFinances } from '../context/FinancesContext';
 import MonthSummaryPanel from '../components/Finances/MonthSummaryPanel';
 import TransactionColumns from '../components/Finances/TransactionColumns';
@@ -64,7 +64,7 @@ const FinancesPage: React.FC = () => {
                     className="fin-fixed-btn"
                     onClick={() => setModal('fixed')}
                 >
-                    <Settings2 size={15} />
+                    <GoogleIcon name="settings" size={15} />
                     Gastos Fijos
                 </button>
             </div>

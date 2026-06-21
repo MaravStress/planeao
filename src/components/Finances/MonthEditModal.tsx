@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Trash2 } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 import { useFinances } from '../../context/FinancesContext';
 import type { Currency } from '../../types/finances';
 
@@ -46,7 +46,7 @@ const MonthEditModal: React.FC<MonthEditModalProps> = ({ yearMonth, onClose }) =
                         <span className="fin-modal-subtitle">{monthName}</span>
                     </div>
                     <button className="fin-modal-close" onClick={onClose}>
-                        <X size={18} />
+                        <GoogleIcon name="close" size={18} />
                     </button>
                 </div>
 
@@ -77,7 +77,7 @@ const MonthEditModal: React.FC<MonthEditModalProps> = ({ yearMonth, onClose }) =
                                             </div>
                                             <div className="fin-item-right">
                                                 <span className="fin-item-amount income-amount">{formatAmount(item.amount, item.currency as Currency)}</span>
-                                                <button className="fin-delete-btn" style={{ opacity: 1 }} onClick={() => deleteIncome(item.id)}><Trash2 size={13} /></button>
+                                                <button className="fin-delete-btn" style={{ opacity: 1 }} onClick={() => deleteIncome(item.id)}><GoogleIcon name="delete" size={13} /></button>
                                             </div>
                                         </div>
                                     ))
@@ -109,7 +109,7 @@ const MonthEditModal: React.FC<MonthEditModalProps> = ({ yearMonth, onClose }) =
                                             </div>
                                             <div className="fin-item-right">
                                                 <span className="fin-item-amount expense-amount">{formatAmount(item.amount, item.currency as Currency)}</span>
-                                                <button className="fin-delete-btn" style={{ opacity: 1 }} onClick={() => deleteVariableExpense(item.id)}><Trash2 size={13} /></button>
+                                                <button className="fin-delete-btn" style={{ opacity: 1 }} onClick={() => deleteVariableExpense(item.id)}><GoogleIcon name="delete" size={13} /></button>
                                             </div>
                                         </div>
                                     ))

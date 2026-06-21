@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Order, ChecklistItem } from '../../types/work';
-import { Check, Calendar as CalendarIcon, Pencil } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 
 interface OrderCardProps {
     order: Order;
@@ -84,7 +84,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, isPaused, onToggleCheck, o
                     }}
                     title="Editar Pedido"
                 >
-                    <Pencil size={14} />
+                    <GoogleIcon name="edit" size={14} />
                 </button>
             </div>
 
@@ -114,7 +114,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, isPaused, onToggleCheck, o
                     color: 'var(--color-text-muted)',
                     marginBottom: '1rem'
                 }}>
-                    <CalendarIcon size={14} />
+                    <GoogleIcon name="calendar_today" size={14} />
                     <span>{new Date(order.startDate).toLocaleDateString()} - {new Date(order.endDate).toLocaleDateString()}</span>
                 </div>
             )}
@@ -144,7 +144,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, isPaused, onToggleCheck, o
                             justifyContent: 'center',
                             transition: 'all 0.2s ease'
                         }}>
-                            {item.completed && <Check size={12} color="white" />}
+                            {item.completed && <GoogleIcon name="check" size={12} style={{ color: 'white' }} />}
                         </div>
                         <span style={{
                             fontSize: '0.9rem',
@@ -176,7 +176,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, isPaused, onToggleCheck, o
                         gap: '0.5rem'
                     }}
                 >
-                    <Check size={16} />
+                    <GoogleIcon name="check" size={16} />
                     Completar y Archivar
                 </button>
             )}

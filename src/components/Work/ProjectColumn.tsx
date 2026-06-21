@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Project, Order } from '../../types/work';
 import OrderCard from './OrderCard';
-import { Plus, Settings, Pause, Play } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 
 interface ProjectColumnProps {
     project: Project;
@@ -47,7 +47,7 @@ const ProjectColumn: React.FC<ProjectColumnProps> = ({
                         title={project.isPaused ? "Reanudar Proyecto" : "Pausar Proyecto"}
                         style={{ color: 'white' }}
                     >
-                        {project.isPaused ? <Play size={18} /> : <Pause size={18} />}
+                        {project.isPaused ? <GoogleIcon name="play_arrow" size={18} /> : <GoogleIcon name="pause" size={18} />}
                     </button>
                     <button
                         onClick={() => onEditProject(project)}
@@ -55,7 +55,7 @@ const ProjectColumn: React.FC<ProjectColumnProps> = ({
                         title="Editar Proyecto"
                         style={{ color: 'white' }}
                     >
-                        <Settings size={18} />
+                        <GoogleIcon name="settings" size={18} />
                     </button>
                 </div>
             </div>
@@ -122,7 +122,7 @@ const ProjectColumn: React.FC<ProjectColumnProps> = ({
                         e.currentTarget.style.color = 'rgba(255,255,255,0.6)';
                     }}
                 >
-                    <Plus size={20} />
+                    <GoogleIcon name="add" size={20} />
                     <span>Añadir Pedido</span>
                 </button>
 

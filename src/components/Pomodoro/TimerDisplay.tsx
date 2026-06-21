@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Pause, RotateCcw, Coffee, Briefcase } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 
 interface TimerDisplayProps {
     minutes: number;
@@ -71,14 +71,14 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                     className={`btn-control ${isActive ? 'active' : ''}`}
                     aria-label={isActive ? 'Pausar' : 'Iniciar'}
                 >
-                    {isActive ? <Pause size={32} /> : <Play size={32} className="ml-1" />}
+                    {isActive ? <GoogleIcon name="pause" size={32} /> : <GoogleIcon name="play_arrow" size={32} className="ml-1" />}
                 </button>
                 <button
                     onClick={onReset}
                     className="btn-control secondary"
                     aria-label="Reiniciar"
                 >
-                    <RotateCcw size={24} />
+                    <GoogleIcon name="replay" size={24} />
                 </button>
                 <button
                     onClick={onModeSwitch}
@@ -86,7 +86,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
                     aria-label={mode === 'focus' ? 'Cambiar a Descanso' : 'Cambiar a Enfoque'}
                     title={mode === 'focus' ? 'Ir a Descanso' : 'Ir a Enfoque'}
                 >
-                    {mode === 'focus' ? <Coffee size={24} /> : <Briefcase size={24} />}
+                    {mode === 'focus' ? <GoogleIcon name="coffee" size={24} /> : <GoogleIcon name="work" size={24} />}
                 </button>
             </div>
         </div>

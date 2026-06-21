@@ -130,8 +130,13 @@
     font-weight: 700;
 }
 
-.fin-balance-value.positive { color: var(--color-success); }
-.fin-balance-value.negative { color: var(--color-danger); }
+.fin-balance-value.positive {
+    color: var(--color-success);
+}
+
+.fin-balance-value.negative {
+    color: var(--color-danger);
+}
 
 .fin-month-label {
     font-size: 1rem;
@@ -195,13 +200,11 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: repeating-linear-gradient(
-        -45deg,
-        transparent,
-        transparent 6px,
-        rgba(255, 255, 255, 0.08) 6px,
-        rgba(255, 255, 255, 0.08) 12px
-    );
+    background: repeating-linear-gradient(-45deg,
+            transparent,
+            transparent 6px,
+            rgba(255, 255, 255, 0.08) 6px,
+            rgba(255, 255, 255, 0.08) 12px);
 }
 
 .fin-bar-fixed {
@@ -296,8 +299,13 @@
     letter-spacing: 0.06em;
 }
 
-.income-title { color: var(--color-success); }
-.expense-title { color: hsl(40, 90%, 65%); }
+.income-title {
+    color: var(--color-success);
+}
+
+.expense-title {
+    color: hsl(40, 90%, 65%);
+}
 
 .fin-add-btn {
     display: flex;
@@ -316,6 +324,7 @@
     border-color: hsla(145, 65%, 45%, 0.3);
     color: var(--color-success);
 }
+
 .income-btn:hover {
     background: hsla(145, 65%, 45%, 0.3);
     transform: scale(1.1);
@@ -326,6 +335,7 @@
     border-color: hsla(40, 90%, 55%, 0.3);
     color: hsl(40, 90%, 65%);
 }
+
 .expense-btn:hover {
     background: hsla(40, 90%, 55%, 0.3);
     transform: scale(1.1);
@@ -390,8 +400,13 @@
     white-space: nowrap;
 }
 
-.income-amount { color: var(--color-success); }
-.expense-amount { color: hsl(0, 75%, 65%); }
+.income-amount {
+    color: var(--color-success);
+}
+
+.expense-amount {
+    color: hsl(0, 75%, 65%);
+}
 
 .fin-delete-btn {
     display: flex;
@@ -408,7 +423,9 @@
     border: none;
 }
 
-.fin-item:hover .fin-delete-btn { opacity: 1; }
+.fin-item:hover .fin-delete-btn {
+    opacity: 1;
+}
 
 .fin-delete-btn:hover {
     background: hsla(0, 75%, 55%, 0.2);
@@ -459,8 +476,13 @@
     font-weight: 700;
 }
 
-.fin-hist-balance-val.positive { color: var(--color-success); }
-.fin-hist-balance-val.negative { color: var(--color-danger); }
+.fin-hist-balance-val.positive {
+    color: var(--color-success);
+}
+
+.fin-hist-balance-val.negative {
+    color: var(--color-danger);
+}
 
 .fin-hist-row {
     display: flex;
@@ -485,7 +507,9 @@
     color: var(--color-text-main);
 }
 
-.fin-hist-stat-val.income-text { color: var(--color-success); }
+.fin-hist-stat-val.income-text {
+    color: var(--color-success);
+}
 
 .fin-hist-bars {
     display: flex;
@@ -539,8 +563,13 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .fin-modal {
@@ -553,8 +582,15 @@
 }
 
 @keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .fin-fixed-modal {
@@ -582,9 +618,17 @@
     margin-top: 0.15rem;
 }
 
-.income-header { border-top: 3px solid var(--color-success); }
-.expense-header { border-top: 3px solid hsl(40, 90%, 60%); }
-.fixed-header { border-top: 3px solid hsl(0, 75%, 60%); }
+.income-header {
+    border-top: 3px solid var(--color-success);
+}
+
+.expense-header {
+    border-top: 3px solid hsl(40, 90%, 60%);
+}
+
+.fixed-header {
+    border-top: 3px solid hsl(0, 75%, 60%);
+}
 
 .fin-modal-close {
     background: transparent;
@@ -653,7 +697,9 @@
     align-items: flex-end;
 }
 
-.fin-field-grow { flex: 1; }
+.fin-field-grow {
+    flex: 1;
+}
 
 .fin-field-currency {
     width: 110px;
@@ -769,8 +815,15 @@
 }
 
 @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-6px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .fin-quick-header {
@@ -848,7 +901,9 @@
     transform: translateY(0) scale(0.97);
 }
 
-.fin-quick-chip-name { font-weight: 600; }
+.fin-quick-chip-name {
+    font-weight: 600;
+}
 
 .fin-quick-chip-amount {
     display: flex;
@@ -887,7 +942,9 @@
     border: 1px solid hsla(0, 0%, 100%, 0.04);
 }
 
-.fin-quick-manage-item:hover .fin-delete-btn { opacity: 1; }
+.fin-quick-manage-item:hover .fin-delete-btn {
+    opacity: 1;
+}
 
 .fin-quick-manage-name {
     flex: 1;
@@ -939,8 +996,14 @@
     align-items: center;
 }
 
-.fin-quick-form-row input { flex: 1; }
-.fin-quick-form-row select { width: 60px; flex-shrink: 0; }
+.fin-quick-form-row input {
+    flex: 1;
+}
+
+.fin-quick-form-row select {
+    width: 60px;
+    flex-shrink: 0;
+}
 
 .fin-quick-add-btn {
     display: flex;
@@ -1092,5 +1155,198 @@
     padding-left: 2rem;
 }
 
-.fin-footer-total .positive { color: var(--color-success); }
-.fin-footer-total .negative { color: var(--color-danger); }
+.fin-footer-total .positive {
+    color: var(--color-success);
+}
+
+.fin-footer-total .negative {
+    color: var(--color-danger);
+}
+
+/* ─────────────────────────────────────────────
+   History Side Panel — wrapper with toggle
+───────────────────────────────────────────── */
+.fin-side-panel {
+    width: 240px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.fin-side-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+/* ─── Mode Toggle ─── */
+.fin-mode-toggle {
+    display: flex;
+    background: hsla(240, 10%, 14%, 0.7);
+    border: 1px solid hsla(0, 0%, 100%, 0.06);
+    border-radius: var(--radius-md);
+    padding: 3px;
+    gap: 3px;
+    flex: 1;
+}
+
+.fin-mode-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.74rem;
+    font-weight: 500;
+    font-family: inherit;
+    border: none;
+    border-radius: calc(var(--radius-md) - 2px);
+    cursor: pointer;
+    color: var(--color-text-muted);
+    background: transparent;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.fin-mode-btn:hover:not(.active) {
+    background: hsla(0, 0%, 100%, 0.05);
+    color: var(--color-text-main);
+}
+
+.fin-mode-btn.active {
+    background: hsla(var(--primary-h), var(--primary-s), 60%, 0.18);
+    color: var(--color-primary);
+    font-weight: 600;
+    box-shadow: 0 1px 6px hsla(var(--primary-h), var(--primary-s), 60%, 0.15);
+}
+
+/* Add buttons in fixed mode header */
+.fin-fixed-add-btns {
+    display: flex;
+    gap: 0.3rem;
+    flex-shrink: 0;
+}
+
+/* ─── Inline add form ─── */
+.fin-fixed-inline-form {
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    animation: slideDown 0.15s ease;
+}
+
+.fin-fixed-inline-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.fin-fixed-inline-row {
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
+}
+
+.fin-fixed-inline-form input[type="text"],
+.fin-fixed-inline-form input[type="number"] {
+    background: var(--color-bg-input);
+    border: 1px solid hsla(0, 0%, 100%, 0.08);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-main);
+    font-size: 0.82rem;
+    padding: 0.4rem 0.55rem;
+    font-family: inherit;
+    transition: border-color var(--transition-fast);
+}
+
+.fin-fixed-inline-form input[type="text"] {
+    width: 100%;
+}
+
+.fin-fixed-inline-row input[type="number"] {
+    flex: 1;
+    min-width: 0;
+}
+
+.fin-fixed-inline-form input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.fin-fixed-inline-form select {
+    background: var(--color-bg-input);
+    border: 1px solid hsla(0, 0%, 100%, 0.08);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-main);
+    font-size: 0.78rem;
+    padding: 0.4rem 0.35rem;
+    font-family: inherit;
+    width: 58px;
+    flex-shrink: 0;
+}
+
+/* ─── Fixed view: balance row ─── */
+.fin-fixed-balance-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.65rem 0.85rem;
+    border-radius: var(--radius-md);
+    flex-shrink: 0;
+}
+
+.fin-fixed-bal-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    align-items: center;
+}
+
+/* ─── Fixed view: sections ─── */
+.fin-fixed-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex-shrink: 0;
+}
+
+.fin-fixed-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0.1rem;
+}
+
+.fin-fixed-section-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.fin-fixed-section-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+
+/* tag badge on fixed items */
+.fin-item-tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    padding: 0.05rem 0.35rem;
+    border-radius: 10px;
+    background: hsla(0, 0%, 100%, 0.05);
+    color: var(--color-text-muted);
+}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Plus, Trash2 } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 import { useFinances } from '../../context/FinancesContext';
 import type { Currency } from '../../types/finances';
 
@@ -36,7 +36,7 @@ const FixedExpensesModal: React.FC<FixedExpensesModalProps> = ({ onClose }) => {
                 <div className="fin-modal-header fixed-header">
                     <h3>Gastos Fijos</h3>
                     <button className="fin-modal-close" onClick={onClose}>
-                        <X size={18} />
+                        <GoogleIcon name="close" size={18} />
                     </button>
                 </div>
 
@@ -59,7 +59,7 @@ const FixedExpensesModal: React.FC<FixedExpensesModalProps> = ({ onClose }) => {
                                         onClick={() => deleteFixedExpense(item.id)}
                                         title="Eliminar"
                                     >
-                                        <Trash2 size={13} />
+                                        <GoogleIcon name="delete" size={13} />
                                     </button>
                                 </div>
                             </div>
@@ -123,7 +123,7 @@ const FixedExpensesModal: React.FC<FixedExpensesModalProps> = ({ onClose }) => {
                         className="fin-submit-btn fixed-submit"
                         disabled={!title.trim() || !amount || parseFloat(amount) <= 0}
                     >
-                        <Plus size={15} style={{ display: 'inline', marginRight: '0.4rem' }} />
+                        <GoogleIcon name="add" size={15} style={{ display: 'inline', marginRight: '0.4rem' }} />
                         Agregar Gasto Fijo
                     </button>
                 </form>

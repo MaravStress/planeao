@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Subject, Assignment } from '../../types/uniTasks';
 import AssignmentCard from './AssignmentCard';
-import { Plus, Settings } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 
 interface SubjectColumnProps {
     subject: Subject;
@@ -44,7 +44,7 @@ const SubjectColumn: React.FC<SubjectColumnProps> = ({
                     title="Editar Materia"
                     style={{ color: 'white' }}
                 >
-                    <Settings size={18} />
+                    <GoogleIcon name="settings" size={18} />
                 </button>
             </div>
 
@@ -109,7 +109,7 @@ const SubjectColumn: React.FC<SubjectColumnProps> = ({
                         e.currentTarget.style.color = 'rgba(255,255,255,0.6)';
                     }}
                 >
-                    <Plus size={20} />
+                    <GoogleIcon name="add" size={20} />
                     <span>Añadir Tarea</span>
                 </button>
 

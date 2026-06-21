@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { Project } from '../../types/work';
-import { X, Save, Plus } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 import {
     DndContext,
     closestCenter,
@@ -136,7 +136,7 @@ const EditProjectModal: React.FC<EditProjectModalProps> = ({ project, isOpen, on
                         cursor: 'pointer'
                     }}
                 >
-                    <X size={24} />
+                    <GoogleIcon name="close" size={24} />
                 </button>
 
                 <h2 style={{ marginTop: 0, marginBottom: '1.5rem' }}>Editar Proyecto</h2>
@@ -223,7 +223,7 @@ const EditProjectModal: React.FC<EditProjectModalProps> = ({ project, isOpen, on
                                 alignItems: 'center'
                             }}
                         >
-                            <Plus size={20} />
+                            <GoogleIcon name="add" size={20} />
                         </button>
                     </form>
 
@@ -307,7 +307,7 @@ const EditProjectModal: React.FC<EditProjectModalProps> = ({ project, isOpen, on
                                 fontWeight: 'bold'
                             }}
                         >
-                            <Save size={18} />
+                            <GoogleIcon name="save" size={18} />
                             Guardar Cambios
                         </button>
                     </div>

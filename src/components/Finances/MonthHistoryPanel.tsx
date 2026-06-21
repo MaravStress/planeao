@@ -48,8 +48,8 @@ const MonthHistoryPanel: React.FC<MonthHistoryPanelProps> = ({ onMonthClick }) =
     return (
         <div className="fin-history-panel">
             {monthCards.map(card => (
-                <div 
-                    key={card.ym} 
+                <div
+                    key={card.ym}
                     className="fin-history-card glass-panel selectable-card"
                     onClick={() => onMonthClick(card.ym)}
                     title={`Ver detalle de ${MONTH_NAMES[card.month]} ${card.year}`}

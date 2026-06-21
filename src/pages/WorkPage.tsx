@@ -4,7 +4,7 @@ import ProjectColumn from '../components/Work/ProjectColumn';
 import EditProjectModal from '../components/Work/EditProjectModal';
 import EditOrderModal from '../components/Work/EditOrderModal';
 import type { Project, Order } from '../types/work';
-import { Plus } from 'lucide-react';
+import GoogleIcon from '../components/GoogleIcon';
 import { useWork } from '../context/WorkContext';
 
 const WorkPage: React.FC = () => {
@@ -119,7 +119,7 @@ const WorkPage: React.FC = () => {
                             e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
                         }}
                     >
-                        <Plus size={32} />
+                        <GoogleIcon name="add" size={32} />
                         <span>Nuevo Proyecto</span>
                     </button>
                 </div>

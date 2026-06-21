@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useWork } from '../../context/WorkContext';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 import type { Order } from '../../types/work';
 
 // Timeline width in days
@@ -171,7 +171,7 @@ const Timeline: React.FC<TimelineProps> = ({ onEditOrder }) => {
                 gap: '1rem'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <CalendarIcon size={20} color="var(--color-secondary)" />
+                    <GoogleIcon name="calendar_today" size={20} style={{ color: 'var(--color-secondary)' }} />
                     <h3 style={{ margin: 0 }}>Timeline ({DAYS_IN_VIEW} días)</h3>
                 </div>
 
@@ -182,7 +182,7 @@ const Timeline: React.FC<TimelineProps> = ({ onEditOrder }) => {
                         style={{ display: 'flex', alignItems: 'center', color: 'white', padding: '0.5rem' }}
                         title="Retroceder 1 semana"
                     >
-                        <ChevronLeft size={16} />
+                        <GoogleIcon name="chevron_left" size={16} />
                     </button>
                     <button
                         onClick={resetToToday}
@@ -197,7 +197,7 @@ const Timeline: React.FC<TimelineProps> = ({ onEditOrder }) => {
                         style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', color: 'white' }}
                         title="Avanzar 1 semana"
                     >
-                        <ChevronRight size={16} />
+                        <GoogleIcon name="chevron_right" size={16} />
                     </button>
                 </div>
             </div>
@@ -371,9 +371,9 @@ const Timeline: React.FC<TimelineProps> = ({ onEditOrder }) => {
                                         )}
 
                                         <div style={{ opacity: 0.9, textOverflow: 'ellipsis', overflow: 'hidden', pointerEvents: 'none', marginLeft: '6px', marginRight: '6px' }}>
-                                            {isCutLeft && <ChevronLeft size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '2px' }} />}
+                                            {isCutLeft && <GoogleIcon name="chevron_left" size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '2px' }} />}
                                             {displayOrder.title}
-                                            {isCutRight && <ChevronRight size={12} style={{ display: 'inline', verticalAlign: 'middle', marginLeft: '2px' }} />}
+                                            {isCutRight && <GoogleIcon name="chevron_right" size={12} style={{ display: 'inline', verticalAlign: 'middle', marginLeft: '2px' }} />}
                                         </div>
 
                                         {/* Right Drag Handle */}

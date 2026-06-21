@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Settings } from 'lucide-react';
+import GoogleIcon from '../components/GoogleIcon';
 import IdeaCard from '../components/ideas/IdeaCard';
 import IdeaModal from '../components/ideas/IdeaModal';
 import IdeaSettingsModal from '../components/ideas/IdeaSettingsModal';
@@ -93,10 +93,10 @@ const IdeasPage: React.FC = () => {
                 </div>
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                     <button className="btn-icon" onClick={() => setIsSettingsOpen(true)} title="Configurar Ideación" style={{ background: 'var(--color-bg-card)', padding: '0.75rem', borderRadius: 'var(--radius-md)' }}>
-                        <Settings size={20} color="var(--color-text-muted)" />
+                        <GoogleIcon name="settings" size={20} style={{ color: 'var(--color-text-muted)' }} />
                     </button>
                     <button className="btn-new-idea" onClick={handleNewIdea}>
-                        <Plus size={20} /> Nueva idea
+                        <GoogleIcon name="add" size={20} /> Nueva idea
                     </button>
                 </div>
             </div>

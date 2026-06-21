@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import type { Idea, BusinessModelCanvas, IdeaSettings } from '../../types/ideas';
-import { X, Trash2, Image as ImageIcon } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 
 interface IdeaModalProps {
     idea: Idea | null;
@@ -147,7 +147,7 @@ const IdeaModal: React.FC<IdeaModalProps> = ({ idea, settings, onSave, onDelete 
                 >
                     {!formData.imageUrl && (
                         <div className="banner-input-container">
-                            <ImageIcon size={32} color="var(--color-text-muted)" style={{ marginBottom: '1rem' }} />
+                            <GoogleIcon name="image" size={32} style={{ color: 'var(--color-text-muted)', marginBottom: '1rem' }} />
                             <input
                                 id="field-image"
                                 className="form-control banner-input"
@@ -167,11 +167,11 @@ const IdeaModal: React.FC<IdeaModalProps> = ({ idea, settings, onSave, onDelete 
                                 onClick={() => handleChange('imageUrl', '')}
                                 title="Eliminar Imagen"
                             >
-                                <Trash2 size={20} />
+                                <GoogleIcon name="delete" size={20} />
                             </button>
                         )}
                         <button className="floating-btn btn-close-float" onClick={handleSaveClick}>
-                            <X size={24} />
+                            <GoogleIcon name="close" size={24} />
                         </button>
                     </div>
                 </div>

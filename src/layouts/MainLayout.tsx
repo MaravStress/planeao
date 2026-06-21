@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { Timer, Settings, DollarSign, Briefcase, Lightbulb, BookOpen, GraduationCap } from 'lucide-react';
+import GoogleIcon from '../components/GoogleIcon';
 import '../styles/Layout.css';
 import '../styles/SidebarTimer.css';
 
@@ -17,9 +17,16 @@ const MainLayout: React.FC = () => {
 
   return (
     <div className="app-container">
+      {/* Dynamic Background Glows */}
+      <div className="bg-glow-container">
+        <div className="bg-glow-1"></div>
+        <div className="bg-glow-2"></div>
+      </div>
+
       <aside className="sidebar glass-panel">
         <div className="logo-container">
-          <h2>Planeao</h2>
+          <h2 className="logo-text-full">Planeao</h2>
+          <h2 className="logo-text-collapsed">P</h2>
         </div>
         <nav className="nav-menu">
           <NavLink
@@ -27,49 +34,68 @@ const MainLayout: React.FC = () => {
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
             end
           >
-            <Briefcase size={24} />
+            <GoogleIcon name="work" size={24} />
             <span>Work</span>
           </NavLink>
           <NavLink
             to="/pomodoro"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''} ${isTimerActive ? `mode-${mode}-text` : ''}`}
           >
-            <Timer size={24} className={isTimerActive ? 'timer-active-icon' : ''} />
-            <span>{isTimerActive ? formatTime(timeLeft) : 'Pomodoro'}</span>
+            <div className="pomodoro-icon-wrapper">
+              {isTimerActive ? (
+                <>
+                  <GoogleIcon name="timer" size={24} className="pomodoro-default-icon timer-active-icon" />
+                  <span className="pomodoro-timer-capsule">{formatTime(timeLeft)}</span>
+
+                </>
+              ) : (
+                <GoogleIcon name="timer" size={24} className="pomodoro-default-icon" />
+              )}
+            </div>
+            <span>
+              {isTimerActive ? (
+                <>
+                  <span className="pomodoro-text-default">Pomodoro</span>
+                  <span className="pomodoro-text-active">{formatTime(timeLeft)}</span>
+                </>
+              ) : (
+                'Pomodoro'
+              )}
+            </span>
           </NavLink>
           <NavLink
             to="/finances"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
-            <DollarSign size={24} />
+            <GoogleIcon name="attach_money" size={24} />
             <span>Finanzas</span>
           </NavLink>
           <NavLink
             to="/ideas"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
-            <Lightbulb size={24} />
+            <GoogleIcon name="lightbulb" size={24} />
             <span>Ideas Emprendedoras</span>
           </NavLink>
           <NavLink
             to="/uni-tasks"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
-            <BookOpen size={24} />
+            <GoogleIcon name="menu_book" size={24} />
             <span>Tareas Uni</span>
           </NavLink>
           <NavLink
             to="/uni-progress"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
-            <GraduationCap size={24} />
+            <GoogleIcon name="school" size={24} />
             <span>Progreso Uni</span>
           </NavLink>
           <NavLink
             to="/settings"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
-            <Settings size={24} />
+            <GoogleIcon name="settings" size={24} />
             <span>Ajustes</span>
           </NavLink>
         </nav>

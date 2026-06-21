@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { Subject } from '../../types/uniTasks';
-import { X, Save, Plus } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 import {
     DndContext,
     closestCenter,
@@ -118,10 +118,13 @@ const EditSubjectModal: React.FC<EditSubjectModalProps> = ({ subject, isOpen, on
                         background: 'transparent',
                         border: 'none',
                         color: 'white',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
                     }}
                 >
-                    <X size={24} />
+                    <GoogleIcon name="close" size={24} />
                 </button>
 
                 <h2 style={{ marginTop: 0, marginBottom: '0.5rem' }}>Configurar Materia</h2>
@@ -135,15 +138,8 @@ const EditSubjectModal: React.FC<EditSubjectModalProps> = ({ subject, isOpen, on
                             value={duration}
                             onChange={(e) => setDuration(Number(e.target.value))}
                             min="1"
-                            style={{
-                                width: '100%',
-                                padding: '0.75rem',
-                                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                border: '1px solid rgba(255, 255, 255, 0.2)',
-                                borderRadius: '4px',
-                                color: 'white',
-                                fontSize: '1rem'
-                            }}
+                            className="glass-input"
+                            style={{ width: '100%' }}
                         />
                     </div>
                 </div>
@@ -168,29 +164,19 @@ const EditSubjectModal: React.FC<EditSubjectModalProps> = ({ subject, isOpen, on
                             value={newItemText}
                             onChange={(e) => setNewItemText(e.target.value)}
                             placeholder="Nueva subtarea por defecto..."
-                            style={{
-                                flex: 1,
-                                padding: '0.5rem',
-                                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                border: '1px solid rgba(255, 255, 255, 0.2)',
-                                borderRadius: '4px',
-                                color: 'white'
-                            }}
+                            className="glass-input"
+                            style={{ flex: 1 }}
                         />
                         <button
                             type="submit"
+                            className="glass-button"
                             style={{
                                 padding: '0.5rem',
-                                backgroundColor: 'var(--color-primary)',
-                                border: 'none',
-                                borderRadius: '4px',
-                                color: 'white',
-                                cursor: 'pointer',
                                 display: 'flex',
                                 alignItems: 'center'
                             }}
                         >
-                            <Plus size={20} />
+                            <GoogleIcon name="add" size={20} />
                         </button>
                     </form>
 
@@ -233,33 +219,22 @@ const EditSubjectModal: React.FC<EditSubjectModalProps> = ({ subject, isOpen, on
                     <div style={{ display: 'flex', gap: '1rem' }}>
                         <button
                             onClick={onClose}
-                            style={{
-                                padding: '0.75rem 1.5rem',
-                                background: 'transparent',
-                                border: '1px solid rgba(255, 255, 255, 0.2)',
-                                borderRadius: '4px',
-                                color: 'white',
-                                cursor: 'pointer'
-                            }}
+                            className="glass-button"
+                            style={{ padding: '0.75rem 1.5rem' }}
                         >
                             Cancelar
                         </button>
                         <button
                             onClick={handleSave}
+                            className="glass-button"
                             style={{
                                 padding: '0.75rem 1.5rem',
                                 background: 'var(--color-primary)',
                                 border: 'none',
-                                borderRadius: '4px',
-                                color: 'white',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
                                 fontWeight: 'bold'
                             }}
                         >
-                            <Save size={18} />
+                            <GoogleIcon name="save" size={18} />
                             Guardar Cambios
                         </button>
                     </div>

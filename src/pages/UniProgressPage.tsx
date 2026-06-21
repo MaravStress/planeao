@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useUniProgress } from '../context/UniProgressContext';
 import type { SubjectStatus } from '../types/uniProgress';
+import GoogleIcon from '../components/GoogleIcon';
+import { GlassCard } from 'react-glass-ui';
 
 const UniProgressPage: React.FC = () => {
     const { terms, addTerm, updateSubjectStatus, deleteTerm } = useUniProgress();
@@ -70,147 +72,168 @@ const UniProgressPage: React.FC = () => {
                 </div>
                 <button 
                     onClick={() => setIsModalOpen(true)}
+                    className="glass-button"
                     style={{
-                        backgroundColor: 'var(--color-primary)',
-                        color: 'white',
-                        width: '50px',
-                        height: '50px',
+                        width: '45px',
+                        height: '45px',
                         borderRadius: '50%',
-                        fontSize: '1.8rem',
+                        padding: 0,
+                        backgroundColor: 'var(--color-primary)',
+                        border: 'none',
+                        boxShadow: 'var(--shadow-glow)',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center',
-                        boxShadow: 'var(--shadow-glow)',
-                        cursor: 'pointer',
-                        transition: 'var(--transition-fast)',
-                        border: 'none'
+                        justifyContent: 'center'
                     }}
-                    onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)' }}
-                    onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
                     title="Añadir cuatrimestre"
                 >
-                    +
+                    <GoogleIcon name="add" size={24} />
                 </button>
             </header>
 
             {/* Statistics Bar */}
-            <div className="glass-panel" style={{ 
-                padding: '2rem', 
-                marginBottom: '2rem', 
-                display: 'flex', 
-                flexWrap: 'wrap', 
-                gap: '2rem', 
-                justifyContent: 'space-around',
-                alignItems: 'center'
-            }}>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Materias Seleccionadas</span>
-                    <span style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--color-secondary)' }}>{seleccionadas}</span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Materias Faltantes</span>
-                    <span style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--color-warning)' }}>{faltantes}</span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Progreso</span>
-                    <span style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--color-primary-light)' }}>{porcentajeCarrera}%</span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Tiempo Estimado</span>
-                    <span style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--color-success)', textAlign: 'center' }}>{calculateEstimatedTime()}</span>
-                </div>
+            <div style={{ marginBottom: '2rem' }}>
+                <GlassCard 
+                    padding="2rem" 
+                    borderRadius={20}
+                    avoidSvgCreation={false}
+                    distortion={6}
+                    blur={25}
+                    backgroundColor="rgba(15, 15, 25, 0.45)"
+                    borderColor="rgba(255, 255, 255, 0.08)"
+                >
+                    <div style={{ 
+                        display: 'flex', 
+                        flexWrap: 'wrap', 
+                        gap: '2rem', 
+                        justifyContent: 'space-around',
+                        alignItems: 'center',
+                        width: '100%'
+                    }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Materias Seleccionadas</span>
+                            <span style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--color-secondary)' }}>{seleccionadas}</span>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Materias Faltantes</span>
+                            <span style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--color-warning)' }}>{faltantes}</span>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Progreso</span>
+                            <span style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--color-primary-light)' }}>{porcentajeCarrera}%</span>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Tiempo Estimado</span>
+                            <span style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--color-success)', textAlign: 'center' }}>{calculateEstimatedTime()}</span>
+                        </div>
+                    </div>
+                </GlassCard>
             </div>
 
             {/* Terms List */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 {terms.length === 0 ? (
-                    <div className="glass-panel" style={{ padding: '3rem', textAlign: 'center', color: 'var(--color-text-muted)' }}>
-                        No has añadido ningún cuatrimestre aún. ¡Agrega uno con el botón + !
-                    </div>
+                    <GlassCard
+                        padding="3rem"
+                        borderRadius={20}
+                        distortion={6}
+                        blur={25}
+                        backgroundColor="rgba(15, 15, 25, 0.45)"
+                        borderColor="rgba(255, 255, 255, 0.08)"
+                    >
+                        <div style={{ textAlign: 'center', color: 'var(--color-text-muted)', fontSize: '1.1rem' }}>
+                            No has añadido ningún cuatrimestre aún. ¡Agrega uno con el botón + !
+                        </div>
+                    </GlassCard>
                 ) : (
                     terms.map(term => (
-                        <div key={term.id} className="glass-panel" style={{ padding: '2rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                                <h2 style={{ margin: 0 }}>{term.name}</h2>
-                                <button 
-                                    onClick={() => { if(window.confirm('¿Eliminar cuatrimestre?')) deleteTerm(term.id) }}
-                                    style={{
-                                        color: 'var(--color-danger)',
-                                        fontSize: '0.9rem',
-                                        background: 'none',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        opacity: 0.8
-                                    }}
-                                    onMouseEnter={(e) => { e.currentTarget.style.opacity = '1' }}
-                                    onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.8' }}
-                                >
-                                    Eliminar Cuatrimestre
-                                </button>
-                            </div>
-                            
-                            <div style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-                                gap: '1rem'
-                            }}>
-                                {term.subjects.map(subject => {
-                                    let borderColor = 'hsla(0, 0%, 100%, 0.1)';
-                                    let bgColor = 'hsla(0, 0%, 100%, 0.02)';
-                                    
-                                    if (subject.status === 'Aprobada') {
-                                        borderColor = 'hsla(145, 65%, 45%, 0.3)';
-                                        bgColor = 'hsla(145, 65%, 45%, 0.05)';
-                                    } else if (subject.status === 'Cursando') {
-                                        borderColor = 'hsla(180, 70%, 50%, 0.4)';
-                                        bgColor = 'hsla(180, 70%, 50%, 0.1)';
-                                    }
+                        <div key={term.id} style={{ marginBottom: '0.5rem' }}>
+                            <GlassCard 
+                                padding="2rem"
+                                borderRadius={20}
+                                distortion={6}
+                                blur={25}
+                                backgroundColor="rgba(15, 15, 25, 0.45)"
+                                borderColor="rgba(255, 255, 255, 0.08)"
+                            >
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', width: '100%' }}>
+                                    <h2 style={{ margin: 0 }}>{term.name}</h2>
+                                    <button 
+                                        onClick={() => { if(window.confirm('¿Eliminar cuatrimestre?')) deleteTerm(term.id) }}
+                                        className="glass-button"
+                                        style={{
+                                            color: '#ff6b6b',
+                                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                            borderColor: 'rgba(239, 68, 68, 0.2)',
+                                            fontSize: '0.85rem',
+                                            padding: '0.4rem 0.8rem'
+                                        }}
+                                    >
+                                        <GoogleIcon name="delete" size={16} />
+                                        Eliminar Cuatrimestre
+                                    </button>
+                                </div>
+                                
+                                <div style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+                                    gap: '1rem',
+                                    width: '100%'
+                                }}>
+                                    {term.subjects.map(subject => {
+                                        let borderColor = 'rgba(255, 255, 255, 0.08)';
+                                        let bgColor = 'rgba(255, 255, 255, 0.02)';
+                                        
+                                        if (subject.status === 'Aprobada') {
+                                            borderColor = 'rgba(16, 185, 129, 0.3)';
+                                            bgColor = 'rgba(16, 185, 129, 0.08)';
+                                        } else if (subject.status === 'Cursando') {
+                                            borderColor = 'rgba(6, 182, 212, 0.3)';
+                                            bgColor = 'rgba(6, 182, 212, 0.08)';
+                                        }
 
-                                    return (
-                                        <div 
-                                            key={subject.id} 
-                                            style={{
-                                                padding: '1.2rem',
-                                                borderRadius: 'var(--radius-md)',
-                                                border: `1px solid ${borderColor}`,
-                                                background: bgColor,
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                gap: '1rem',
-                                                transition: 'all var(--transition-normal)'
-                                            }}
-                                        >
-                                            <span style={{ 
-                                                fontSize: '1.1rem',
-                                                fontWeight: '500',
-                                                textDecoration: subject.status === 'Aprobada' ? 'line-through' : 'none',
-                                                color: subject.status === 'Aprobada' ? 'var(--color-text-muted)' : 'var(--color-text-main)'
-                                            }}>
-                                                {subject.name}
-                                            </span>
-                                            <select 
-                                                value={subject.status}
-                                                onChange={(e) => updateSubjectStatus(term.id, subject.id, e.target.value as SubjectStatus)}
+                                        return (
+                                            <div 
+                                                key={subject.id} 
                                                 style={{
-                                                    backgroundColor: 'var(--color-bg-input)',
-                                                    border: '1px solid hsla(0, 0%, 100%, 0.1)',
-                                                    borderRadius: 'var(--radius-sm)',
-                                                    padding: '0.6rem',
-                                                    color: 'var(--color-text-main)',
-                                                    fontSize: '0.9rem',
-                                                    width: '100%',
-                                                    outline: 'none',
-                                                    cursor: 'pointer'
+                                                    padding: '1.2rem',
+                                                    borderRadius: 'var(--radius-md)',
+                                                    border: `1px solid ${borderColor}`,
+                                                    background: bgColor,
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    gap: '1rem',
+                                                    transition: 'all var(--transition-normal)'
                                                 }}
                                             >
-                                                <option value="No cursada">No cursada</option>
-                                                <option value="Cursando">Cursando</option>
-                                                <option value="Aprobada">Aprobada</option>
-                                            </select>
-                                        </div>
-                                    );
-                                })}
-                            </div>
+                                                <span style={{ 
+                                                    fontSize: '1.1rem',
+                                                    fontWeight: '500',
+                                                    textDecoration: subject.status === 'Aprobada' ? 'line-through' : 'none',
+                                                    color: subject.status === 'Aprobada' ? 'var(--color-text-muted)' : 'var(--color-text-main)'
+                                                }}>
+                                                    {subject.name}
+                                                </span>
+                                                <select 
+                                                    value={subject.status}
+                                                    onChange={(e) => updateSubjectStatus(term.id, subject.id, e.target.value as SubjectStatus)}
+                                                    className="glass-input"
+                                                    style={{
+                                                        padding: '0.6rem',
+                                                        fontSize: '0.9rem',
+                                                        width: '100%',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                >
+                                                    <option value="No cursada">No cursada</option>
+                                                    <option value="Cursando">Cursando</option>
+                                                    <option value="Aprobada">Aprobada</option>
+                                                </select>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </GlassCard>
                         </div>
                     ))
                 )}
@@ -222,7 +245,7 @@ const UniProgressPage: React.FC = () => {
                     position: 'fixed',
                     top: 0, left: 0, right: 0, bottom: 0,
                     backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                    backdropFilter: 'blur(4px)',
+                    backdropFilter: 'blur(5px)',
                     zIndex: 1000,
                     display: 'flex',
                     alignItems: 'center',
@@ -246,16 +269,8 @@ const UniProgressPage: React.FC = () => {
                                     value={newTermName}
                                     onChange={(e) => setNewTermName(e.target.value)}
                                     placeholder="Ej: Cuatrimestre 1"
-                                    style={{
-                                        width: '100%',
-                                        backgroundColor: 'var(--color-bg-input)',
-                                        border: '1px solid hsla(0, 0%, 100%, 0.1)',
-                                        borderRadius: 'var(--radius-sm)',
-                                        padding: '0.8rem',
-                                        color: 'var(--color-text-main)',
-                                        fontSize: '1rem',
-                                        outline: 'none'
-                                    }}
+                                    className="glass-input"
+                                    style={{ width: '100%' }}
                                 />
                             </div>
                             
@@ -269,31 +284,23 @@ const UniProgressPage: React.FC = () => {
                                             value={sub}
                                             onChange={(e) => handleSubjectChange(index, e.target.value)}
                                             placeholder={`Nombre de la materia ${index + 1}`}
-                                            style={{
-                                                width: '100%',
-                                                backgroundColor: 'var(--color-bg-input)',
-                                                border: '1px solid hsla(0, 0%, 100%, 0.1)',
-                                                borderRadius: 'var(--radius-sm)',
-                                                padding: '0.8rem',
-                                                color: 'var(--color-text-main)',
-                                                fontSize: '1rem',
-                                                outline: 'none'
-                                            }}
+                                            className="glass-input"
+                                            style={{ width: '100%' }}
                                         />
                                     ))}
                                 </div>
                                 <button 
                                     onClick={handleAddSubjectInput}
+                                    className="glass-button"
                                     style={{
                                         marginTop: '1rem',
                                         color: 'var(--color-primary-light)',
                                         fontSize: '0.9rem',
-                                        background: 'none',
-                                        border: 'none',
-                                        cursor: 'pointer'
+                                        padding: '0.4rem 0.8rem'
                                     }}
                                 >
-                                    + Añadir otra materia
+                                    <GoogleIcon name="add" size={16} />
+                                    Añadir otra materia
                                 </button>
                             </div>
                         </div>
@@ -307,28 +314,20 @@ const UniProgressPage: React.FC = () => {
                         }}>
                             <button 
                                 onClick={() => setIsModalOpen(false)}
-                                style={{
-                                    padding: '0.8rem 1.5rem',
-                                    borderRadius: 'var(--radius-sm)',
-                                    background: 'hsla(0, 0%, 100%, 0.1)',
-                                    color: 'white',
-                                    border: 'none',
-                                    cursor: 'pointer'
-                                }}
+                                className="glass-button"
+                                style={{ padding: '0.8rem 1.5rem' }}
                             >
                                 Cancelar
                             </button>
                             <button 
                                 onClick={handleSubmitTerm}
                                 disabled={!newTermName.trim() || newSubjects.filter(s => s.trim() !== '').length === 0}
+                                className="glass-button"
                                 style={{
                                     padding: '0.8rem 1.5rem',
-                                    borderRadius: 'var(--radius-sm)',
                                     background: 'var(--color-primary)',
-                                    color: 'white',
-                                    fontWeight: '500',
                                     border: 'none',
-                                    cursor: (!newTermName.trim() || newSubjects.filter(s => s.trim() !== '').length === 0) ? 'not-allowed' : 'pointer',
+                                    fontWeight: '500',
                                     opacity: (!newTermName.trim() || newSubjects.filter(s => s.trim() !== '').length === 0) ? 0.5 : 1
                                 }}
                             >

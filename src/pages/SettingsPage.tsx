@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Database, AlertCircle, LogOut, Cloud, User, DownloadCloud, UploadCloud } from 'lucide-react';
+import GoogleIcon from '../components/GoogleIcon';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, logInWithGoogle, logOut } from '../firebase';
@@ -105,9 +105,9 @@ const SettingsPage: React.FC = () => {
 
             <div className="settings-content">
                 <div className="glass-panel settings-form-container">
-                    <div className="card-header">
-                        <Database size={24} className="text-primary" />
-                        <h3>Autenticación y Respaldo</h3>
+                    <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                        <GoogleIcon name="storage" size={24} style={{ color: 'var(--color-primary)' }} />
+                        <h3 style={{ margin: 0 }}>Autenticación y Respaldo</h3>
                     </div>
 
                     <p className="settings-description">
@@ -123,7 +123,9 @@ const SettingsPage: React.FC = () => {
                                     {user.photoURL ? (
                                         <img src={user.photoURL} alt="Profile" className="profile-pic" />
                                     ) : (
-                                        <div className="profile-placeholder"><User size={24} /></div>
+                                        <div className="profile-placeholder">
+                                            <GoogleIcon name="person" size={24} />
+                                        </div>
                                     )}
                                     <div className="user-details">
                                         <h4>{user.displayName || 'Usuario'}</h4>
@@ -132,23 +134,23 @@ const SettingsPage: React.FC = () => {
                                 </div>
 
                                 <div className={`status-indicator ${status}`}>
-                                    {status === 'loading' && <AlertCircle size={18} className="pulse" />}
-                                    {status === 'success' && <Cloud size={18} />}
-                                    {status === 'error' && <AlertCircle size={18} />}
+                                    {status === 'loading' && <GoogleIcon name="error" size={18} className="pulse" />}
+                                    {status === 'success' && <GoogleIcon name="cloud" size={18} />}
+                                    {status === 'error' && <GoogleIcon name="error" size={18} />}
                                     <span>{message || 'En línea'}</span>
                                 </div>
 
                                 <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', width: '100%', flexDirection: 'column' }}>
-                                    <button onClick={handleForcePull} className="btn-logout" disabled={status === 'loading'} style={{ backgroundColor: '#f59e0b', color: 'white', border: 'none' }}>
-                                        <DownloadCloud size={18} />
+                                    <button onClick={handleForcePull} className="glass-button" disabled={status === 'loading'} style={{ backgroundColor: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b', borderColor: 'rgba(245, 158, 11, 0.3)', width: '100%' }}>
+                                        <GoogleIcon name="cloud_download" size={18} />
                                         Forzar descarga desde la Nube
                                     </button>
-                                    <button onClick={handleForcePush} className="btn-logout" disabled={status === 'loading'} style={{ backgroundColor: 'var(--color-primary, #6366f1)', color: 'white', border: 'none' }}>
-                                        <UploadCloud size={18} />
+                                    <button onClick={handleForcePush} className="glass-button" disabled={status === 'loading'} style={{ backgroundColor: 'rgba(139, 92, 246, 0.15)', color: '#a78bfa', borderColor: 'rgba(139, 92, 246, 0.3)', width: '100%' }}>
+                                        <GoogleIcon name="cloud_upload" size={18} />
                                         Forzar subida y re-escribir Nube
                                     </button>
-                                    <button onClick={handleLogout} className="btn-logout">
-                                        <LogOut size={18} />
+                                    <button onClick={handleLogout} className="glass-button" style={{ backgroundColor: 'rgba(239, 68, 68, 0.15)', color: '#fca5a5', borderColor: 'rgba(239, 68, 68, 0.3)', width: '100%' }}>
+                                        <GoogleIcon name="logout" size={18} />
                                         Cerrar Sesión
                                     </button>
                                 </div>
@@ -157,12 +159,12 @@ const SettingsPage: React.FC = () => {
                             <div className="login-prompt">
                                 {status === 'error' && (
                                     <div className="status-message error">
-                                        <AlertCircle size={18} />
+                                        <GoogleIcon name="error" size={18} />
                                         <span>{message}</span>
                                     </div>
                                 )}
-                                <button onClick={handleLogin} className="btn-login" disabled={status === 'loading'}>
-                                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" className="google-icon" />
+                                <button onClick={handleLogin} className="glass-button" disabled={status === 'loading'} style={{ width: '100%', background: 'rgba(255, 255, 255, 0.08)', padding: '1rem' }}>
+                                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" className="google-icon" style={{ marginRight: '0.5rem' }} />
                                     <span>{status === 'loading' ? 'Cargando...' : 'Iniciar Sesión con Google'}</span>
                                 </button>
                             </div>

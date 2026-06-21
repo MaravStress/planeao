@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { Order, ChecklistItem } from '../../types/work';
-import { X, Save, Plus } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 import {
     DndContext,
     closestCenter,
@@ -153,7 +153,7 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({ order, isOpen, onClose,
                         cursor: 'pointer'
                     }}
                 >
-                    <X size={24} />
+                    <GoogleIcon name="close" size={24} />
                 </button>
 
                 <h2 style={{ marginTop: 0, marginBottom: '1.5rem' }}>Editar Pedido</h2>
@@ -257,7 +257,7 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({ order, isOpen, onClose,
                                 alignItems: 'center'
                             }}
                         >
-                            <Plus size={20} />
+                            <GoogleIcon name="add" size={20} />
                         </button>
                     </form>
 
@@ -344,7 +344,7 @@ const EditOrderModal: React.FC<EditOrderModalProps> = ({ order, isOpen, onClose,
                                 fontWeight: 'bold'
                             }}
                         >
-                            <Save size={18} />
+                            <GoogleIcon name="save" size={18} />
                             Guardar Cambios
                         </button>
                     </div>

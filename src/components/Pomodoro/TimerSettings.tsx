@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings as SettingsIcon, X } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 
 interface TimerSettingsProps {
     focusDuration: number;
@@ -30,7 +30,7 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({
                 className="btn-settings-toggle"
                 onClick={() => setIsOpen(true)}
             >
-                <SettingsIcon size={20} />
+                <GoogleIcon name="settings" size={20} />
                 Configurar Tiempos
             </button>
         );
@@ -41,7 +41,7 @@ const TimerSettings: React.FC<TimerSettingsProps> = ({
             <div className="settings-header">
                 <h3>Configuración</h3>
                 <button onClick={() => setIsOpen(false)} className="btn-close-settings">
-                    <X size={20} />
+                    <GoogleIcon name="close" size={20} />
                 </button>
             </div>
 

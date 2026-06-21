@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 import { useUniTasks } from '../../context/UniTasksContext';
 import type { Assignment } from '../../types/uniTasks';
 
@@ -118,7 +118,7 @@ const Calendar: React.FC<CalendarProps> = ({ onEditAssignment }) => {
                 gap: '1rem'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <CalendarIcon size={24} color="var(--color-secondary)" />
+                    <GoogleIcon name="calendar_today" size={24} style={{ color: 'var(--color-secondary)' }} />
                     <h2 style={{ margin: 0 }}>{monthNames[month]} {year}</h2>
                 </div>
 
@@ -129,7 +129,7 @@ const Calendar: React.FC<CalendarProps> = ({ onEditAssignment }) => {
                         style={{ display: 'flex', alignItems: 'center', color: 'white', padding: '0.5rem' }}
                         title="Mes Anterior"
                     >
-                        <ChevronLeft size={20} />
+                        <GoogleIcon name="chevron_left" size={20} />
                     </button>
                     <button
                         onClick={resetToToday}
@@ -144,7 +144,7 @@ const Calendar: React.FC<CalendarProps> = ({ onEditAssignment }) => {
                         style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', color: 'white' }}
                         title="Mes Siguiente"
                     >
-                        <ChevronRight size={20} />
+                        <GoogleIcon name="chevron_right" size={20} />
                     </button>
                 </div>
             </div>

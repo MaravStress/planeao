@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Assignment, ChecklistItem } from '../../types/uniTasks';
-import { Check, Calendar as CalendarIcon, Pencil, ExternalLink } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 
 interface AssignmentCardProps {
     assignment: Assignment;
@@ -70,7 +70,7 @@ const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, onToggleChe
                     }}
                     title="Editar Tarea"
                 >
-                    <Pencil size={14} />
+                    <GoogleIcon name="edit" size={14} />
                 </button>
             </div>
 
@@ -99,7 +99,7 @@ const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, onToggleChe
                 color: 'var(--color-text-muted)',
                 marginBottom: '1rem'
             }}>
-                <CalendarIcon size={14} />
+                <GoogleIcon name="calendar_today" size={14} />
                 <span>{new Date(assignment.endDate).toLocaleDateString()}</span>
             </div>
 
@@ -129,7 +129,7 @@ const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, onToggleChe
                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'}
                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'}
                 >
-                    <ExternalLink size={16} />
+                    <GoogleIcon name="open_in_new" size={16} />
                     Abrir Tarea
                 </a>
             )}
@@ -159,7 +159,7 @@ const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, onToggleChe
                             justifyContent: 'center',
                             transition: 'all 0.2s ease'
                         }}>
-                            {item.completed && <Check size={12} color="white" />}
+                            {item.completed && <GoogleIcon name="check" size={12} style={{ color: 'white' }} />}
                         </div>
                         <span style={{
                             fontSize: '0.9rem',
@@ -191,7 +191,7 @@ const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, onToggleChe
                         gap: '0.5rem'
                     }}
                 >
-                    <Check size={16} />
+                    <GoogleIcon name="check" size={16} />
                     Completar y Archivar
                 </button>
             )}

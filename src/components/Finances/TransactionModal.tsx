@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 import type { Currency } from '../../types/finances';
 
 interface TransactionModalProps {
@@ -36,7 +36,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({ type, onSave, onClo
                 <div className={`fin-modal-header ${accentClass}-header`}>
                     <h3>Registrar {label}</h3>
                     <button className="fin-modal-close" onClick={onClose}>
-                        <X size={18} />
+                        <GoogleIcon name="close" size={18} />
                     </button>
                 </div>
 

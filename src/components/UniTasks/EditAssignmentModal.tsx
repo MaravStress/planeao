@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { Assignment, ChecklistItem } from '../../types/uniTasks';
-import { X, Save, Plus } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 import {
     DndContext,
     closestCenter,
@@ -148,67 +148,49 @@ const EditAssignmentModal: React.FC<EditAssignmentModalProps> = ({ assignment, i
                         background: 'transparent',
                         border: 'none',
                         color: 'white',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
                     }}
                 >
-                    <X size={24} />
+                    <GoogleIcon name="close" size={24} />
                 </button>
 
                 <h2 style={{ marginTop: 0, marginBottom: '1.5rem' }}>Editar Tarea</h2>
 
-                <div style={{ marginBottom: '1.5rem' }}>
+                <div style={{ marginBottom: '1.25rem' }}>
                     <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Título</label>
                     <input
                         ref={titleInputRef}
                         type="text"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        style={{
-                            width: '100%',
-                            padding: '0.75rem',
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                            border: '1px solid rgba(255, 255, 255, 0.2)',
-                            borderRadius: '4px',
-                            color: 'white',
-                            fontSize: '1rem'
-                        }}
+                        className="glass-input"
+                        style={{ width: '100%' }}
                     />
                 </div>
 
-                <div style={{ marginBottom: '1.5rem' }}>
+                <div style={{ marginBottom: '1.25rem' }}>
                     <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Fecha de Entrega</label>
                     <input
                         type="date"
                         value={endDate}
                         onChange={(e) => setEndDate(e.target.value)}
-                        style={{
-                            width: '100%',
-                            padding: '0.75rem',
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                            border: '1px solid rgba(255, 255, 255, 0.2)',
-                            borderRadius: '4px',
-                            color: 'white',
-                            fontSize: '1rem'
-                        }}
+                        className="glass-input"
+                        style={{ width: '100%' }}
                     />
                 </div>
 
-                <div style={{ marginBottom: '1.5rem' }}>
+                <div style={{ marginBottom: '1.25rem' }}>
                     <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Enlace de la Tarea (Opcional)</label>
                     <input
                         type="url"
                         value={link}
                         onChange={(e) => setLink(e.target.value)}
                         placeholder="https://..."
-                        style={{
-                            width: '100%',
-                            padding: '0.75rem',
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                            border: '1px solid rgba(255, 255, 255, 0.2)',
-                            borderRadius: '4px',
-                            color: 'white',
-                            fontSize: '1rem'
-                        }}
+                        className="glass-input"
+                        style={{ width: '100%' }}
                     />
                 </div>
 
@@ -233,29 +215,19 @@ const EditAssignmentModal: React.FC<EditAssignmentModalProps> = ({ assignment, i
                             value={newItemText}
                             onChange={(e) => setNewItemText(e.target.value)}
                             placeholder="Nueva subtarea..."
-                            style={{
-                                flex: 1,
-                                padding: '0.5rem',
-                                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                border: '1px solid rgba(255, 255, 255, 0.2)',
-                                borderRadius: '4px',
-                                color: 'white'
-                            }}
+                            className="glass-input"
+                            style={{ flex: 1 }}
                         />
                         <button
                             type="submit"
+                            className="glass-button"
                             style={{
                                 padding: '0.5rem',
-                                backgroundColor: 'var(--color-primary)',
-                                border: 'none',
-                                borderRadius: '4px',
-                                color: 'white',
-                                cursor: 'pointer',
                                 display: 'flex',
                                 alignItems: 'center'
                             }}
                         >
-                            <Plus size={20} />
+                            <GoogleIcon name="add" size={20} />
                         </button>
                     </form>
 
@@ -301,13 +273,12 @@ const EditAssignmentModal: React.FC<EditAssignmentModalProps> = ({ assignment, i
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto' }}>
                     <button
                         onClick={() => onDelete(assignment.subjectId, assignment.id)}
+                        className="glass-button"
                         style={{
                             padding: '0.75rem 1.5rem',
-                            background: 'rgba(239, 68, 68, 0.2)',
-                            border: '1px solid rgba(239, 68, 68, 0.5)',
-                            borderRadius: '4px',
+                            background: 'rgba(239, 68, 68, 0.15)',
+                            borderColor: 'rgba(239, 68, 68, 0.3)',
                             color: '#fca5a5',
-                            cursor: 'pointer',
                             fontWeight: 'bold'
                         }}
                     >
@@ -316,33 +287,22 @@ const EditAssignmentModal: React.FC<EditAssignmentModalProps> = ({ assignment, i
                     <div style={{ display: 'flex', gap: '1rem' }}>
                         <button
                             onClick={onClose}
-                            style={{
-                                padding: '0.75rem 1.5rem',
-                                background: 'transparent',
-                                border: '1px solid rgba(255, 255, 255, 0.2)',
-                                borderRadius: '4px',
-                                color: 'white',
-                                cursor: 'pointer'
-                            }}
+                            className="glass-button"
+                            style={{ padding: '0.75rem 1.5rem' }}
                         >
                             Cancelar
                         </button>
                         <button
                             onClick={handleSave}
+                            className="glass-button"
                             style={{
                                 padding: '0.75rem 1.5rem',
                                 background: 'var(--color-primary)',
                                 border: 'none',
-                                borderRadius: '4px',
-                                color: 'white',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
                                 fontWeight: 'bold'
                             }}
                         >
-                            <Save size={18} />
+                            <GoogleIcon name="save" size={18} />
                             Guardar Cambios
                         </button>
                     </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, Trash2 } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 
 interface SortableItemProps {
     id: string;
@@ -39,7 +39,7 @@ export const SortableItem: React.FC<SortableItemProps> = ({ id, text, onDelete }
                 {...listeners}
                 style={{ cursor: 'grab', display: 'flex', alignItems: 'center', padding: '0.25rem' }}
             >
-                <GripVertical size={16} color="rgba(255,255,255,0.5)" />
+                <GoogleIcon name="drag_indicator" size={16} style={{ color: 'rgba(255,255,255,0.5)' }} />
             </div>
 
             <div style={{ flex: 1 }}>{text}</div>
@@ -60,7 +60,7 @@ export const SortableItem: React.FC<SortableItemProps> = ({ id, text, onDelete }
                     padding: '0.25rem'
                 }}
             >
-                <Trash2 size={16} />
+                <GoogleIcon name="delete" size={16} />
             </button>
         </div>
     );

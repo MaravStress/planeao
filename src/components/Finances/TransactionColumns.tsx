@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, Zap } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 import { useFinances } from '../../context/FinancesContext';
 import type { Currency } from '../../types/finances';
 
@@ -60,7 +60,7 @@ const TransactionColumns: React.FC<TransactionColumnsProps> = ({ onAddIncome, on
                 <div className="fin-column-header">
                     <span className="fin-column-title income-title">Ingresos</span>
                     <button className="fin-add-btn income-btn" onClick={onAddIncome} title="Registrar ingreso">
-                        <Plus size={16} />
+                        <GoogleIcon name="add" size={16} />
                     </button>
                 </div>
                 <div className="fin-column-list">
@@ -89,7 +89,7 @@ const TransactionColumns: React.FC<TransactionColumnsProps> = ({ onAddIncome, on
                                         {formatAmount(item.amount, item.currency as Currency)} {item.currency}
                                     </span>
                                     <button className="fin-delete-btn" onClick={() => deleteIncome(item.id)} title="Eliminar">
-                                        <Trash2 size={13} />
+                                        <GoogleIcon name="delete" size={13} />
                                     </button>
                                 </div>
                             </div>
@@ -129,10 +129,10 @@ const TransactionColumns: React.FC<TransactionColumnsProps> = ({ onAddIncome, on
                             onClick={() => setManagingQuick(p => !p)}
                             title="Gestionar gastos rápidos"
                         >
-                            <Zap size={14} />
+                            <GoogleIcon name="bolt" size={14} />
                         </button>
                         <button className="fin-add-btn expense-btn" onClick={onAddExpense} title="Registrar gasto">
-                            <Plus size={16} />
+                            <GoogleIcon name="add" size={16} />
                         </button>
                     </div>
                 </div>
@@ -156,7 +156,7 @@ const TransactionColumns: React.FC<TransactionColumnsProps> = ({ onAddIncome, on
                                         onClick={() => deleteQuickExpense(q.id)}
                                         title="Eliminar"
                                     >
-                                        <Trash2 size={12} />
+                                        <GoogleIcon name="delete" size={12} />
                                     </button>
                                 </div>
                             ))}
@@ -188,7 +188,7 @@ const TransactionColumns: React.FC<TransactionColumnsProps> = ({ onAddIncome, on
                                         disabled={!newTitle.trim() || !newAmount || parseFloat(newAmount) <= 0}
                                         title="Guardar plantilla"
                                     >
-                                        <Plus size={14} />
+                                        <GoogleIcon name="add" size={14} />
                                     </button>
                                 </div>
                             </form>
@@ -222,7 +222,7 @@ const TransactionColumns: React.FC<TransactionColumnsProps> = ({ onAddIncome, on
                                         {formatAmount(item.amount, item.currency as Currency)} {item.currency}
                                     </span>
                                     <button className="fin-delete-btn" onClick={() => deleteVariableExpense(item.id)} title="Eliminar">
-                                        <Trash2 size={13} />
+                                        <GoogleIcon name="delete" size={13} />
                                     </button>
                                 </div>
                             </div>

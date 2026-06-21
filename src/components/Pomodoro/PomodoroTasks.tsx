@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, CheckSquare, Square } from 'lucide-react';
+import GoogleIcon from '../GoogleIcon';
 import { v4 as uuidv4 } from 'uuid';
 import '../../styles/PomodoroDnD.css';
 import { saveToLocal, loadFromLocal, STORAGE_KEYS } from '../../context/LocalSave';
@@ -136,7 +136,7 @@ const PomodoroTasks: React.FC = () => {
                     className="task-input"
                 />
                 <button onClick={addTask} className="btn-add-task">
-                    <Plus size={20} />
+                    <GoogleIcon name="add" size={20} />
                 </button>
             </div>
 
@@ -164,11 +164,11 @@ const PomodoroTasks: React.FC = () => {
                             </svg>
                         </div>
                         <button onClick={() => toggleTask(task.id)} className="btn-toggle-task">
-                            {task.completed ? <CheckSquare size={20} /> : <Square size={20} />}
+                            {task.completed ? <GoogleIcon name="check_box" size={20} /> : <GoogleIcon name="check_box_outline_blank" size={20} />}
                         </button>
                         <span className="task-text">{task.text}</span>
                         <button onClick={() => deleteTask(task.id)} className="btn-delete-task">
-                            <Trash2 size={16} />
+                            <GoogleIcon name="delete" size={16} />
                         </button>
                     </div>
                 ))}
