@@ -77,13 +77,7 @@ const MainLayout: React.FC = () => {
             <GoogleIcon name="lightbulb" size={24} />
             <span>Ideas Emprendedoras</span>
           </NavLink>
-          <NavLink
-            to="/uni-tasks"
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-          >
-            <GoogleIcon name="menu_book" size={24} />
-            <span>Tareas Uni</span>
-          </NavLink>
+
           <NavLink
             to="/uni-progress"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
