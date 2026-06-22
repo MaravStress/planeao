@@ -33,7 +33,7 @@ const FinancesPage: React.FC = () => {
     };
 
     return (
-        <div className="fin-page">
+        <div className="page-container fin-page">
             {/* Top Bar */}
             <div className="fin-topbar">
                 <div className="fin-topbar-left">

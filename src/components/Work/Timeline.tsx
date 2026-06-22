@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useWork } from '../../context/WorkContext';
 import GoogleIcon from '../GoogleIcon';
 import type { Order } from '../../types/work';
+import { getOrderStatus, getOrderStatusColor } from '../../utils/workColors';
 
 // Timeline width in days
 const DAYS_IN_VIEW = 14;
@@ -132,23 +133,9 @@ const Timeline: React.FC<TimelineProps> = ({ onEditOrder }) => {
     }, [viewStartDate]);
 
     const getStatusColor = (order: Order) => {
-        const now = new Date();
-        now.setHours(0, 0, 0, 0);
-
-        const start = new Date(order.startDate);
-        start.setHours(0, 0, 0, 0);
-
-        const end = new Date(order.endDate);
-        end.setHours(0, 0, 0, 0);
-
-        const oneDay = 24 * 60 * 60 * 1000;
-        const diffDays = (end.getTime() - now.getTime()) / oneDay;
-
-        if (now > end) return 'rgba(239, 68, 68, 0.4)'; // Red
-        if (diffDays <= 1 && diffDays >= 0) return 'rgba(234, 179, 8, 0.4)'; // Yellow
-        if (now >= start) return 'rgba(59, 130, 246, 0.4)'; // Blue
-
-        return 'rgba(255, 255, 255, 0.1)'; // Default
+        const project = projects.find(p => p.id === order.projectId);
+        const status = getOrderStatus(order, project?.isPaused);
+        return getOrderStatusColor(status, true);
     };
 
     return (

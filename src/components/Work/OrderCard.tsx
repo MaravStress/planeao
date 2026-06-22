@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Order, ChecklistItem } from '../../types/work';
 import GoogleIcon from '../GoogleIcon';
+import { getOrderStatus, getOrderStatusColor } from '../../utils/workColors';
 
 interface OrderCardProps {
     order: Order;
@@ -18,45 +19,12 @@ const OrderCard: React.FC<OrderCardProps> = ({ order, isPaused, onToggleCheck, o
 
     // Calculate status color
     const getBackgroundColor = () => {
-        if (isPaused) {
-            return 'rgba(255, 255, 255, 0.05)';
-        }
-
-        const now = new Date();
-        now.setHours(0, 0, 0, 0); // Normalize to start of day
-
-        const start = new Date(order.startDate);
-        start.setHours(0, 0, 0, 0);
-
-        const end = new Date(order.endDate);
-        end.setHours(0, 0, 0, 0);
-
-        // Calculate difference in days
-        // If end is today, diff is 0. If end is tomorrow, diff is 1.
-        const oneDay = 24 * 60 * 60 * 1000;
-        const diffDays = (end.getTime() - now.getTime()) / oneDay;
-
-        // Priority 1: Past deadline -> Reddish
-        if (now > end) {
-            return 'rgba(239, 68, 68, 0.25)'; // Red
-        }
-
-        // Priority 2: 1 day left (today or tomorrow is the deadline) -> Yellowish
-        if (diffDays <= 1 && diffDays >= 0) {
-            return 'rgba(234, 179, 8, 0.25)'; // Yellow
-        }
-
-        // Priority 3: Active (Start date passed or is today) -> Bluish
-        if (now >= start) {
-            return 'rgba(59, 130, 246, 0.25)'; // Blue
-        }
-
-        // Priority 4: Default (Future start date)
-        return 'rgba(255, 255, 255, 0.05)';
+        const status = getOrderStatus(order, isPaused);
+        return getOrderStatusColor(status, false);
     };
 
     return (
-        <div className="glass-panel" style={{
+        <div className="order-card" style={{
             padding: '1rem',
             marginTop: '1rem',
             backgroundColor: getBackgroundColor(),
