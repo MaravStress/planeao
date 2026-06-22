@@ -5,6 +5,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth, logInWithGoogle, logOut } from '../firebase';
 import { syncData, forcePullFromOnline, forcePushToOnline } from '../context/OnlineSave';
 import '../styles/Settings.css';
+import { exportAllData, importAllData, triggerImportFile } from '../utils/importExport';
 
 const SettingsPage: React.FC = () => {
     const [user, setUser] = useState<FirebaseUser | null>(null);
@@ -96,6 +97,21 @@ const SettingsPage: React.FC = () => {
         }
     };
 
+    const handleExportDB = () => {
+        exportAllData();
+    };
+
+    const handleImportDB = () => {
+        if (window.confirm("¿Estás seguro de que deseas importar una base de datos completa? Esta acción sobreescribirá todos los datos actuales locales.")) {
+            triggerImportFile((jsonText) => {
+                const success = importAllData(jsonText);
+                if (success) {
+                    window.location.reload();
+                }
+            });
+        }
+    };
+
     return (
         <div className="page-container settings-page">
             <header className="page-header">
@@ -103,7 +119,7 @@ const SettingsPage: React.FC = () => {
                 <p>Gestiona tu cuenta y el respaldo de datos.</p>
             </header>
 
-            <div className="settings-content">
+            <div className="settings-content" style={{ flexDirection: 'column', alignItems: 'center', gap: '2rem', paddingBottom: '3rem' }}>
                 <div className="glass-panel settings-form-container">
                     <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
                         <GoogleIcon name="storage" size={24} style={{ color: 'var(--color-primary)' }} />
@@ -169,6 +185,55 @@ const SettingsPage: React.FC = () => {
                                 </button>
                             </div>
                         )}
+                    </div>
+                </div>
+
+                {/* Respaldo Local (JSON) Card */}
+                <div className="glass-panel settings-form-container">
+                    <div className="card-header" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                        <GoogleIcon name="backup" size={24} style={{ color: 'var(--color-secondary)' }} />
+                        <h3 style={{ margin: 0 }}>Respaldo Local (JSON)</h3>
+                    </div>
+
+                    <p className="settings-description" style={{ marginBottom: '1.5rem', paddingBottom: '1.5rem' }}>
+                        Exporta o importa una copia de seguridad local de toda tu base de datos (proyectos, tareas, finanzas, ideas y progreso universitario) en un único archivo JSON.
+                    </p>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <button 
+                            onClick={handleExportDB} 
+                            className="glass-button" 
+                            style={{ 
+                                padding: '1rem', 
+                                background: 'rgba(255, 255, 255, 0.08)', 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center', 
+                                gap: '0.5rem', 
+                                fontWeight: '600',
+                                width: '100%' 
+                            }}
+                        >
+                            <GoogleIcon name="download" size={20} />
+                            <span>Exportar Base de Datos</span>
+                        </button>
+                        <button 
+                            onClick={handleImportDB} 
+                            className="glass-button" 
+                            style={{ 
+                                padding: '1rem', 
+                                background: 'rgba(255, 255, 255, 0.08)', 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center', 
+                                gap: '0.5rem', 
+                                fontWeight: '600',
+                                width: '100%' 
+                            }}
+                        >
+                            <GoogleIcon name="upload" size={20} />
+                            <span>Importar Base de Datos</span>
+                        </button>
                     </div>
                 </div>
             </div>

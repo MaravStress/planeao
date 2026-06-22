@@ -9,6 +9,7 @@ import FixedExpensesModal from '../components/Finances/FixedExpensesModal';
 import MonthEditModal from '../components/Finances/MonthEditModal';
 import type { Currency } from '../types/finances';
 import '../styles/Finances.css';
+import ImportExportButtons from '../components/ImportExportButtons';
 
 const FinancesPage: React.FC = () => {
     const { exchangeRate, setExchangeRate, addIncome, addVariableExpense } = useFinances();
@@ -58,15 +59,18 @@ const FinancesPage: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Fixed Expenses Button */}
-                <button
-                    id="fin-fixed-expenses-btn"
-                    className="fin-fixed-btn"
-                    onClick={() => setModal('fixed')}
-                >
-                    <GoogleIcon name="settings" size={15} />
-                    Gastos Fijos
-                </button>
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <ImportExportButtons page="finances" />
+                    {/* Fixed Expenses Button */}
+                    <button
+                        id="fin-fixed-expenses-btn"
+                        className="fin-fixed-btn"
+                        onClick={() => setModal('fixed')}
+                    >
+                        <GoogleIcon name="settings" size={15} />
+                        Gastos Fijos
+                    </button>
+                </div>
             </div>
 
             {/* Month Summary Panel */}

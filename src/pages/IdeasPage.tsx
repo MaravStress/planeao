@@ -6,6 +6,7 @@ import IdeaSettingsModal from '../components/ideas/IdeaSettingsModal';
 import type { Idea, IdeaSettings } from '../types/ideas';
 import { useIdeas } from '../context/IdeasContext';
 import '../styles/Ideas.css';
+import ImportExportButtons from '../components/ImportExportButtons';
 
 const IdeasPage: React.FC = () => {
     const { ideas, settings, addIdea, updateIdea, deleteIdea, updateSettings } = useIdeas();
@@ -75,9 +76,11 @@ const IdeasPage: React.FC = () => {
 
     return (
         <div className="page-container">
-            <header className="page-header">
-                <h1>Ideas Emprendedoras</h1>
-                <br />
+            <header className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                    <h1>Ideas Emprendedoras</h1>
+                </div>
+                <ImportExportButtons page="ideas" />
             </header>
 
             <div className="ideas-header-container">

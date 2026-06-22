@@ -6,6 +6,7 @@ import EditOrderModal from '../components/Work/EditOrderModal';
 import type { Project, Order } from '../types/work';
 import GoogleIcon from '../components/GoogleIcon';
 import { useWork } from '../context/WorkContext';
+import ImportExportButtons from '../components/ImportExportButtons';
 
 const WorkPage: React.FC = () => {
     const {
@@ -53,9 +54,12 @@ const WorkPage: React.FC = () => {
 
     return (
         <div className="page-container" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-            <header className="page-header">
-                <h1>Work</h1>
-                <p>Gestiona tus proyectos y pedidos.</p>
+            <header className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                    <h1>Work</h1>
+                    <p>Gestiona tus proyectos y pedidos.</p>
+                </div>
+                <ImportExportButtons page="work" />
             </header>
 
             <Timeline onEditOrder={setEditingOrder} />

@@ -5,6 +5,7 @@ import PomodoroTasks from '../components/Pomodoro/PomodoroTasks';
 import PomodoroProjectTasks from '../components/Pomodoro/PomodoroProjectTasks';
 import '../styles/Pomodoro.css';
 import { usePomodoro } from '../context/PomodoroContext';
+import ImportExportButtons from '../components/ImportExportButtons';
 
 const PomodoroPage: React.FC = () => {
     const {
@@ -27,9 +28,12 @@ const PomodoroPage: React.FC = () => {
 
     return (
         <div className={`page-container pomodoro-page mode-${mode}`}>
-            <header className="page-header">
-                <h1>Pomodoro</h1>
-                <p>Mantén el enfoque y toma descansos cronometrados.</p>
+            <header className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                    <h1>Pomodoro</h1>
+                    <p>Mantén el enfoque y toma descansos cronometrados.</p>
+                </div>
+                <ImportExportButtons page="pomodoro" />
             </header>
 
             <div className="pomodoro-content">

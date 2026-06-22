@@ -3,6 +3,7 @@ import { useUniProgress } from '../context/UniProgressContext';
 import type { SubjectStatus } from '../types/uniProgress';
 import GoogleIcon from '../components/GoogleIcon';
 import { GlassCard } from 'react-glass-ui';
+import ImportExportButtons from '../components/ImportExportButtons';
 
 const UniProgressPage: React.FC = () => {
     const { terms, addTerm, updateSubjectStatus, deleteTerm } = useUniProgress();
@@ -70,25 +71,28 @@ const UniProgressPage: React.FC = () => {
                     <h1 style={{ marginBottom: '0.5rem' }}>Progreso de la Universidad</h1>
                     <p style={{ color: 'var(--color-text-muted)' }}>Sigue tu avance académico y calificaciones.</p>
                 </div>
-                <button 
-                    onClick={() => setIsModalOpen(true)}
-                    className="glass-button"
-                    style={{
-                        width: '45px',
-                        height: '45px',
-                        borderRadius: '50%',
-                        padding: 0,
-                        backgroundColor: 'var(--color-primary)',
-                        border: 'none',
-                        boxShadow: 'var(--shadow-glow)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                    title="Añadir cuatrimestre"
-                >
-                    <GoogleIcon name="add" size={24} />
-                </button>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <ImportExportButtons page="uni-progress" />
+                    <button 
+                        onClick={() => setIsModalOpen(true)}
+                        className="glass-button"
+                        style={{
+                            width: '45px',
+                            height: '45px',
+                            borderRadius: '50%',
+                            padding: 0,
+                            backgroundColor: 'var(--color-primary)',
+                            border: 'none',
+                            boxShadow: 'var(--shadow-glow)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
+                        title="Añadir cuatrimestre"
+                    >
+                        <GoogleIcon name="add" size={24} />
+                    </button>
+                </div>
             </header>
 
             {/* Statistics Bar */}
