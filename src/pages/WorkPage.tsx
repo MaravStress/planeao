@@ -56,7 +56,7 @@ const WorkPage: React.FC = () => {
         <div className="page-container" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
             <header className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                    <h1>Work</h1>
+                    <h1 className="work-page-title">Work</h1>
                     <p>Gestiona tus proyectos y pedidos.</p>
                 </div>
                 <ImportExportButtons page="work" />

@@ -254,7 +254,19 @@ a:hover {
 }
 
 .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
   margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
 }
 
 .page-header h1 {
@@ -269,3 +281,127 @@ a:hover {
   font-size: 1rem;
   margin-top: 0.25rem;
 }
+
+/* Page Gradient Titles */
+.work-page-title {
+  background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  letter-spacing: -0.02em;
+}
+
+.ideas-page-title {
+  background: linear-gradient(135deg, #f97316 0%, #facc15 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  letter-spacing: -0.02em;
+}
+
+.pomodoro-page-title {
+  background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  letter-spacing: -0.02em;
+}
+
+.uni-page-title {
+  background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  letter-spacing: -0.02em;
+}
+
+.settings-page-title {
+  background: linear-gradient(135deg, #a78bfa 0%, #f472b6 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  letter-spacing: -0.02em;
+}
+
+/* Custom responsive classes for panels, grids, and modals */
+.glass-modal-panel {
+  background: rgba(20, 20, 32, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  border-radius: var(--radius-lg);
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  color: var(--color-text-main) !important;
+}
+
+.modal-content {
+  width: 100%;
+  padding: 2rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.stats-panel {
+  padding: 2rem;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgba(15, 15, 25, 0.6) !important;
+}
+
+.term-panel {
+  padding: 2rem;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgba(15, 15, 25, 0.6) !important;
+}
+
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-panel {
+    padding: 1.25rem;
+  }
+  .term-panel {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .modal-content {
+    padding: 1.25rem;
+    max-height: 95vh;
+  }
+}
+
+/* Specific styling for select dropdowns inside term panels to prevent Chrome layout overlaps */
+.term-panel select {
+  width: 100% !important;
+  display: block !important;
+  background: rgba(10, 10, 15, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  padding: 0.6rem 1rem !important;
+  border-radius: var(--radius-md) !important;
+  color: var(--color-text-main) !important;
+  font-size: 0.9rem !important;
+  cursor: pointer !important;
+  margin-top: 0.5rem !important;
+}
+
+

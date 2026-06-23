@@ -30,7 +30,7 @@ const PomodoroPage: React.FC = () => {
         <div className={`page-container pomodoro-page mode-${mode}`}>
             <header className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                    <h1>Pomodoro</h1>
+                    <h1 className="pomodoro-page-title">Pomodoro</h1>
                     <p>Mantén el enfoque y toma descansos cronometrados.</p>
                 </div>
                 <ImportExportButtons page="pomodoro" />

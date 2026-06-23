@@ -115,7 +115,7 @@ const SettingsPage: React.FC = () => {
     return (
         <div className="page-container settings-page">
             <header className="page-header">
-                <h1>Configuraciones</h1>
+                <h1 className="settings-page-title">Configuraciones</h1>
                 <p>Gestiona tu cuenta y el respaldo de datos.</p>
             </header>
 

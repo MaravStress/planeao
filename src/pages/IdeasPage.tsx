@@ -78,7 +78,7 @@ const IdeasPage: React.FC = () => {
         <div className="page-container">
             <header className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                    <h1>Ideas Emprendedoras</h1>
+                    <h1 className="ideas-page-title">Ideas Emprendedoras</h1>
                 </div>
                 <ImportExportButtons page="ideas" />
             </header>

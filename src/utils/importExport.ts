@@ -23,6 +23,7 @@ export const exportPageData = (page: 'work' | 'pomodoro' | 'finances' | 'ideas' 
             transactions: loadFromLocal(STORAGE_KEYS.FINANCE_TRANSACTIONS, []),
             exchangeRate: loadFromLocal(STORAGE_KEYS.FINANCE_EXCHANGE_RATE, 60),
             recurring: loadFromLocal(STORAGE_KEYS.FINANCE_RECURRING, []),
+            fixedIncomes: loadFromLocal(STORAGE_KEYS.FINANCE_RECURRING_INCOMES, []),
             incomes: loadFromLocal(STORAGE_KEYS.FINANCE_INCOMES, []),
             quickExpenses: loadFromLocal(STORAGE_KEYS.FINANCE_QUICK_EXPENSES, [])
         };
@@ -86,6 +87,7 @@ export const importPageData = (page: 'work' | 'pomodoro' | 'finances' | 'ideas' 
             if (parsed.transactions) saveToLocal(STORAGE_KEYS.FINANCE_TRANSACTIONS, parsed.transactions);
             if (parsed.exchangeRate !== undefined) saveToLocal(STORAGE_KEYS.FINANCE_EXCHANGE_RATE, parsed.exchangeRate);
             if (parsed.recurring) saveToLocal(STORAGE_KEYS.FINANCE_RECURRING, parsed.recurring);
+            if (parsed.fixedIncomes) saveToLocal(STORAGE_KEYS.FINANCE_RECURRING_INCOMES, parsed.fixedIncomes);
             if (parsed.incomes) saveToLocal(STORAGE_KEYS.FINANCE_INCOMES, parsed.incomes);
             if (parsed.quickExpenses) saveToLocal(STORAGE_KEYS.FINANCE_QUICK_EXPENSES, parsed.quickExpenses);
         } else if (page === 'ideas') {
@@ -119,6 +121,7 @@ export const exportAllData = () => {
             [STORAGE_KEYS.FINANCE_TRANSACTIONS]: loadFromLocal(STORAGE_KEYS.FINANCE_TRANSACTIONS, []),
             [STORAGE_KEYS.FINANCE_EXCHANGE_RATE]: loadFromLocal(STORAGE_KEYS.FINANCE_EXCHANGE_RATE, 60),
             [STORAGE_KEYS.FINANCE_RECURRING]: loadFromLocal(STORAGE_KEYS.FINANCE_RECURRING, []),
+            [STORAGE_KEYS.FINANCE_RECURRING_INCOMES]: loadFromLocal(STORAGE_KEYS.FINANCE_RECURRING_INCOMES, []),
             [STORAGE_KEYS.FINANCE_INCOMES]: loadFromLocal(STORAGE_KEYS.FINANCE_INCOMES, []),
             [STORAGE_KEYS.FINANCE_QUICK_EXPENSES]: loadFromLocal(STORAGE_KEYS.FINANCE_QUICK_EXPENSES, []),
             [STORAGE_KEYS.IDEAS]: loadFromLocal(STORAGE_KEYS.IDEAS, []),

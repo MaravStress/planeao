@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, type ReactNode } from 'react';
-import type { FixedExpense, VariableExpense, Income, Currency, QuickExpense } from '../types/finances';
+import type { FixedExpense, FixedIncome, VariableExpense, Income, Currency, QuickExpense } from '../types/finances';
 import { saveToLocal, loadFromLocal, STORAGE_KEYS } from './LocalSave';
 
 interface FinancesContextType {
     // Data
     fixedExpenses: FixedExpense[];
+    fixedIncomes: FixedIncome[];
     variableExpenses: VariableExpense[];
     incomes: Income[];
     exchangeRate: number;
@@ -15,6 +16,10 @@ interface FinancesContextType {
     // Fixed Expenses CRUD
     addFixedExpense: (title: string, amount: number, currency: Currency) => void;
     deleteFixedExpense: (id: string) => void;
+
+    // Fixed Incomes CRUD
+    addFixedIncome: (title: string, amount: number, currency: Currency) => void;
+    deleteFixedIncome: (id: string) => void;
 
     // Variable Expenses CRUD
     addVariableExpense: (title: string, amount: number, currency: Currency, date?: string) => void;
@@ -50,6 +55,9 @@ export const FinancesProvider: React.FC<{ children: ReactNode }> = ({ children }
     const [fixedExpenses, setFixedExpenses] = useState<FixedExpense[]>(() =>
         loadFromLocal<FixedExpense[]>(STORAGE_KEYS.FINANCE_RECURRING, [])
     );
+    const [fixedIncomes, setFixedIncomes] = useState<FixedIncome[]>(() =>
+        loadFromLocal<FixedIncome[]>(STORAGE_KEYS.FINANCE_RECURRING_INCOMES, [])
+    );
     const [variableExpenses, setVariableExpenses] = useState<VariableExpense[]>(() =>
         loadFromLocal<VariableExpense[]>(STORAGE_KEYS.FINANCE_TRANSACTIONS, [])
     );
@@ -67,6 +75,7 @@ export const FinancesProvider: React.FC<{ children: ReactNode }> = ({ children }
 
     // Persist on change
     useEffect(() => { saveToLocal(STORAGE_KEYS.FINANCE_RECURRING, fixedExpenses); }, [fixedExpenses]);
+    useEffect(() => { saveToLocal(STORAGE_KEYS.FINANCE_RECURRING_INCOMES, fixedIncomes); }, [fixedIncomes]);
     useEffect(() => { saveToLocal(STORAGE_KEYS.FINANCE_TRANSACTIONS, variableExpenses); }, [variableExpenses]);
     useEffect(() => { saveToLocal(STORAGE_KEYS.FINANCE_INCOMES, incomes); }, [incomes]);
     useEffect(() => { saveToLocal(STORAGE_KEYS.FINANCE_EXCHANGE_RATE, exchangeRate); }, [exchangeRate]);
@@ -86,6 +95,15 @@ export const FinancesProvider: React.FC<{ children: ReactNode }> = ({ children }
     };
     const deleteFixedExpense = (id: string) => {
         setFixedExpenses(prev => prev.filter(e => e.id !== id));
+    };
+
+    // Fixed Incomes
+    const addFixedIncome = (title: string, amount: number, currency: Currency) => {
+        const newItem: FixedIncome = { id: crypto.randomUUID(), title, amount, currency };
+        setFixedIncomes(prev => [...prev, newItem]);
+    };
+    const deleteFixedIncome = (id: string) => {
+        setFixedIncomes(prev => prev.filter(e => e.id !== id));
     };
 
     // Variable Expenses
@@ -142,12 +160,15 @@ export const FinancesProvider: React.FC<{ children: ReactNode }> = ({ children }
     return (
         <FinancesContext.Provider value={{
             fixedExpenses,
+            fixedIncomes,
             variableExpenses,
             incomes,
             exchangeRate,
             setExchangeRate,
             addFixedExpense,
             deleteFixedExpense,
+            addFixedIncome,
+            deleteFixedIncome,
             addVariableExpense,
             deleteVariableExpense,
             updateVariableExpenseDate,

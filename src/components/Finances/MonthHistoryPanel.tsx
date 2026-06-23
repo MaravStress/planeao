@@ -13,7 +13,7 @@ interface MonthHistoryPanelProps {
 }
 
 const MonthHistoryPanel: React.FC<MonthHistoryPanelProps> = ({ onMonthClick }) => {
-    const { allMonths, fixedExpenses, variableExpenses, incomes, toUSD } = useFinances();
+    const { allMonths, fixedExpenses, fixedIncomes, variableExpenses, incomes, toUSD } = useFinances();
 
     const monthCards = useMemo(() => {
         return allMonths.map(ym => {
@@ -23,15 +23,16 @@ const MonthHistoryPanel: React.FC<MonthHistoryPanelProps> = ({ onMonthClick }) =
             const monthVarExpenses = variableExpenses.filter(e => (e.createdAt || '').slice(0, 7) === ym);
 
             const totalFixed = fixedExpenses.reduce((s, e) => s + toUSD(e.amount, e.currency as Currency), 0);
+            const totalFixedIncomes = fixedIncomes.reduce((s, i) => s + toUSD(i.amount, i.currency as Currency), 0);
             const totalVariable = monthVarExpenses.reduce((s, e) => s + toUSD(e.amount, e.currency as Currency), 0);
-            const totalIncome = monthIncomes.reduce((s, i) => s + toUSD(i.amount, i.currency as Currency), 0);
+            const totalIncome = totalFixedIncomes + monthIncomes.reduce((s, i) => s + toUSD(i.amount, i.currency as Currency), 0);
             const budget = totalFixed * 2;
             const totalExpenses = totalFixed + totalVariable;
             const balance = totalIncome - totalExpenses;
 
             return { ym, year, month, budget, totalIncome, totalExpenses, totalFixed, totalVariable, balance };
         });
-    }, [allMonths, fixedExpenses, variableExpenses, incomes, toUSD]);
+    }, [allMonths, fixedExpenses, fixedIncomes, variableExpenses, incomes, toUSD]);
 
     const fmt = (n: number) => `$${n.toFixed(2)}`;
 

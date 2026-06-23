@@ -115,12 +115,10 @@ const EditProjectModal: React.FC<EditProjectModalProps> = ({ project, isOpen, on
             zIndex: 1000,
             backdropFilter: 'blur(5px)'
         }}>
-            <div className="glass-panel" style={{
+            <div className="glass-modal-panel modal-content" style={{
                 width: '800px',
                 maxWidth: '90%',
-                padding: '2rem',
                 position: 'relative',
-                maxHeight: '90vh',
                 display: 'flex',
                 flexDirection: 'column'
             }}>

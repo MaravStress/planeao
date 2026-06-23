@@ -3,7 +3,7 @@ import { useFinances } from '../../context/FinancesContext';
 import type { Currency } from '../../types/finances';
 
 const MonthSummaryPanel: React.FC = () => {
-    const { fixedExpenses, variableExpenses, incomes, toUSD, currentYearMonth } = useFinances();
+    const { fixedExpenses, fixedIncomes, variableExpenses, incomes, toUSD, currentYearMonth } = useFinances();
 
     // Current month items
     const currentVarExpenses = variableExpenses.filter(e => (e.createdAt || '').slice(0, 7) === currentYearMonth);
@@ -18,11 +18,16 @@ const MonthSummaryPanel: React.FC = () => {
         currentVarExpenses.reduce((sum, e) => sum + toUSD(e.amount, e.currency as Currency), 0),
         [currentVarExpenses, toUSD]
     );
-    const totalIncome = useMemo(() =>
+    const totalFixedIncomes = useMemo(() =>
+        fixedIncomes.reduce((sum, i) => sum + toUSD(i.amount, i.currency as Currency), 0),
+        [fixedIncomes, toUSD]
+    );
+    const totalVariableIncomes = useMemo(() =>
         currentIncomes.reduce((sum, i) => sum + toUSD(i.amount, i.currency as Currency), 0),
         [currentIncomes, toUSD]
     );
 
+    const totalIncome = totalFixedIncomes + totalVariableIncomes;
     const budget = totalFixed * 2;
     const totalExpenses = totalFixed + totalVariable;
     const balance = totalIncome - totalExpenses;
@@ -34,7 +39,8 @@ const MonthSummaryPanel: React.FC = () => {
 
     // Income bar percents (max = 2 × budget)
     const incomeMax = Math.max(budget * 2, totalIncome, 1);
-    const incomePct = Math.min((totalIncome / incomeMax) * 100, 100);
+    const fixedIncomePct = Math.min((totalFixedIncomes / incomeMax) * 100, 100);
+    const variableIncomePct = Math.min((totalVariableIncomes / incomeMax) * 100, 100 - fixedIncomePct);
     // Budget midpoint marker position (budget / incomeMax * 100)
     const budgetMarkerPct = budget > 0 ? Math.min((budget / incomeMax) * 100, 100) : 50;
 
@@ -98,12 +104,21 @@ const MonthSummaryPanel: React.FC = () => {
                 </div>
                 <div className="fin-bar-track fin-income-track" style={{ position: 'relative' }}>
                     <div
-                        className="fin-bar-fill fin-bar-income"
-                        style={{ width: `${incomePct}%` }}
-                        title={`Ingresos: ${fmt(totalIncome)}`}
+                        className="fin-bar-fill fin-bar-fixed-income"
+                        style={{ width: `${fixedIncomePct}%` }}
+                        title={`Ingresos fijos: ${fmt(totalFixedIncomes)}`}
                     >
-                        {incomePct > 8 && (
-                            <span className="fin-bar-text">{fmt(totalIncome)} {incomePct.toFixed(0)}%</span>
+                        {fixedIncomePct > 8 && (
+                            <span className="fin-bar-text">Fijos {fmt(totalFixedIncomes)} {fixedIncomePct.toFixed(0)}%</span>
+                        )}
+                    </div>
+                    <div
+                        className="fin-bar-fill fin-bar-income"
+                        style={{ width: `${variableIncomePct}%` }}
+                        title={`Ingresos variables: ${fmt(totalVariableIncomes)}`}
+                    >
+                        {variableIncomePct > 8 && (
+                            <span className="fin-bar-text">Variables {fmt(totalVariableIncomes)} {variableIncomePct.toFixed(0)}%</span>
                         )}
                     </div>
                     {/* Budget midpoint marker */}

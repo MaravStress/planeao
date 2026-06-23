@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useUniProgress } from '../context/UniProgressContext';
 import type { SubjectStatus } from '../types/uniProgress';
 import GoogleIcon from '../components/GoogleIcon';
-import { GlassCard } from 'react-glass-ui';
 import ImportExportButtons from '../components/ImportExportButtons';
 
 const UniProgressPage: React.FC = () => {
@@ -20,13 +19,17 @@ const UniProgressPage: React.FC = () => {
         setNewSubjects(updated);
     };
     
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setNewTermName('');
+        setNewSubjects(['']);
+    };
+
     const handleSubmitTerm = () => {
         const validSubjects = newSubjects.filter(s => s.trim() !== '');
         if (newTermName.trim() && validSubjects.length > 0) {
             addTerm(newTermName.trim(), validSubjects);
-            setNewTermName('');
-            setNewSubjects(['']);
-            setIsModalOpen(false);
+            handleCloseModal();
         }
     };
 
@@ -66,12 +69,12 @@ const UniProgressPage: React.FC = () => {
 
     return (
         <div className="page-container" style={{ position: 'relative' }}>
-            <header className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+            <header className="page-header">
                 <div>
-                    <h1 style={{ marginBottom: '0.5rem' }}>Progreso de la Universidad</h1>
+                    <h1 className="uni-page-title" style={{ marginBottom: '0.5rem' }}>Progreso de la Universidad</h1>
                     <p style={{ color: 'var(--color-text-muted)' }}>Sigue tu avance académico y calificaciones.</p>
                 </div>
-                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
                     <ImportExportButtons page="uni-progress" />
                     <button 
                         onClick={() => setIsModalOpen(true)}
@@ -97,23 +100,8 @@ const UniProgressPage: React.FC = () => {
 
             {/* Statistics Bar */}
             <div style={{ marginBottom: '2rem' }}>
-                <GlassCard 
-                    padding="2rem" 
-                    borderRadius={20}
-                    avoidSvgCreation={false}
-                    distortion={6}
-                    blur={25}
-                    backgroundColor="rgba(15, 15, 25, 0.45)"
-                    borderColor="rgba(255, 255, 255, 0.08)"
-                >
-                    <div style={{ 
-                        display: 'flex', 
-                        flexWrap: 'wrap', 
-                        gap: '2rem', 
-                        justifyContent: 'space-around',
-                        alignItems: 'center',
-                        width: '100%'
-                    }}>
+                <div className="glass-panel stats-panel">
+                    <div className="stats-grid">
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
                             <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Materias Seleccionadas</span>
                             <span style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--color-secondary)' }}>{seleccionadas}</span>
@@ -131,35 +119,24 @@ const UniProgressPage: React.FC = () => {
                             <span style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--color-success)', textAlign: 'center' }}>{calculateEstimatedTime()}</span>
                         </div>
                     </div>
-                </GlassCard>
+                </div>
             </div>
 
             {/* Terms List */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 {terms.length === 0 ? (
-                    <GlassCard
-                        padding="3rem"
-                        borderRadius={20}
-                        distortion={6}
-                        blur={25}
-                        backgroundColor="rgba(15, 15, 25, 0.45)"
-                        borderColor="rgba(255, 255, 255, 0.08)"
+                    <div
+                        className="glass-panel"
+                        style={{ padding: '3rem' }}
                     >
                         <div style={{ textAlign: 'center', color: 'var(--color-text-muted)', fontSize: '1.1rem' }}>
                             No has añadido ningún cuatrimestre aún. ¡Agrega uno con el botón + !
                         </div>
-                    </GlassCard>
+                    </div>
                 ) : (
                     terms.map(term => (
                         <div key={term.id} style={{ marginBottom: '0.5rem' }}>
-                            <GlassCard 
-                                padding="2rem"
-                                borderRadius={20}
-                                distortion={6}
-                                blur={25}
-                                backgroundColor="rgba(15, 15, 25, 0.45)"
-                                borderColor="rgba(255, 255, 255, 0.08)"
-                            >
+                            <div className="glass-panel term-panel">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', width: '100%' }}>
                                     <h2 style={{ margin: 0 }}>{term.name}</h2>
                                     <button 
@@ -237,7 +214,7 @@ const UniProgressPage: React.FC = () => {
                                         );
                                     })}
                                 </div>
-                            </GlassCard>
+                            </div>
                         </div>
                     ))
                 )}
@@ -254,14 +231,10 @@ const UniProgressPage: React.FC = () => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    padding: '2rem'
+                    padding: '1rem'
                 }}>
-                    <div className="glass-panel" style={{
-                        width: '100%',
-                        maxWidth: '500px',
-                        padding: '2rem',
-                        maxHeight: '90vh',
-                        overflowY: 'auto'
+                    <div className="glass-modal-panel modal-content" style={{
+                        maxWidth: '500px'
                     }}>
                         <h2 style={{ marginBottom: '1.5rem', marginTop: 0 }}>Añadir Cuatrimestre</h2>
                         
@@ -317,7 +290,7 @@ const UniProgressPage: React.FC = () => {
                             paddingTop: '1.5rem'
                         }}>
                             <button 
-                                onClick={() => setIsModalOpen(false)}
+                                onClick={handleCloseModal}
                                 className="glass-button"
                                 style={{ padding: '0.8rem 1.5rem' }}
                             >

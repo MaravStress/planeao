@@ -11,6 +11,7 @@ interface MonthEditModalProps {
 const MonthEditModal: React.FC<MonthEditModalProps> = ({ yearMonth, onClose }) => {
     const {
         variableExpenses, incomes,
+        fixedExpenses, fixedIncomes,
         deleteIncome, deleteVariableExpense,
         updateIncomeDate, updateVariableExpenseDate,
         toUSD
@@ -34,8 +35,10 @@ const MonthEditModal: React.FC<MonthEditModalProps> = ({ yearMonth, onClose }) =
 
     const getIsoDateOnly = (iso: string) => (iso || new Date().toISOString()).slice(0, 10);
 
-    const totalIn = monthIncomes.reduce((s, i) => s + toUSD(i.amount, i.currency as Currency), 0);
-    const totalOut = monthExpenses.reduce((s, e) => s + toUSD(e.amount, e.currency as Currency), 0);
+    const totalFixed = fixedExpenses.reduce((s, e) => s + toUSD(e.amount, e.currency as Currency), 0);
+    const totalFixedIn = fixedIncomes.reduce((s, i) => s + toUSD(i.amount, i.currency as Currency), 0);
+    const totalIn = totalFixedIn + monthIncomes.reduce((s, i) => s + toUSD(i.amount, i.currency as Currency), 0);
+    const totalOut = totalFixed + monthExpenses.reduce((s, e) => s + toUSD(e.amount, e.currency as Currency), 0);
 
     return (
         <div className="fin-modal-overlay" onClick={onClose}>

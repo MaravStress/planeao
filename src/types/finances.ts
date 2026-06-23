@@ -23,6 +23,13 @@ export interface Income {
     createdAt: string; // ISO date string
 }
 
+export interface FixedIncome {
+    id: string;
+    title: string;
+    amount: number;
+    currency: Currency;
+}
+
 export interface QuickExpense {
     id: string;
     title: string;
@@ -35,5 +42,7 @@ export interface MonthData {
     incomes: Income[];
     variableExpenses: VariableExpense[];
     fixedExpenses: FixedExpense[];
+    fixedIncomes: FixedIncome[];
     exchangeRate: number;
 }
+

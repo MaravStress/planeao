@@ -4,17 +4,20 @@ import { useFinances } from '../../context/FinancesContext';
 import type { Currency } from '../../types/finances';
 
 interface TransactionColumnsProps {
+    showFixed: boolean;
     onAddIncome: () => void;
     onAddExpense: () => void;
 }
 
-const TransactionColumns: React.FC<TransactionColumnsProps> = ({ onAddIncome, onAddExpense }) => {
+const TransactionColumns: React.FC<TransactionColumnsProps> = ({ showFixed, onAddIncome, onAddExpense }) => {
     const {
         variableExpenses, incomes,
+        fixedExpenses, fixedIncomes,
         deleteIncome, deleteVariableExpense,
+        deleteFixedIncome, deleteFixedExpense,
         addVariableExpense, updateVariableExpenseDate,
         quickExpenses, addQuickExpense, deleteQuickExpense,
-        updateIncomeDate,
+        updateIncomeDate, toUSD,
         currentYearMonth
     } = useFinances();
 
@@ -25,6 +28,9 @@ const TransactionColumns: React.FC<TransactionColumnsProps> = ({ onAddIncome, on
 
     const currentVarExpenses = variableExpenses.filter(e => (e.createdAt || '').slice(0, 7) === currentYearMonth);
     const currentIncomes = incomes.filter(i => (i.createdAt || '').slice(0, 7) === currentYearMonth);
+
+    const totalFixedIncomeUSD = fixedIncomes.reduce((sum, item) => sum + toUSD(item.amount, item.currency as Currency), 0);
+    const totalFixedExpenseUSD = fixedExpenses.reduce((sum, item) => sum + toUSD(item.amount, item.currency as Currency), 0);
 
     const formatAmount = (amount: number, currency: Currency) => {
         if (currency === 'USD') return `$${amount.toFixed(2)}`;
@@ -58,87 +64,124 @@ const TransactionColumns: React.FC<TransactionColumnsProps> = ({ onAddIncome, on
             {/* Incomes Column */}
             <div className="fin-column glass-panel">
                 <div className="fin-column-header">
-                    <span className="fin-column-title income-title">Ingresos</span>
-                    <button className="fin-add-btn income-btn" onClick={onAddIncome} title="Registrar ingreso">
+                    <span className="fin-column-title income-title">
+                        {showFixed ? 'Ingresos Fijos' : 'Ingresos'}
+                    </span>
+                    <button className="fin-add-btn income-btn" onClick={onAddIncome} title={showFixed ? "Registrar ingreso fijo" : "Registrar ingreso"}>
                         <GoogleIcon name="add" size={16} />
                     </button>
                 </div>
                 <div className="fin-column-list">
-                    {currentIncomes.length === 0 ? (
-                        <p className="fin-empty">Sin ingresos este mes</p>
-                    ) : (
-                        currentIncomes.map(item => (
-                            <div key={item.id} className="fin-item income-item">
-                                <div className="fin-item-info">
-                                    <span className="fin-item-title">{item.title}</span>
-                                    <div className="fin-date-edit">
-                                        <input
-                                            type="date"
-                                            className="fin-in-item-date-input"
-                                            value={getIsoDateOnly(item.createdAt)}
-                                            onChange={e => {
-                                                const newIso = new Date(`${e.target.value}T12:00:00`).toISOString();
-                                                updateIncomeDate(item.id, newIso);
-                                            }}
-                                        />
-                                        <span className="fin-item-date">{formatDate(item.createdAt)}</span>
+                    {showFixed ? (
+                        fixedIncomes.length === 0 ? (
+                            <p className="fin-empty">Sin ingresos fijos registrados</p>
+                        ) : (
+                            fixedIncomes.map(item => (
+                                <div key={item.id} className="fin-item income-item">
+                                    <div className="fin-item-info">
+                                        <span className="fin-item-title">{item.title}</span>
+                                        <span className="fin-item-date fin-item-tag fixed-income-tag">Ingreso fijo</span>
+                                    </div>
+                                    <div className="fin-item-right">
+                                        <span className="fin-item-amount fixed-income-amount">
+                                            {formatAmount(item.amount, item.currency as Currency)} {item.currency}
+                                        </span>
+                                        <button className="fin-delete-btn" style={{ opacity: 1 }} onClick={() => deleteFixedIncome(item.id)} title="Eliminar">
+                                            <GoogleIcon name="delete" size={13} />
+                                        </button>
                                     </div>
                                 </div>
-                                <div className="fin-item-right">
-                                    <span className="fin-item-amount income-amount">
-                                        {formatAmount(item.amount, item.currency as Currency)} {item.currency}
-                                    </span>
-                                    <button className="fin-delete-btn" onClick={() => deleteIncome(item.id)} title="Eliminar">
-                                        <GoogleIcon name="delete" size={13} />
-                                    </button>
+                            ))
+                        )
+                    ) : (
+                        currentIncomes.length === 0 ? (
+                            <p className="fin-empty">Sin ingresos este mes</p>
+                        ) : (
+                            currentIncomes.map(item => (
+                                <div key={item.id} className="fin-item income-item">
+                                    <div className="fin-item-info">
+                                        <span className="fin-item-title">{item.title}</span>
+                                        <div className="fin-date-edit">
+                                            <input
+                                                type="date"
+                                                className="fin-in-item-date-input"
+                                                value={getIsoDateOnly(item.createdAt)}
+                                                onChange={e => {
+                                                    const newIso = new Date(`${e.target.value}T12:00:00`).toISOString();
+                                                    updateIncomeDate(item.id, newIso);
+                                                }}
+                                            />
+                                            <span className="fin-item-date">{formatDate(item.createdAt)}</span>
+                                        </div>
+                                    </div>
+                                    <div className="fin-item-right">
+                                        <span className="fin-item-amount income-amount">
+                                            {formatAmount(item.amount, item.currency as Currency)} {item.currency}
+                                        </span>
+                                        <button className="fin-delete-btn" onClick={() => deleteIncome(item.id)} title="Eliminar">
+                                            <GoogleIcon name="delete" size={13} />
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        ))
+                            ))
+                        )
                     )}
                 </div>
+                {showFixed && (
+                    <div className="fin-column-footer">
+                        <span>Total mensual</span>
+                        <span className="fixed-income-amount">${totalFixedIncomeUSD.toFixed(2)} USD</span>
+                    </div>
+                )}
             </div>
 
-            {/* Variable Expenses Column */}
+            {/* Expenses Column */}
             <div className="fin-column glass-panel">
                 {/* Header: title | chips (inline) | ⚡ manage | + add */}
                 <div className="fin-column-header fin-var-header">
-                    <span className="fin-column-title expense-title" style={{ flexShrink: 0 }}>Gastos Variables</span>
+                    <span className="fin-column-title expense-title" style={{ flexShrink: 0 }}>
+                        {showFixed ? 'Gastos Fijos' : 'Gastos Variables'}
+                    </span>
 
-                    {/* Quick chips — inline in header row */}
-                    <div className="fin-header-chips">
-                        {quickExpenses.map(q => (
-                            <button
-                                key={q.id}
-                                className="fin-quick-chip"
-                                onClick={() => handleQuickAdd(q.id)}
-                                title={`Añadir: ${q.title} — ${formatAmount(q.amount, q.currency as Currency)} ${q.currency}`}
-                            >
-                                <span className="fin-quick-chip-name">{q.title}</span>
-                                <span className="fin-quick-chip-amount">
-                                    {formatAmount(q.amount, q.currency as Currency)}
-                                    <span className="fin-quick-chip-cur">{q.currency}</span>
-                                </span>
-                            </button>
-                        ))}
-                    </div>
+                    {/* Quick chips — inline in header row — only in variable mode */}
+                    {!showFixed && (
+                        <div className="fin-header-chips">
+                            {quickExpenses.map(q => (
+                                <button
+                                    key={q.id}
+                                    className="fin-quick-chip"
+                                    onClick={() => handleQuickAdd(q.id)}
+                                    title={`Añadir: ${q.title} — ${formatAmount(q.amount, q.currency as Currency)} ${q.currency}`}
+                                >
+                                    <span className="fin-quick-chip-name">{q.title}</span>
+                                    <span className="fin-quick-chip-amount">
+                                        {formatAmount(q.amount, q.currency as Currency)}
+                                        <span className="fin-quick-chip-cur">{q.currency}</span>
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    )}
 
                     {/* Action buttons */}
                     <div style={{ display: 'flex', gap: '0.4rem', flexShrink: 0 }}>
-                        <button
-                            className={`fin-add-btn ${managingQuick ? 'quick-btn-active' : 'quick-btn'}`}
-                            onClick={() => setManagingQuick(p => !p)}
-                            title="Gestionar gastos rápidos"
-                        >
-                            <GoogleIcon name="bolt" size={14} />
-                        </button>
-                        <button className="fin-add-btn expense-btn" onClick={onAddExpense} title="Registrar gasto">
+                        {!showFixed && (
+                            <button
+                                className={`fin-add-btn ${managingQuick ? 'quick-btn-active' : 'quick-btn'}`}
+                                onClick={() => setManagingQuick(p => !p)}
+                                title="Gestionar gastos rápidos"
+                            >
+                                <GoogleIcon name="bolt" size={14} />
+                            </button>
+                        )}
+                        <button className="fin-add-btn expense-btn" onClick={onAddExpense} title={showFixed ? "Registrar gasto fijo" : "Registrar gasto"}>
                             <GoogleIcon name="add" size={16} />
                         </button>
                     </div>
                 </div>
 
-                {/* Manage panel — slides in below header when ⚡ is active */}
-                {managingQuick && (
+                {/* Manage panel — slides in below header when ⚡ is active (only in variable mode) */}
+                {!showFixed && managingQuick && (
                     <div className="fin-quick-panel">
                         <div className="fin-quick-manage">
                             {quickExpenses.length === 0 && (
@@ -197,38 +240,67 @@ const TransactionColumns: React.FC<TransactionColumnsProps> = ({ onAddIncome, on
                 )}
 
                 <div className="fin-column-list">
-                    {currentVarExpenses.length === 0 ? (
-                        <p className="fin-empty">Sin gastos variables este mes</p>
-                    ) : (
-                        currentVarExpenses.map(item => (
-                            <div key={item.id} className="fin-item expense-item">
-                                <div className="fin-item-info">
-                                    <span className="fin-item-title">{item.title}</span>
-                                    <div className="fin-date-edit">
-                                        <input
-                                            type="date"
-                                            className="fin-in-item-date-input"
-                                            value={getIsoDateOnly(item.createdAt)}
-                                            onChange={e => {
-                                                const newIso = new Date(`${e.target.value}T12:00:00`).toISOString();
-                                                updateVariableExpenseDate(item.id, newIso);
-                                            }}
-                                        />
-                                        <span className="fin-item-date">{formatDate(item.createdAt)}</span>
+                    {showFixed ? (
+                        fixedExpenses.length === 0 ? (
+                            <p className="fin-empty">Sin gastos fijos registrados</p>
+                        ) : (
+                            fixedExpenses.map(item => (
+                                <div key={item.id} className="fin-item expense-item">
+                                    <div className="fin-item-info">
+                                        <span className="fin-item-title">{item.title}</span>
+                                        <span className="fin-item-date fin-item-tag fixed-expense-tag">Gasto fijo</span>
+                                    </div>
+                                    <div className="fin-item-right">
+                                        <span className="fin-item-amount expense-amount">
+                                            {formatAmount(item.amount, item.currency as Currency)} {item.currency}
+                                        </span>
+                                        <button className="fin-delete-btn" style={{ opacity: 1 }} onClick={() => deleteFixedExpense(item.id)} title="Eliminar">
+                                            <GoogleIcon name="delete" size={13} />
+                                        </button>
                                     </div>
                                 </div>
-                                <div className="fin-item-right">
-                                    <span className="fin-item-amount expense-amount">
-                                        {formatAmount(item.amount, item.currency as Currency)} {item.currency}
-                                    </span>
-                                    <button className="fin-delete-btn" onClick={() => deleteVariableExpense(item.id)} title="Eliminar">
-                                        <GoogleIcon name="delete" size={13} />
-                                    </button>
+                            ))
+                        )
+                    ) : (
+                        currentVarExpenses.length === 0 ? (
+                            <p className="fin-empty">Sin gastos variables este mes</p>
+                        ) : (
+                            currentVarExpenses.map(item => (
+                                <div key={item.id} className="fin-item expense-item">
+                                    <div className="fin-item-info">
+                                        <span className="fin-item-title">{item.title}</span>
+                                        <div className="fin-date-edit">
+                                            <input
+                                                type="date"
+                                                className="fin-in-item-date-input"
+                                                value={getIsoDateOnly(item.createdAt)}
+                                                onChange={e => {
+                                                    const newIso = new Date(`${e.target.value}T12:00:00`).toISOString();
+                                                    updateVariableExpenseDate(item.id, newIso);
+                                                }}
+                                            />
+                                            <span className="fin-item-date">{formatDate(item.createdAt)}</span>
+                                        </div>
+                                    </div>
+                                    <div className="fin-item-right">
+                                        <span className="fin-item-amount expense-amount">
+                                            {formatAmount(item.amount, item.currency as Currency)} {item.currency}
+                                        </span>
+                                        <button className="fin-delete-btn" onClick={() => deleteVariableExpense(item.id)} title="Eliminar">
+                                            <GoogleIcon name="delete" size={13} />
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        ))
+                            ))
+                        )
                     )}
                 </div>
+                {showFixed && (
+                    <div className="fin-column-footer">
+                        <span>Total mensual</span>
+                        <span className="expense-amount">${totalFixedExpenseUSD.toFixed(2)} USD</span>
+                    </div>
+                )}
             </div>
         </div>
     );
