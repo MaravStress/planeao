@@ -73,8 +73,10 @@ export const syncData = async (): Promise<boolean> => {
                     await saveToOnline(key, localPayload);
                 } else if (onlinePayload._lastModified > localPayload._lastModified) {
                     // Online is newer, save to local
-                    setLocalPayload(key, onlinePayload);
-                    updatedLocal = true;
+                    const success = setLocalPayload(key, onlinePayload);
+                    if (success) {
+                        updatedLocal = true;
+                    }
                 } else {
                     // Both have same timestamp (exact same version synced before)
                     // No action needed
@@ -84,8 +86,10 @@ export const syncData = async (): Promise<boolean> => {
                 await saveToOnline(key, localPayload);
             } else if (!localPayload && onlinePayload) {
                 // Only online exists -> Pull from Online
-                setLocalPayload(key, onlinePayload);
-                updatedLocal = true;
+                const success = setLocalPayload(key, onlinePayload);
+                if (success) {
+                    updatedLocal = true;
+                }
             }
         } catch (error) {
             console.error(`Error syncing key "${key}":`, error);

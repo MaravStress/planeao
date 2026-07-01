@@ -43,11 +43,14 @@ export const getLocalPayload = <T = any>(key: string): StoragePayload<T> | null 
     }
 };
 
-export const setLocalPayload = <T = any>(key: string, payload: StoragePayload<T>): void => {
+export const setLocalPayload = <T = any>(key: string, payload: StoragePayload<T>): boolean => {
     try {
         localStorage.setItem(key, JSON.stringify(payload));
+        const stored = localStorage.getItem(key);
+        return stored !== null;
     } catch (error) {
         console.error(`Error saving payload to localStorage key "${key}":`, error);
+        return false;
     }
 };
 

@@ -21,11 +21,21 @@ import { syncData } from './context/OnlineSave';
 
 function App() {
   useEffect(() => {
+    const wasReloadedForSync = sessionStorage.getItem('planeao-reload-sync') === 'true';
+    if (wasReloadedForSync) {
+        sessionStorage.removeItem('planeao-reload-sync');
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        if (wasReloadedForSync) {
+            // Avoid syncing again if we just reloaded to apply online data
+            return;
+        }
         // Sync local data with firebase globally whenever the app initializes and user is authenticated
         const updatedLocal = await syncData();
         if (updatedLocal) {
+            sessionStorage.setItem('planeao-reload-sync', 'true');
             // A hard refresh ensures all contexts re-mount and load the freshly synchronized local storage data automatically.
             window.location.reload();
         }
