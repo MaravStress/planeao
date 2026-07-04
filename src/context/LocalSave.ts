@@ -17,6 +17,8 @@ export const STORAGE_KEYS = {
     FINANCE_QUICK_EXPENSES: 'finance-quick-expenses',
     IDEAS: 'planeao-ideas',
     IDEA_SETTINGS: 'planeao-idea-settings',
+    IDEAS_BACKUP: 'planeao-ideas-backup',
+    IDEA_SETTINGS_BACKUP: 'planeao-idea-settings-backup',
     UNI_PROGRESS_TERMS: 'planeao-uni-progress'
 } as const;
 

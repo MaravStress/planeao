@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import GoogleIcon from '../components/GoogleIcon';
 import IdeaCard from '../components/ideas/IdeaCard';
 import IdeaModal from '../components/ideas/IdeaModal';
@@ -9,10 +9,17 @@ import '../styles/Ideas.css';
 import ImportExportButtons from '../components/ImportExportButtons';
 
 const IdeasPage: React.FC = () => {
-    const { ideas, settings, addIdea, updateIdea, deleteIdea, updateSettings } = useIdeas();
+    const { ideas, settings, addIdea, updateIdea, deleteIdea, updateSettings, isLoaded, loadIdeas, unloadIdeas } = useIdeas();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [editingIdea, setEditingIdea] = useState<Idea | null>(null);
+
+    useEffect(() => {
+        loadIdeas();
+        return () => {
+            unloadIdeas();
+        };
+    }, []);
 
     const handleNewIdea = () => {
         setEditingIdea(null);
@@ -80,7 +87,7 @@ const IdeasPage: React.FC = () => {
                 <div>
                     <h1 className="ideas-page-title">Ideas Emprendedoras</h1>
                 </div>
-                <ImportExportButtons page="ideas" />
+                <ImportExportButtons page="ideas" disabled={!isLoaded} />
             </header>
 
             <div className="ideas-header-container">
@@ -95,16 +102,44 @@ const IdeasPage: React.FC = () => {
                     </div>
                 </div>
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                    <button className="btn-icon" onClick={() => setIsSettingsOpen(true)} title="Configurar Ideación" style={{ background: 'var(--color-bg-card)', padding: '0.75rem', borderRadius: 'var(--radius-md)' }}>
+                    <button 
+                        className="btn-icon" 
+                        onClick={() => setIsSettingsOpen(true)} 
+                        title="Configurar Ideación" 
+                        style={{ 
+                            background: 'var(--color-bg-card)', 
+                            padding: '0.75rem', 
+                            borderRadius: 'var(--radius-md)',
+                            opacity: !isLoaded ? 0.5 : 1,
+                            cursor: !isLoaded ? 'not-allowed' : 'pointer',
+                            pointerEvents: !isLoaded ? 'none' : 'auto'
+                        }}
+                        disabled={!isLoaded}
+                    >
                         <GoogleIcon name="settings" size={20} style={{ color: 'var(--color-text-muted)' }} />
                     </button>
-                    <button className="btn-new-idea" onClick={handleNewIdea}>
+                    <button 
+                        className="btn-new-idea" 
+                        onClick={handleNewIdea}
+                        style={{
+                            opacity: !isLoaded ? 0.5 : 1,
+                            cursor: !isLoaded ? 'not-allowed' : 'pointer',
+                            pointerEvents: !isLoaded ? 'none' : 'auto'
+                        }}
+                        disabled={!isLoaded}
+                    >
                         <GoogleIcon name="add" size={20} /> Nueva idea
                     </button>
                 </div>
             </div>
 
-            {(ideas || []).length === 0 ? (
+            {!isLoaded ? (
+                <div className="glass-panel" style={{ padding: '4rem', textAlign: 'center' }}>
+                    <p style={{ color: 'var(--color-text-muted)', fontSize: '1.2rem' }} className="pulse">
+                        Cargando ideas...
+                    </p>
+                </div>
+            ) : (ideas || []).length === 0 ? (
                 <div className="glass-panel" style={{ padding: '4rem', textAlign: 'center' }}>
                     <p style={{ color: 'var(--color-text-muted)', fontSize: '1.2rem' }}>
                         No tienes ideas registradas. ¡Haz clic en "Nueva idea" para empezar!

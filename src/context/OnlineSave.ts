@@ -2,6 +2,12 @@ import { ref, set, get, child } from "firebase/database";
 import { database, auth } from "../firebase";
 import { STORAGE_KEYS, type StoragePayload, getLocalPayload, setLocalPayload } from "./LocalSave";
 
+const getFirebaseKey = (key: string): string => {
+    if (key === STORAGE_KEYS.IDEAS_BACKUP) return STORAGE_KEYS.IDEAS;
+    if (key === STORAGE_KEYS.IDEA_SETTINGS_BACKUP) return STORAGE_KEYS.IDEA_SETTINGS;
+    return key;
+};
+
 /**
  * Save data to Firebase Realtime Database
  * @param key The key to store data under
@@ -12,7 +18,8 @@ export const saveToOnline = async <T>(key: string, data: T): Promise<void> => {
     if (!user) return; // User not logged in, just silently return
 
     try {
-        const dbRef = ref(database, `users/${user.uid}/${key}`);
+        const firebaseKey = getFirebaseKey(key);
+        const dbRef = ref(database, `users/${user.uid}/${firebaseKey}`);
         await set(dbRef, data);
     } catch (error) {
         console.error(`Error saving to online key "${key}":`, error);
@@ -29,8 +36,9 @@ export const getOnlinePayload = async <T = any>(key: string): Promise<StoragePay
     if (!user) return null;
 
     try {
+        const firebaseKey = getFirebaseKey(key);
         const dbRef = ref(database);
-        const snapshot = await get(child(dbRef, `users/${user.uid}/${key}`));
+        const snapshot = await get(child(dbRef, `users/${user.uid}/${firebaseKey}`));
         if (snapshot.exists()) {
             const val = snapshot.val();
             if (val && typeof val === 'object' && '_lastModified' in val && '_data' in val) {
@@ -58,7 +66,9 @@ export const syncData = async (): Promise<boolean> => {
     const user = auth.currentUser;
     if (!user) return false;
 
-    const keysToSync = Object.values(STORAGE_KEYS);
+    const keysToSync = Object.values(STORAGE_KEYS).filter(
+        key => key !== STORAGE_KEYS.IDEAS && key !== STORAGE_KEYS.IDEA_SETTINGS
+    );
     let updatedLocal = false;
 
     for (const key of keysToSync) {
@@ -105,7 +115,9 @@ export const forcePullFromOnline = async () => {
     const user = auth.currentUser;
     if (!user) return;
 
-    const keysToSync = Object.values(STORAGE_KEYS);
+    const keysToSync = Object.values(STORAGE_KEYS).filter(
+        key => key !== STORAGE_KEYS.IDEAS && key !== STORAGE_KEYS.IDEA_SETTINGS
+    );
 
     for (const key of keysToSync) {
         try {
@@ -126,7 +138,9 @@ export const forcePushToOnline = async () => {
     const user = auth.currentUser;
     if (!user) return;
 
-    const keysToSync = Object.values(STORAGE_KEYS);
+    const keysToSync = Object.values(STORAGE_KEYS).filter(
+        key => key !== STORAGE_KEYS.IDEAS && key !== STORAGE_KEYS.IDEA_SETTINGS
+    );
 
     for (const key of keysToSync) {
         try {

@@ -28,11 +28,13 @@ export const exportPageData = (page: 'work' | 'pomodoro' | 'finances' | 'ideas' 
             quickExpenses: loadFromLocal(STORAGE_KEYS.FINANCE_QUICK_EXPENSES, [])
         };
     } else if (page === 'ideas') {
+        const localIdeas = loadFromLocal(STORAGE_KEYS.IDEAS, null) || loadFromLocal(STORAGE_KEYS.IDEAS_BACKUP, []);
+        const localSettings = loadFromLocal(STORAGE_KEYS.IDEA_SETTINGS, null) || loadFromLocal(STORAGE_KEYS.IDEA_SETTINGS_BACKUP, null);
         data = {
             type: 'planeao-ideas',
             version: 1,
-            ideas: loadFromLocal(STORAGE_KEYS.IDEAS, []),
-            settings: loadFromLocal(STORAGE_KEYS.IDEA_SETTINGS, null)
+            ideas: localIdeas,
+            settings: localSettings
         };
     } else if (page === 'uni-progress') {
         data = {
@@ -91,8 +93,14 @@ export const importPageData = (page: 'work' | 'pomodoro' | 'finances' | 'ideas' 
             if (parsed.incomes) saveToLocal(STORAGE_KEYS.FINANCE_INCOMES, parsed.incomes);
             if (parsed.quickExpenses) saveToLocal(STORAGE_KEYS.FINANCE_QUICK_EXPENSES, parsed.quickExpenses);
         } else if (page === 'ideas') {
-            if (parsed.ideas) saveToLocal(STORAGE_KEYS.IDEAS, parsed.ideas);
-            if (parsed.settings) saveToLocal(STORAGE_KEYS.IDEA_SETTINGS, parsed.settings);
+            if (parsed.ideas) {
+                saveToLocal(STORAGE_KEYS.IDEAS, parsed.ideas);
+                saveToLocal(STORAGE_KEYS.IDEAS_BACKUP, parsed.ideas);
+            }
+            if (parsed.settings) {
+                saveToLocal(STORAGE_KEYS.IDEA_SETTINGS, parsed.settings);
+                saveToLocal(STORAGE_KEYS.IDEA_SETTINGS_BACKUP, parsed.settings);
+            }
         } else if (page === 'uni-progress') {
             if (Array.isArray(parsed.terms)) {
                 saveToLocal(STORAGE_KEYS.UNI_PROGRESS_TERMS, parsed.terms);
@@ -124,8 +132,8 @@ export const exportAllData = () => {
             [STORAGE_KEYS.FINANCE_RECURRING_INCOMES]: loadFromLocal(STORAGE_KEYS.FINANCE_RECURRING_INCOMES, []),
             [STORAGE_KEYS.FINANCE_INCOMES]: loadFromLocal(STORAGE_KEYS.FINANCE_INCOMES, []),
             [STORAGE_KEYS.FINANCE_QUICK_EXPENSES]: loadFromLocal(STORAGE_KEYS.FINANCE_QUICK_EXPENSES, []),
-            [STORAGE_KEYS.IDEAS]: loadFromLocal(STORAGE_KEYS.IDEAS, []),
-            [STORAGE_KEYS.IDEA_SETTINGS]: loadFromLocal(STORAGE_KEYS.IDEA_SETTINGS, null),
+            [STORAGE_KEYS.IDEAS]: loadFromLocal(STORAGE_KEYS.IDEAS, null) || loadFromLocal(STORAGE_KEYS.IDEAS_BACKUP, []),
+            [STORAGE_KEYS.IDEA_SETTINGS]: loadFromLocal(STORAGE_KEYS.IDEA_SETTINGS, null) || loadFromLocal(STORAGE_KEYS.IDEA_SETTINGS_BACKUP, null),
             [STORAGE_KEYS.UNI_PROGRESS_TERMS]: loadFromLocal(STORAGE_KEYS.UNI_PROGRESS_TERMS, [])
         }
     };
@@ -156,11 +164,16 @@ export const importAllData = (jsonText: string): boolean => {
         }
 
         const dataObj = parsed.data || {};
-        
+
         // Import each key using saveToLocal to trigger online sync
         Object.entries(dataObj).forEach(([key, val]) => {
             const isValidKey = Object.values(STORAGE_KEYS).includes(key as any);
             if (isValidKey) {
+                if (key === STORAGE_KEYS.IDEAS) {
+                    saveToLocal(STORAGE_KEYS.IDEAS_BACKUP, val);
+                } else if (key === STORAGE_KEYS.IDEA_SETTINGS) {
+                    saveToLocal(STORAGE_KEYS.IDEA_SETTINGS_BACKUP, val);
+                }
                 saveToLocal(key as any, val);
             }
         });
