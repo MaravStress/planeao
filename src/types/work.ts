@@ -11,6 +11,7 @@ export interface Order {
     checklist: ChecklistItem[];
     startDate: string; // ISO date string
     endDate: string; // ISO date string
+    status?: 'todo' | 'in_progress' | 'done'; // Kanban status
 }
 
 export interface Project {
@@ -20,4 +21,5 @@ export interface Project {
     defaultOrderDuration?: number; // Duration in days for new orders
     isPaused?: boolean;
     orders: Order[];
+    description?: string; // Project information in Markdown format
 }

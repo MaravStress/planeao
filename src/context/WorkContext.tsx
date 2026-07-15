@@ -5,7 +5,7 @@ import { saveToLocal, loadFromLocal, STORAGE_KEYS } from './LocalSave';
 interface WorkContextType {
     projects: Project[];
     addProject: () => Project;
-    updateProject: (projectId: string, name: string, template: string[], defaultOrderDuration: number) => void;
+    updateProject: (projectId: string, name: string, template: string[], defaultOrderDuration: number, description?: string) => void;
     deleteProject: (projectId: string) => void;
     addOrder: (projectId: string) => Order | undefined;
     updateOrder: (projectId: string, updatedOrder: Order) => void;
@@ -40,9 +40,9 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return newProject;
     };
 
-    const updateProject = (projectId: string, name: string, template: string[], defaultOrderDuration: number) => {
+    const updateProject = (projectId: string, name: string, template: string[], defaultOrderDuration: number, description?: string) => {
         setProjects(projects.map(p =>
-            p.id === projectId ? { ...p, name, template, defaultOrderDuration } : p
+            p.id === projectId ? { ...p, name, template, defaultOrderDuration, description } : p
         ));
     };
 
@@ -76,7 +76,8 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             title,
             checklist,
             startDate: new Date().toISOString(),
-            endDate: new Date(Date.now() + duration * 24 * 60 * 60 * 1000).toISOString()
+            endDate: new Date(Date.now() + duration * 24 * 60 * 60 * 1000).toISOString(),
+            status: 'todo'
         };
 
         setProjects(projects.map(p => {
