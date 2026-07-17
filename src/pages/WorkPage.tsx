@@ -10,6 +10,7 @@ import { useWork } from '../context/WorkContext';
 import ImportExportButtons from '../components/ImportExportButtons';
 import KanbanBoard from '../components/Work/KanbanBoard';
 import '../styles/Work.css';
+import ProjectPanel from '../components/Work/ProjectPanel';
 
 const WorkPage: React.FC = () => {
     const {
@@ -96,15 +97,17 @@ const WorkPage: React.FC = () => {
     // Detail View when a project is selected
     if (activeProjectId && activeProject) {
         return (
+
             <div className="page-container" style={{ display: 'flex', flexDirection: 'column' }}>
+                <ProjectPanel name={"como?"} />
                 <div className="project-detail-container">
                     <div className="project-detail-header">
-                        <button 
-                            className="back-button" 
+                        <button
+                            className="back-button"
                             onClick={() => {
                                 setActiveProjectId(null);
                                 setIsEditingTitle(false);
-                            }} 
+                            }}
                             title="Volver a Proyectos"
                         >
                             <GoogleIcon name="arrow_back" size={24} />
@@ -137,9 +140,9 @@ const WorkPage: React.FC = () => {
                                 }}
                             />
                         ) : (
-                            <h2 
-                                className="project-detail-title" 
-                                onDoubleClick={handleTitleDoubleClick} 
+                            <h2
+                                className="project-detail-title"
+                                onDoubleClick={handleTitleDoubleClick}
                                 title="Doble clic para editar"
                                 style={{ cursor: 'pointer' }}
                             >
@@ -176,7 +179,7 @@ const WorkPage: React.FC = () => {
                                         Información del Proyecto
                                     </h3>
                                     <div className="obsidian-mode-toggle">
-                                        <button 
+                                        <button
                                             className={`obsidian-toggle-btn ${obsidianMode === 'edit' ? 'active' : ''}`}
                                             onClick={() => setObsidianMode('edit')}
                                             title="Modo Edición"
@@ -184,7 +187,7 @@ const WorkPage: React.FC = () => {
                                             <GoogleIcon name="edit" size={16} />
                                             <span>Editar</span>
                                         </button>
-                                        <button 
+                                        <button
                                             className={`obsidian-toggle-btn ${obsidianMode === 'split' ? 'active' : ''}`}
                                             onClick={() => setObsidianMode('split')}
                                             title="Modo Dividido"
@@ -192,7 +195,7 @@ const WorkPage: React.FC = () => {
                                             <GoogleIcon name="vertical_split" size={16} />
                                             <span>Dividido</span>
                                         </button>
-                                        <button 
+                                        <button
                                             className={`obsidian-toggle-btn ${obsidianMode === 'preview' ? 'active' : ''}`}
                                             onClick={() => setObsidianMode('preview')}
                                             title="Modo Lectura"
@@ -259,10 +262,10 @@ const WorkPage: React.FC = () => {
                             </div>
                         )}
                         {activeTab === 'kanban' && (
-                            <KanbanBoard 
-                                orders={activeProject.orders || []} 
-                                onMoveOrder={handleMoveOrderStatus} 
-                                onEditOrder={setEditingOrder} 
+                            <KanbanBoard
+                                orders={activeProject.orders || []}
+                                onMoveOrder={handleMoveOrderStatus}
+                                onEditOrder={setEditingOrder}
                             />
                         )}
                     </div>
