@@ -8,7 +8,6 @@ import { useWork } from '../context/WorkContext';
 import ImportExportButtons from '../components/ImportExportButtons';
 import ProjectPanelTabKanban from '../components/Work/ProjectPanelTabKanban';
 import '../styles/Work.css';
-import ProjectPanel from '../components/Work/ProjectPanel';
 import ProjectPanelTabWhiteboard from '../components/Work/ProjectPanelTabWhiteBoard';
 import ProjectPanelTabInfo from '../components/Work/ProjectPanelTabInfo';
 
@@ -77,7 +76,6 @@ const WorkPage: React.FC = () => {
         return (
 
             <div className="page-container" style={{ display: 'flex', flexDirection: 'column' }}>
-                <ProjectPanel name={"como?"} />
                 <div className="project-detail-container">
                     <div className="project-detail-header">
                         <button

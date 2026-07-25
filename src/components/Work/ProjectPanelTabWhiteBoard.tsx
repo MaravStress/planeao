@@ -7,11 +7,6 @@ interface ProjectPanelTabWhiteboardProps {
 
 const ProjectPanelTabWhiteboard: React.FC<ProjectPanelTabWhiteboardProps> = ({ name }) => {
 
-    if (name != "") {
-
-    } else {
-
-    }
     return (
         <>
             <div className="empty-tab-state">

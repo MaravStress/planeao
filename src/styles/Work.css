@@ -649,3 +649,72 @@
     color: #10b981;
     border-color: rgba(16, 185, 129, 0.1);
 }
+
+/* Interactive Block Editor */
+.project-info-blocks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-right: 0.5rem;
+}
+
+.project-info-block-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.project-info-textarea-block {
+    width: 100%;
+    min-height: 36px;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-main);
+    padding: 0.4rem 0.6rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    resize: none;
+    overflow-y: hidden;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(var(--primary-h), var(--primary-s), var(--primary-l), 0.15);
+}
+
+.project-info-block-preview {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    background: transparent;
+    transition: background var(--transition-fast);
+}
+
+.project-info-block-preview:hover {
+    background: hsla(0, 0%, 100%, 0.03);
+}
+
+.project-info-block-preview p {
+    margin: 0;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+}
+
+.project-info-block-preview p:not(:last-child) {
+    margin-bottom: 0.25rem;
+}
+
+.project-info-block-preview h1,
+.project-info-block-preview h2,
+.project-info-block-preview h3,
+.project-info-block-preview h4 {
+    color: var(--color-text-main);
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.add-block-btn:hover {
+    border-color: var(--color-primary) !important;
+    color: var(--color-text-main) !important;
+    background: hsla(0, 0%, 100%, 0.03) !important;
+}
+

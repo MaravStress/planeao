@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import GoogleIcon from "../GoogleIcon";
@@ -9,113 +9,244 @@ interface ProjectPanelTabInfoProps {
     updateProject: (projectId: string, name: string, template: string[], defaultOrderDuration: number, description?: string) => void;
 }
 
-const ProjectPanelTabInfo: React.FC<ProjectPanelTabInfoProps> = ({ activeProject, updateProject }) => {
+interface Block {
+    id: string;
+    text: string;
+    isEditing: boolean;
+}
 
-    const [infoInput, setInfoInput] = useState('');
-    const [obsidianMode, setObsidianMode] = useState<'edit' | 'preview' | 'split'>('split');
+const ProjectPanelTabInfo: React.FC<ProjectPanelTabInfoProps> = ({ activeProject, updateProject }) => {
+    const [blocks, setBlocks] = useState<Block[]>([]);
+    const textareaRefs = useRef<{ [key: string]: HTMLTextAreaElement | null }>({});
+    const [focusedBlockId, setFocusedBlockId] = useState<string | null>(null);
+
+    // Sync state when active project changes or initial load
     useEffect(() => {
         if (activeProject) {
-            setInfoInput(activeProject.description || '');
-        } else {
-            setInfoInput('');
+            const rawDescription = activeProject.description || '';
+            if (rawDescription.trim()) {
+                const initialParagraphs = rawDescription.split(/\n\n+/);
+                setBlocks(
+                    initialParagraphs.map((para, index) => ({
+                        id: `block-${Date.now()}-${index}`,
+                        text: para,
+                        isEditing: false
+                    }))
+                );
+            } else {
+                const initialId = `block-${Date.now()}-0`;
+                setBlocks([
+                    {
+                        id: initialId,
+                        text: '',
+                        isEditing: true
+                    }
+                ]);
+                setFocusedBlockId(initialId);
+            }
         }
     }, [activeProject.id]);
 
-    const handleSaveDescription = (value: string) => {
+    const adjustHeight = (el: HTMLTextAreaElement | null) => {
+        if (!el) return;
+        el.style.height = 'auto';
+        el.style.height = `${el.scrollHeight}px`;
+    };
+
+    // Focus active block textarea automatically and adjust height for editing blocks
+    useEffect(() => {
+        blocks.forEach(b => {
+            if (b.isEditing) {
+                adjustHeight(textareaRefs.current[b.id]);
+            }
+        });
+
+        if (focusedBlockId && textareaRefs.current[focusedBlockId]) {
+            const el = textareaRefs.current[focusedBlockId];
+            if (el) {
+                el.focus();
+                el.selectionStart = el.value.length;
+                el.selectionEnd = el.value.length;
+                adjustHeight(el);
+            }
+        }
+    }, [focusedBlockId, blocks]);
+
+    const saveBlocksToProject = (updatedBlocks: Block[]) => {
+        const fullText = updatedBlocks.map(b => b.text).join('\n\n');
         if (activeProject) {
             updateProject(
                 activeProject.id,
                 activeProject.name,
                 activeProject.template,
                 activeProject.defaultOrderDuration || 7,
-                value
+                fullText
             );
         }
     };
+
+    const handleTextChange = (id: string, newText: string) => {
+        const updated = blocks.map(b => (b.id === id ? { ...b, text: newText } : b));
+        setBlocks(updated);
+        saveBlocksToProject(updated);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>, index: number) => {
+        const currentBlock = blocks[index];
+
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault(); // Prevent newline in current block
+
+            // Switch current block to preview mode
+            const updated = [...blocks];
+            updated[index] = { ...currentBlock, isEditing: false };
+
+            // Insert new block directly underneath
+            const newBlockId = `block-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+            const newBlock: Block = {
+                id: newBlockId,
+                text: '',
+                isEditing: true
+            };
+
+            updated.splice(index + 1, 0, newBlock);
+            setBlocks(updated);
+            setFocusedBlockId(newBlockId);
+            saveBlocksToProject(updated);
+        } else if (e.key === 'ArrowUp') {
+            const { selectionStart } = e.currentTarget;
+            const isFirstLine = !currentBlock.text.slice(0, selectionStart).includes('\n');
+            if (isFirstLine && index > 0) {
+                e.preventDefault();
+                const prevBlock = blocks[index - 1];
+                const updated = blocks.map((b, i) => i === index - 1 ? { ...b, isEditing: true } : b);
+                setBlocks(updated);
+                setFocusedBlockId(prevBlock.id);
+            }
+        } else if (e.key === 'ArrowDown') {
+            const { selectionEnd } = e.currentTarget;
+            const isLastLine = !currentBlock.text.slice(selectionEnd).includes('\n');
+            if (isLastLine && index < blocks.length - 1) {
+                e.preventDefault();
+                const nextBlock = blocks[index + 1];
+                const updated = blocks.map((b, i) => i === index + 1 ? { ...b, isEditing: true } : b);
+                setBlocks(updated);
+                setFocusedBlockId(nextBlock.id);
+            }
+        } else if (e.key === 'Backspace' && currentBlock.text === '' && blocks.length > 1) {
+            e.preventDefault();
+            const prevIndex = Math.max(0, index - 1);
+            const prevBlockId = blocks[prevIndex].id;
+
+            const updated = blocks.filter((_, i) => i !== index);
+            updated[prevIndex] = { ...updated[prevIndex], isEditing: true };
+
+            setBlocks(updated);
+            setFocusedBlockId(prevBlockId);
+            saveBlocksToProject(updated);
+        }
+    };
+
+    const handleBlockClick = (id: string) => {
+        const updated = blocks.map(b => (b.id === id ? { ...b, isEditing: true } : b));
+        setBlocks(updated);
+        setFocusedBlockId(id);
+    };
+
+    const handleBlur = (id: string) => {
+        setBlocks(prev =>
+            prev.map(b => {
+                if (b.id === id) {
+                    // Keep empty block editable if it's the only block
+                    if (!b.text.trim() && prev.length === 1) {
+                        return b;
+                    }
+                    return { ...b, isEditing: false };
+                }
+                return b;
+            })
+        );
+    };
+
+    const handleAddBlockBottom = () => {
+        const newBlockId = `block-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+        const newBlock: Block = {
+            id: newBlockId,
+            text: '',
+            isEditing: true
+        };
+        const updated = [...blocks, newBlock];
+        setBlocks(updated);
+        setFocusedBlockId(newBlockId);
+    };
+
     return (
-        <>
-            <div className="project-info-pane">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid hsla(0, 0%, 100%, 0.05)', paddingBottom: '0.75rem' }}>
-                    <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                        Información del Proyecto
-                    </h3>
-                    <div className="obsidian-mode-toggle">
-                        <button
-                            className={`obsidian-toggle-btn ${obsidianMode === 'edit' ? 'active' : ''}`}
-                            onClick={() => setObsidianMode('edit')}
-                            title="Modo Edición"
-                        >
-                            <GoogleIcon name="edit" size={16} />
-                            <span>Editar</span>
-                        </button>
-                        <button
-                            className={`obsidian-toggle-btn ${obsidianMode === 'split' ? 'active' : ''}`}
-                            onClick={() => setObsidianMode('split')}
-                            title="Modo Dividido"
-                        >
-                            <GoogleIcon name="vertical_split" size={16} />
-                            <span>Dividido</span>
-                        </button>
-                        <button
-                            className={`obsidian-toggle-btn ${obsidianMode === 'preview' ? 'active' : ''}`}
-                            onClick={() => setObsidianMode('preview')}
-                            title="Modo Lectura"
-                        >
-                            <GoogleIcon name="visibility" size={16} />
-                            <span>Lectura</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div className="project-info-content-area">
-                    {obsidianMode === 'edit' && (
-                        <textarea
-                            className="project-info-textarea-split"
-                            value={infoInput}
-                            onChange={(e) => {
-                                setInfoInput(e.target.value);
-                                handleSaveDescription(e.target.value);
-                            }}
-                            placeholder="Escribe la información del proyecto aquí usando Markdown (títulos, listas, imágenes, enlaces...)"
-                        />
-                    )}
-                    {obsidianMode === 'preview' && (
-                        <div className="project-info-preview-split" style={{ height: '100%', overflowY: 'auto' }}>
-                            {infoInput ? (
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>{infoInput}</ReactMarkdown>
-                            ) : (
-                                <span className="markdown-preview-hint">No hay información registrada. Haz clic en "Editar" o "Dividido" para comenzar.</span>
-                            )}
-                        </div>
-                    )}
-                    {obsidianMode === 'split' && (
-                        <div className="project-info-split-container">
-                            <div className="project-info-editor-column">
-                                <textarea
-                                    className="project-info-textarea-split"
-                                    value={infoInput}
-                                    onChange={(e) => {
-                                        setInfoInput(e.target.value);
-                                        handleSaveDescription(e.target.value);
-                                    }}
-                                    placeholder="Escribe la información del proyecto aquí usando Markdown (títulos, listas, imágenes, enlaces...)"
-                                />
-                            </div>
-                            <div className="project-info-preview-column">
-                                <div className="project-info-preview-split">
-                                    {infoInput ? (
-                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{infoInput}</ReactMarkdown>
-                                    ) : (
-                                        <span className="markdown-preview-hint">La vista previa formateada aparecerá aquí a medida que escribes...</span>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
+        <div className="project-info-pane">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid hsla(0, 0%, 100%, 0.05)', paddingBottom: '0.75rem' }}>
+                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Información del Proyecto
+                </h3>
             </div>
-        </>
-    );
-}
 
-export default ProjectPanelTabInfo;
+            <div className="project-info-blocks-container" style={{ marginTop: '1rem', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {blocks.map((block, index) => (
+                    <div key={block.id} className="project-info-block-wrapper">
+                        {block.isEditing ? (
+                            <textarea
+                                ref={el => {
+                                    textareaRefs.current[block.id] = el;
+                                    adjustHeight(el);
+                                }}
+                                className="project-info-textarea-block"
+                                value={block.text}
+                                onChange={(e) => {
+                                    handleTextChange(block.id, e.target.value);
+                                    adjustHeight(e.target);
+                                }}
+                                onInput={(e) => adjustHeight(e.currentTarget)}
+                                onKeyDown={(e) => handleKeyDown(e, index)}
+                                onBlur={() => handleBlur(block.id)}
+                                placeholder="Escribe información aquí en Markdown... (Enter para nuevo bloque, Shift+Enter para salto de línea)"
+                            />
+                        ) : (
+                            <div
+                                className="project-info-block-preview"
+                                onClick={() => handleBlockClick(block.id)}
+                            >
+                                {block.text.trim() ? (
+                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{block.text}</ReactMarkdown>
+                                ) : (
+                                    <span className="markdown-preview-hint">Bloque vacío. Haz clic para editar...</span>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                ))}
+
+                <button
+                    className="add-block-btn"
+                    onClick={handleAddBlockBottom}
+                    style={{
+                        alignSelf: 'flex-start',
+                        background: 'transparent',
+                        border: '1px dashed hsla(0, 0%, 100%, 0.15)',
+                        color: 'var(--color-text-muted)',
+                        padding: '0.5rem 1rem',
+                        borderRadius: 'var(--radius-md)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        marginTop: '0.5rem',
+                        fontSize: '0.85rem'
+                    }}
+                >
+                    <GoogleIcon name="add" size={16} />
+                    <span>Añadir bloque</span>
+                </button>
+            </div>
+        </div>
+    );
+};
+
+export default ProjectPanelTabInfo;
