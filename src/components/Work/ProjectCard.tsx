@@ -14,7 +14,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
         for (let i = 0; i < name.length; i++) {
             hash = name.charCodeAt(i) + ((hash << 5) - hash);
         }
-        // Use HSL colors to ensure nice saturation and lightness
         const h1 = Math.abs(hash) % 360;
         const h2 = (h1 + 40) % 360;
         return `linear-gradient(135deg, hsl(${h1}, 70%, 45%), hsl(${h2}, 80%, 25%))`;
@@ -34,7 +33,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
                         {project.isPaused ? 'Pausado' : 'Activo'}
                     </span>
                     <span className="project-orders-count">
-                        {ordersCount} {ordersCount === 1 ? 'Pedido' : 'Pedidos'}
+                        {ordersCount} {ordersCount === 1 ? 'tarea' : 'tareas'}
                     </span>
                 </div>
             </div>

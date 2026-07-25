@@ -36,11 +36,7 @@ const PomodoroPage: React.FC = () => {
                 <ImportExportButtons page="pomodoro" />
             </header>
 
-            <div className="pomodoro-content">
-                <div className="pomodoro-column">
-                    <PomodoroProjectTasks />
-                </div>
-
+            <div className="pomodoro-top-section">
                 <div className="pomodoro-column">
                     <TimerDisplay
                         minutes={minutes}
@@ -53,7 +49,7 @@ const PomodoroPage: React.FC = () => {
                         onModeSwitch={handleModeSwitch}
                     />
 
-                    <div className="pomodoro-controls-area" style={{ marginTop: '1.5rem' }}>
+                    <div className="pomodoro-controls-area" style={{ marginTop: '1.5rem', width: '100%' }}>
                         <TimerSettings
                             focusDuration={focusDuration}
                             restDuration={restDuration}
@@ -67,6 +63,10 @@ const PomodoroPage: React.FC = () => {
                 <div className="pomodoro-column">
                     <PomodoroTasks />
                 </div>
+            </div>
+
+            <div className="pomodoro-bottom-section">
+                <PomodoroProjectTasks />
             </div>
         </div>
     );

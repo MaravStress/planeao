@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Timeline from '../components/Work/Timeline';
 import ProjectCard from '../components/Work/ProjectCard';
-import EditOrderModal from '../components/Work/EditOrderModal';
 import type { Order } from '../types/work';
 import GoogleIcon from '../components/GoogleIcon';
 import { useWork } from '../context/WorkContext';
@@ -16,32 +15,34 @@ const WorkPage: React.FC = () => {
         projects,
         addProject: addProjectContext,
         updateProject,
-        updateOrder,
-        deleteOrder
+        deleteProject,
+        updateOrder
     } = useWork();
 
-    const [editingOrder, setEditingOrder] = useState<Order | null>(null);
     const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<'info' | 'whiteboard' | 'kanban'>('info');
     const [isEditingTitle, setIsEditingTitle] = useState(false);
     const [titleInput, setTitleInput] = useState('');
 
-
     const handleAddProject = () => {
         addProjectContext();
     };
 
-    const handleDeleteOrder = (projectId: string, orderId: string) => {
-        const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este pedido?");
-        if (confirmDelete) {
-            deleteOrder(projectId, orderId);
-            setEditingOrder(null);
+    const handleDeleteProject = (projectId: string, projectName: string) => {
+        const confirmed = window.confirm(
+            `¿Estás seguro de que deseas eliminar permanentemente el proyecto "${projectName}" y todas sus tareas/tableros? Esta acción no se puede deshacer.`
+        );
+        if (confirmed) {
+            deleteProject(projectId);
+            if (activeProjectId === projectId) {
+                setActiveProjectId(null);
+            }
         }
     };
 
     const activeProject = projects.find(p => p.id === activeProjectId);
 
-    const handleMoveOrderStatus = (order: Order, newStatus: 'todo' | 'in_progress' | 'done') => {
+    const handleMoveOrderStatus = (order: Order, newStatus: string) => {
         if (activeProject) {
             updateOrder(activeProject.id, {
                 ...order,
@@ -145,20 +146,59 @@ const WorkPage: React.FC = () => {
                                 Kanban
                             </button>
                         </div>
+
+                        <button
+                            onClick={() => handleDeleteProject(activeProject.id, activeProject.name)}
+                            style={{
+                                background: 'hsla(0, 0%, 100%, 0.05)',
+                                backdropFilter: 'blur(10px)',
+                                WebkitBackdropFilter: 'blur(10px)',
+                                border: '1px solid hsla(0, 0%, 100%, 0.1)',
+                                color: 'var(--color-text-muted)',
+                                width: '38px',
+                                height: '38px',
+                                borderRadius: '50%',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'all 0.2s ease',
+                                marginLeft: '0.5rem'
+                            }}
+                            title="Eliminar este proyecto"
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.background = 'hsla(0, 0%, 100%, 0.12)';
+                                e.currentTarget.style.borderColor = 'hsla(0, 0%, 100%, 0.2)';
+                                e.currentTarget.style.color = '#ffffff';
+                                e.currentTarget.style.transform = 'scale(1.05)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.background = 'hsla(0, 0%, 100%, 0.05)';
+                                e.currentTarget.style.borderColor = 'hsla(0, 0%, 100%, 0.1)';
+                                e.currentTarget.style.color = 'var(--color-text-muted)';
+                                e.currentTarget.style.transform = 'scale(1)';
+                            }}
+                        >
+                            <GoogleIcon name="delete" size={20} />
+                        </button>
                     </div>
 
                     <div className="tab-content-container">
                         {activeTab === 'info' && (
-                            <ProjectPanelTabInfo activeProject={activeProject} updateProject={updateProject} />
+                            <ProjectPanelTabInfo
+                                activeProject={activeProject}
+                                updateProject={updateProject}
+                                onDeleteProject={() => handleDeleteProject(activeProject.id, activeProject.name)}
+                            />
                         )}
                         {activeTab === 'whiteboard' && (
                             <ProjectPanelTabWhiteboard project={activeProject} />
                         )}
                         {activeTab === 'kanban' && (
                             <ProjectPanelTabKanban
+                                projectId={activeProject.id}
                                 orders={activeProject.orders || []}
                                 onMoveOrder={handleMoveOrderStatus}
-                                onEditOrder={setEditingOrder}
                             />
                         )}
                     </div>
@@ -194,7 +234,7 @@ const WorkPage: React.FC = () => {
                 </button>
             </div>
 
-            <Timeline onEditOrder={setEditingOrder} />
+            <Timeline />
 
             <h2 style={{ marginTop: '2rem', marginBottom: '1rem', fontSize: '1.4rem' }}>Proyectos</h2>
 
@@ -241,16 +281,6 @@ const WorkPage: React.FC = () => {
                     <span style={{ fontWeight: 600 }}>Nuevo Proyecto</span>
                 </div>
             </div>
-
-            {editingOrder && (
-                <EditOrderModal
-                    order={editingOrder}
-                    isOpen={!!editingOrder}
-                    onClose={() => setEditingOrder(null)}
-                    onSave={updateOrder}
-                    onDelete={handleDeleteOrder}
-                />
-            )}
         </div>
     );
 };

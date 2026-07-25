@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { Order } from '../../types/work';
@@ -6,10 +6,12 @@ import GoogleIcon from '../GoogleIcon';
 
 interface KanbanCardProps {
     order: Order;
-    onEdit: (order: Order) => void;
+    columnColor?: string;
+    onUpdateOrder?: (updatedOrder: Order) => void;
+    onDeleteOrder?: (orderId: string) => void;
 }
 
-export const KanbanCard: React.FC<KanbanCardProps> = ({ order, onEdit }) => {
+export const KanbanCard: React.FC<KanbanCardProps> = ({ order, columnColor, onUpdateOrder, onDeleteOrder }) => {
     const {
         attributes,
         listeners,
@@ -25,23 +27,69 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ order, onEdit }) => {
         }
     });
 
-    const style = {
+    const [isEditingTitle, setIsEditingTitle] = useState(false);
+    const [title, setTitle] = useState(order.title);
+
+    useEffect(() => {
+        setTitle(order.title);
+    }, [order.title]);
+
+    const style: React.CSSProperties = {
         transform: CSS.Transform.toString(transform),
         transition,
     };
 
-    // Calculate checklist progress
-    const totalItems = order.checklist?.length || 0;
-    const completedItems = order.checklist?.filter(item => item.completed).length || 0;
-    const progressText = `${completedItems}/${totalItems}`;
-    const isCompleted = totalItems > 0 && completedItems === totalItems;
+    const handleSaveTitle = () => {
+        setIsEditingTitle(false);
+        const trimmed = title.trim();
+        if (trimmed && trimmed !== order.title && onUpdateOrder) {
+            onUpdateOrder({
+                ...order,
+                title: trimmed
+            });
+        } else if (!trimmed) {
+            setTitle(order.title);
+        }
+    };
 
-    // Formatting dates
-    const formatDate = (dateStr: string) => {
+    const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newDateStr = e.target.value;
+        if (newDateStr && onUpdateOrder) {
+            const newStartDate = new Date(`${newDateStr}T00:00:00`).toISOString();
+            onUpdateOrder({
+                ...order,
+                startDate: newStartDate
+            });
+        }
+    };
+
+    const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newDateStr = e.target.value;
+        if (newDateStr && onUpdateOrder) {
+            const newEndDate = new Date(`${newDateStr}T00:00:00`).toISOString();
+            onUpdateOrder({
+                ...order,
+                endDate: newEndDate
+            });
+        }
+    };
+
+    const handleDelete = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+        if (onDeleteOrder) {
+            onDeleteOrder(order.id);
+        }
+    };
+
+    const formatDateForInput = (dateStr: string) => {
         try {
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
-        } catch (e) {
+            const d = new Date(dateStr);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        } catch {
             return '';
         }
     };
@@ -56,33 +104,93 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ order, onEdit }) => {
             {...attributes}
             {...listeners}
         >
-            <div className={`kanban-card-accent ${status}`} />
+            <div className={`kanban-card-accent ${status}`} style={columnColor ? { backgroundColor: columnColor } : undefined} />
+
             <div className="kanban-card-header">
-                <span className="kanban-card-title">{order.title}</span>
-                <button
-                    className="kanban-card-edit-btn"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        onEdit(order);
-                    }}
-                    title="Editar pedido"
-                >
-                    <GoogleIcon name="edit" size={14} />
-                </button>
-            </div>
-            <div className="kanban-card-footer">
-                <div className="kanban-card-date">
-                    <GoogleIcon name="calendar_today" size={12} />
-                    <span>{formatDate(order.endDate)}</span>
-                </div>
-                {totalItems > 0 && (
-                    <div className={`kanban-card-progress ${isCompleted ? 'completed' : ''}`}>
-                        <GoogleIcon name="check_circle" size={12} />
-                        <span>{progressText}</span>
-                    </div>
+                {isEditingTitle ? (
+                    <input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        onBlur={handleSaveTitle}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleSaveTitle();
+                            if (e.key === 'Escape') {
+                                setTitle(order.title);
+                                setIsEditingTitle(false);
+                            }
+                        }}
+                        onPointerDown={(e) => e.stopPropagation()}
+                        onClick={(e) => e.stopPropagation()}
+                        autoFocus
+                        className="kanban-card-title-input"
+                    />
+                ) : (
+                    <span
+                        className="kanban-card-title"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsEditingTitle(true);
+                        }}
+                        title="Clic para editar título"
+                    >
+                        {order.title}
+                    </span>
                 )}
+
+                <div className="kanban-card-actions" onPointerDown={(e) => e.stopPropagation()}>
+                    <button
+                        className="kanban-card-action-btn edit-btn"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsEditingTitle(!isEditingTitle);
+                        }}
+                        title="Editar título"
+                    >
+                        <GoogleIcon name="edit" size={13} />
+                    </button>
+                    <button
+                        className="kanban-card-action-btn delete-btn"
+                        onClick={handleDelete}
+                        title="Eliminar tarjeta"
+                    >
+                        <GoogleIcon name="delete" size={13} />
+                    </button>
+                </div>
+            </div>
+
+            <div className="kanban-card-footer" onPointerDown={(e) => e.stopPropagation()}>
+                <div className="kanban-card-dates">
+                    <div className="kanban-card-date-picker" title="Fecha de Inicio">
+                        <span className="kanban-card-date-label">Inicio:</span>
+                        <input
+                            type="date"
+                            value={formatDateForInput(order.startDate)}
+                            onChange={handleStartDateChange}
+                            onClick={(e) => e.stopPropagation()}
+                            className="kanban-card-date-input"
+                        />
+                    </div>
+                    <div className="kanban-card-date-picker" title="Fecha Final">
+                        <span className="kanban-card-date-label">Fin:</span>
+                        <input
+                            type="date"
+                            value={formatDateForInput(order.endDate)}
+                            onChange={handleEndDateChange}
+                            onClick={(e) => e.stopPropagation()}
+                            className="kanban-card-date-input"
+                        />
+                    </div>
+                </div>
+
+                <div className={`kanban-card-status-badge ${status}`}>
+                    {status === 'todo' && 'Pendiente'}
+                    {status === 'in_progress' && 'En Proceso'}
+                    {status === 'done' && 'Completado'}
+                </div>
             </div>
         </div>
     );
 };
+
+export default KanbanCard;

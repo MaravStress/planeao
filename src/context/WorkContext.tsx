@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import type { Project, Order, ChecklistItem } from '../types/work';
+import type { Project, Order, KanbanColumnData } from '../types/work';
+import { DEFAULT_KANBAN_COLUMNS } from '../types/work';
 import { saveToLocal, loadFromLocal, STORAGE_KEYS } from './LocalSave';
 
 interface WorkContextType {
@@ -8,12 +9,15 @@ interface WorkContextType {
     addProject: () => Project;
     updateProject: (projectId: string, name: string, template: string[], defaultOrderDuration: number, description?: string) => void;
     deleteProject: (projectId: string) => void;
-    addOrder: (projectId: string) => Order | undefined;
+    addOrder: (projectId: string, status?: string) => Order | undefined;
     updateOrder: (projectId: string, updatedOrder: Order) => void;
     deleteOrder: (projectId: string, orderId: string) => void;
-    toggleOrderCheck: (projectId: string, orderId: string, itemId: string) => void;
     toggleProjectPause: (projectId: string) => void;
     updateProjectWhiteboard: (projectId: string, whiteboardData: any) => void;
+    addProjectColumn: (projectId: string, title: string, color?: string) => void;
+    deleteProjectColumn: (projectId: string, columnId: string) => void;
+    updateProjectColumn: (projectId: string, columnId: string, title: string, color?: string) => void;
+    moveProjectColumn: (projectId: string, columnId: string, direction: 'left' | 'right') => void;
 }
 
 const WorkContext = createContext<WorkContextType | undefined>(undefined);
@@ -34,7 +38,8 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             id: crypto.randomUUID(),
             name,
             template: ['Tarea 1', 'Tarea 2'],
-            defaultOrderDuration: 3, // Default duration for new projects
+            defaultOrderDuration: 3,
+            columns: DEFAULT_KANBAN_COLUMNS,
             orders: []
         };
 
@@ -58,31 +63,25 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         ));
     };
 
-    const addOrder = (projectId: string): Order | undefined => {
+    const addOrder = (projectId: string, initialStatus?: string): Order | undefined => {
         const project = projects.find(p => p.id === projectId);
         if (!project) return undefined;
 
+        const currentColumns = project.columns || DEFAULT_KANBAN_COLUMNS;
+        const targetStatus = initialStatus || (currentColumns[0] ? currentColumns[0].id : 'todo');
+
         const title = "Nuevo Pedido";
-
-        // Create checklist from template
-        const checklist: ChecklistItem[] = (project.template || []).map((text, index) => ({
-            id: `${crypto.randomUUID()}-${index}`,
-            text,
-            completed: false
-        }));
-
         const duration = project.defaultOrderDuration || 7;
         const newOrder: Order = {
             id: crypto.randomUUID(),
             projectId,
             title,
-            checklist,
             startDate: new Date().toISOString(),
             endDate: new Date(Date.now() + duration * 24 * 60 * 60 * 1000).toISOString(),
-            status: 'todo'
+            status: targetStatus
         };
 
-        setProjects(projects.map(p => {
+        setProjects(prevProjects => prevProjects.map(p => {
             if (p.id === projectId) {
                 return { ...p, orders: [...(p.orders || []), newOrder] };
             }
@@ -116,31 +115,92 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }));
     };
 
-    const toggleOrderCheck = (projectId: string, orderId: string, itemId: string) => {
-        setProjects(projects.map(p => {
+    const updateProjectWhiteboard = (projectId: string, whiteboardData: any) => {
+        setProjects(prevProjects => prevProjects.map(p =>
+            p.id === projectId ? { ...p, whiteboardData } : p
+        ));
+    };
+
+    const addProjectColumn = (projectId: string, title: string, color?: string) => {
+        setProjects(prevProjects => prevProjects.map(p => {
             if (p.id === projectId) {
-                const updatedOrders = (p.orders || []).map(order => {
-                    if (order.id === orderId) {
-                        const updatedChecklist = (order.checklist || []).map(item => {
-                            if (item.id === itemId) {
-                                return { ...item, completed: !item.completed };
-                            }
-                            return item;
-                        });
-                        return { ...order, checklist: updatedChecklist };
-                    }
-                    return order;
-                });
-                return { ...p, orders: updatedOrders };
+                const currentCols = p.columns && p.columns.length > 0 ? p.columns : DEFAULT_KANBAN_COLUMNS;
+                const newCol: KanbanColumnData = {
+                    id: `col-${Date.now()}`,
+                    title,
+                    color: color || '#8b5cf6'
+                };
+                return {
+                    ...p,
+                    columns: [...currentCols, newCol]
+                };
             }
             return p;
         }));
     };
 
-    const updateProjectWhiteboard = (projectId: string, whiteboardData: any) => {
-        setProjects(prevProjects => prevProjects.map(p =>
-            p.id === projectId ? { ...p, whiteboardData } : p
-        ));
+    const deleteProjectColumn = (projectId: string, columnId: string) => {
+        setProjects(prevProjects => prevProjects.map(p => {
+            if (p.id === projectId) {
+                const currentCols = p.columns && p.columns.length > 0 ? p.columns : DEFAULT_KANBAN_COLUMNS;
+                const updatedCols = currentCols.filter(c => c.id !== columnId);
+                const fallbackStatus = updatedCols[0] ? updatedCols[0].id : 'todo';
+
+                // Reassign orders in deleted column to fallback column
+                const updatedOrders = (p.orders || []).map(o => {
+                    if (o.status === columnId) {
+                        return { ...o, status: fallbackStatus };
+                    }
+                    return o;
+                });
+
+                return {
+                    ...p,
+                    columns: updatedCols,
+                    orders: updatedOrders
+                };
+            }
+            return p;
+        }));
+    };
+
+    const updateProjectColumn = (projectId: string, columnId: string, title: string, color?: string) => {
+        setProjects(prevProjects => prevProjects.map(p => {
+            if (p.id === projectId) {
+                const currentCols = p.columns && p.columns.length > 0 ? p.columns : DEFAULT_KANBAN_COLUMNS;
+                const updatedCols = currentCols.map(c => {
+                    if (c.id === columnId) {
+                        return { ...c, title, color: color || c.color };
+                    }
+                    return c;
+                });
+                return {
+                    ...p,
+                    columns: updatedCols
+                };
+            }
+            return p;
+        }));
+    };
+
+    const moveProjectColumn = (projectId: string, columnId: string, direction: 'left' | 'right') => {
+        setProjects(prevProjects => prevProjects.map(p => {
+            if (p.id === projectId) {
+                const currentCols = [...(p.columns && p.columns.length > 0 ? p.columns : DEFAULT_KANBAN_COLUMNS)];
+                const index = currentCols.findIndex(c => c.id === columnId);
+                if (index === -1) return p;
+
+                const targetIndex = direction === 'left' ? index - 1 : index + 1;
+                if (targetIndex < 0 || targetIndex >= currentCols.length) return p;
+
+                const temp = currentCols[index];
+                currentCols[index] = currentCols[targetIndex];
+                currentCols[targetIndex] = temp;
+
+                return { ...p, columns: currentCols };
+            }
+            return p;
+        }));
     };
 
     return (
@@ -152,9 +212,12 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             addOrder,
             updateOrder,
             deleteOrder,
-            toggleOrderCheck,
             toggleProjectPause,
-            updateProjectWhiteboard
+            updateProjectWhiteboard,
+            addProjectColumn,
+            deleteProjectColumn,
+            updateProjectColumn,
+            moveProjectColumn
         }}>
             {children}
         </WorkContext.Provider>

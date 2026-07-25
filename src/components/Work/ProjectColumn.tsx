@@ -73,9 +73,8 @@ const ProjectColumn: React.FC<ProjectColumnProps> = ({
                 <div>
                     Target: {(() => {
                         const orders = project.orders || [];
-                        const completed = orders.reduce((acc, o) => acc + (o.checklist || []).filter(i => i.completed).length, 0);
-                        const total = orders.reduce((acc, o) => acc + (o.checklist || []).length, 0);
-                        return `${completed}/${total}`;
+                        const completed = orders.filter(o => o.status === 'done').length;
+                        return `${completed}/${orders.length}`;
                     })()}
                 </div>
                 <div>

@@ -7,6 +7,7 @@ import type { Project } from "../../types/work";
 interface ProjectPanelTabInfoProps {
     activeProject: Project;
     updateProject: (projectId: string, name: string, template: string[], defaultOrderDuration: number, description?: string) => void;
+    onDeleteProject?: () => void;
 }
 
 interface Block {
@@ -15,7 +16,7 @@ interface Block {
     isEditing: boolean;
 }
 
-const ProjectPanelTabInfo: React.FC<ProjectPanelTabInfoProps> = ({ activeProject, updateProject }) => {
+const ProjectPanelTabInfo: React.FC<ProjectPanelTabInfoProps> = ({ activeProject, updateProject, onDeleteProject }) => {
     const [blocks, setBlocks] = useState<Block[]>([]);
     const textareaRefs = useRef<{ [key: string]: HTMLTextAreaElement | null }>({});
     const [focusedBlockId, setFocusedBlockId] = useState<string | null>(null);
@@ -245,8 +246,63 @@ const ProjectPanelTabInfo: React.FC<ProjectPanelTabInfoProps> = ({ activeProject
                     <span>Añadir bloque</span>
                 </button>
             </div>
+
+            {onDeleteProject && (
+                <div style={{
+                    marginTop: '3rem',
+                    padding: '1.25rem',
+                    borderRadius: 'var(--radius-lg)',
+                    border: '1px solid hsla(0, 0%, 100%, 0.08)',
+                    background: 'hsla(0, 0%, 100%, 0.03)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}>
+                    <div>
+                        <div style={{ fontWeight: 600, color: 'var(--color-text-main)', fontSize: '0.95rem' }}>Eliminar Proyecto</div>
+                        <div style={{ fontSize: '0.82rem', color: 'var(--color-text-muted)', marginTop: '0.2rem' }}>
+                            Eliminar este proyecto y borrar permanentemente sus listas y configuraciones.
+                        </div>
+                    </div>
+                    <button
+                        onClick={onDeleteProject}
+                        title="Eliminar Proyecto"
+                        style={{
+                            background: 'hsla(0, 0%, 100%, 0.06)',
+                            backdropFilter: 'blur(8px)',
+                            WebkitBackdropFilter: 'blur(8px)',
+                            border: '1px solid hsla(0, 0%, 100%, 0.12)',
+                            color: 'var(--color-text-muted)',
+                            width: '38px',
+                            height: '38px',
+                            borderRadius: '50%',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'hsla(0, 0%, 100%, 0.15)';
+                            e.currentTarget.style.borderColor = 'hsla(0, 0%, 100%, 0.25)';
+                            e.currentTarget.style.color = '#ffffff';
+                            e.currentTarget.style.transform = 'scale(1.1)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'hsla(0, 0%, 100%, 0.06)';
+                            e.currentTarget.style.borderColor = 'hsla(0, 0%, 100%, 0.12)';
+                            e.currentTarget.style.color = 'var(--color-text-muted)';
+                            e.currentTarget.style.transform = 'scale(1)';
+                        }}
+                    >
+                        <GoogleIcon name="delete" size={18} />
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
 
-export default ProjectPanelTabInfo;
+export default ProjectPanelTabInfo;

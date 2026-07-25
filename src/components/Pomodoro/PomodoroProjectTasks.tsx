@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useWork } from '../../context/WorkContext';
-import OrderCard from '../Work/OrderCard';
-import EditOrderModal from '../Work/EditOrderModal';
+import ProjectPanelTabKanban from '../Work/ProjectPanelTabKanban';
 import type { Order } from '../../types/work';
-import '../../styles/PomodoroDnD.css';
+import GoogleIcon from '../GoogleIcon';
 
 const PomodoroProjectTasks: React.FC = () => {
-    const { projects, updateOrder, deleteOrder, toggleOrderCheck } = useWork();
+    const { projects, updateOrder } = useWork();
     const [selectedProjectId, setSelectedProjectId] = useState<string>('');
-    const [editingOrder, setEditingOrder] = useState<Order | null>(null);
 
     useEffect(() => {
         if (projects.length > 0 && !selectedProjectId) {
@@ -26,10 +24,20 @@ const PomodoroProjectTasks: React.FC = () => {
 
     const selectedProject = projects.find(p => p.id === selectedProjectId);
 
+    const handleMoveOrderStatus = (order: Order, newStatus: string) => {
+        if (selectedProject) {
+            updateOrder(selectedProject.id, {
+                ...order,
+                status: newStatus
+            });
+        }
+    };
+
     return (
-        <div className="pomodoro-tasks glass-panel" style={{ marginTop: '1rem' }}>
-            <h3>
-                <span>Pedidos del Proyecto</span>
+        <div className="pomodoro-project-tasks-container glass-panel" style={{ marginTop: '1rem', width: '100%' }}>
+            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+                <GoogleIcon name="view_kanban" size={20} />
+                <span>Kanban del Proyecto</span>
             </h3>
 
             <div className="task-input-container" style={{ marginBottom: '1rem' }}>
@@ -55,37 +63,16 @@ const PomodoroProjectTasks: React.FC = () => {
                 </select>
             </div>
 
-            <div className="task-list" style={{ maxHeight: '400px', overflowY: 'auto', paddingRight: '0.5rem' }}>
-                {!selectedProject && <p className="no-tasks">Selecciona un proyecto para ver sus pedidos</p>}
-                {selectedProject && (!selectedProject.orders || selectedProject.orders.length === 0) && (
-                    <p className="no-tasks">Este proyecto no tiene pedidos</p>
+            <div className="pomodoro-kanban-wrapper" style={{ overflowX: 'auto', paddingBottom: '0.5rem' }}>
+                {!selectedProject && <p className="no-tasks">Selecciona un proyecto para ver su tablero Kanban</p>}
+                {selectedProject && (
+                    <ProjectPanelTabKanban
+                        projectId={selectedProject.id}
+                        orders={selectedProject.orders || []}
+                        onMoveOrder={handleMoveOrderStatus}
+                    />
                 )}
-                {selectedProject && selectedProject.orders && [...selectedProject.orders]
-                    .sort((a, b) => new Date(a.endDate).getTime() - new Date(b.endDate).getTime())
-                    .map(order => (
-                        <OrderCard
-                            key={order.id}
-                            order={order}
-                            onEdit={setEditingOrder}
-                            onArchive={(orderId) => deleteOrder(selectedProject.id, orderId)}
-                            onToggleCheck={(orderId, itemId) => toggleOrderCheck(selectedProject.id, orderId, itemId)}
-                        />
-                    ))
-                }
             </div>
-
-            {editingOrder && selectedProject && (
-                <EditOrderModal
-                    order={editingOrder}
-                    isOpen={!!editingOrder}
-                    onClose={() => setEditingOrder(null)}
-                    onSave={(projectId, updatedOrder) => updateOrder(projectId, updatedOrder)}
-                    onDelete={(projectId, orderId) => {
-                        deleteOrder(projectId, orderId);
-                        setEditingOrder(null);
-                    }}
-                />
-            )}
         </div>
     );
 };

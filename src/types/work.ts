@@ -4,14 +4,25 @@ export interface ChecklistItem {
     completed: boolean;
 }
 
+export interface KanbanColumnData {
+    id: string;
+    title: string;
+    color?: string;
+}
+
+export const DEFAULT_KANBAN_COLUMNS: KanbanColumnData[] = [
+    { id: 'todo', title: 'Pendientes', color: '#3b82f6' },
+    { id: 'in_progress', title: 'En Proceso', color: '#f97316' },
+    { id: 'done', title: 'Completado', color: '#10b981' }
+];
+
 export interface Order {
     id: string;
     projectId: string;
     title: string;
-    checklist: ChecklistItem[];
     startDate: string; // ISO date string
     endDate: string; // ISO date string
-    status?: 'todo' | 'in_progress' | 'done'; // Kanban status
+    status?: string; // Column ID
 }
 
 export interface Project {
@@ -20,6 +31,7 @@ export interface Project {
     template: string[]; // List of task names for new orders
     defaultOrderDuration?: number; // Duration in days for new orders
     isPaused?: boolean;
+    columns?: KanbanColumnData[];
     orders: Order[];
     description?: string; // Project information in Markdown format
     whiteboardData?: {
@@ -28,4 +40,3 @@ export interface Project {
         files?: Record<string, any>;
     };
 }
-

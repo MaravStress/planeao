@@ -16,10 +16,11 @@ interface DragState {
 }
 
 interface TimelineProps {
+    projectId?: string;
     onEditOrder?: (order: Order) => void;
 }
 
-const Timeline: React.FC<TimelineProps> = ({ onEditOrder }) => {
+const Timeline: React.FC<TimelineProps> = ({ projectId, onEditOrder }) => {
     const { projects, updateOrder } = useWork();
 
     const [viewStartDate, setViewStartDate] = useState(() => {
@@ -121,8 +122,15 @@ const Timeline: React.FC<TimelineProps> = ({ onEditOrder }) => {
     }, [dragState, updateOrder]);
 
     const allOrders = useMemo(() => {
-        return projects.filter(p => !p.isPaused).flatMap(p => p.orders || []);
-    }, [projects]);
+        let list: Order[] = [];
+        if (projectId) {
+            const p = projects.find(proj => proj.id === projectId);
+            list = p?.orders || [];
+        } else {
+            list = projects.filter(p => !p.isPaused).flatMap(p => p.orders || []);
+        }
+        return list.filter(o => o.status !== 'done');
+    }, [projects, projectId]);
 
     const daysArray = useMemo(() => {
         return Array.from({ length: DAYS_IN_VIEW }).map((_, i) => {
