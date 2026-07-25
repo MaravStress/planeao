@@ -22,4 +22,10 @@ export interface Project {
     isPaused?: boolean;
     orders: Order[];
     description?: string; // Project information in Markdown format
+    whiteboardData?: {
+        elements?: readonly any[];
+        appState?: Record<string, any>;
+        files?: Record<string, any>;
+    };
 }
+

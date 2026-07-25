@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import type { Project, Order, ChecklistItem } from '../types/work';
 import { saveToLocal, loadFromLocal, STORAGE_KEYS } from './LocalSave';
@@ -12,6 +13,7 @@ interface WorkContextType {
     deleteOrder: (projectId: string, orderId: string) => void;
     toggleOrderCheck: (projectId: string, orderId: string, itemId: string) => void;
     toggleProjectPause: (projectId: string) => void;
+    updateProjectWhiteboard: (projectId: string, whiteboardData: any) => void;
 }
 
 const WorkContext = createContext<WorkContextType | undefined>(undefined);
@@ -135,6 +137,12 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }));
     };
 
+    const updateProjectWhiteboard = (projectId: string, whiteboardData: any) => {
+        setProjects(prevProjects => prevProjects.map(p =>
+            p.id === projectId ? { ...p, whiteboardData } : p
+        ));
+    };
+
     return (
         <WorkContext.Provider value={{
             projects,
@@ -145,7 +153,8 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             updateOrder,
             deleteOrder,
             toggleOrderCheck,
-            toggleProjectPause
+            toggleProjectPause,
+            updateProjectWhiteboard
         }}>
             {children}
         </WorkContext.Provider>

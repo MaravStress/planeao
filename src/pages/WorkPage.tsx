@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Timeline from '../components/Work/Timeline';
 import ProjectCard from '../components/Work/ProjectCard';
 import EditOrderModal from '../components/Work/EditOrderModal';
-import type { Project, Order } from '../types/work';
+import type { Order } from '../types/work';
 import GoogleIcon from '../components/GoogleIcon';
 import { useWork } from '../context/WorkContext';
 import ImportExportButtons from '../components/ImportExportButtons';
@@ -152,7 +152,7 @@ const WorkPage: React.FC = () => {
                             <ProjectPanelTabInfo activeProject={activeProject} updateProject={updateProject} />
                         )}
                         {activeTab === 'whiteboard' && (
-                            <ProjectPanelTabWhiteboard name={activeProject.name} />
+                            <ProjectPanelTabWhiteboard project={activeProject} />
                         )}
                         {activeTab === 'kanban' && (
                             <ProjectPanelTabKanban
