@@ -9,11 +9,63 @@ interface ProjectPanelTabWhiteboardProps {
     name?: string;
 }
 
+// Error Boundary to prevent black screen if module loading fails
+class ExcalidrawErrorBoundary extends React.Component<
+    { children: React.ReactNode },
+    { hasError: boolean; error: Error | null }
+> {
+    constructor(props: { children: React.ReactNode }) {
+        super(props);
+        this.state = { hasError: false, error: null };
+    }
+
+    static getDerivedStateFromError(error: Error) {
+        return { hasError: true, error };
+    }
+
+    componentDidCatch(error: Error, errorInfo: any) {
+        console.error("Excalidraw load error:", error, errorInfo);
+    }
+
+    handleRetry = () => {
+        this.setState({ hasError: false, error: null });
+        window.location.reload();
+    };
+
+    render() {
+        if (this.state.hasError) {
+            return (
+                <div className="empty-tab-state" style={{ padding: '3rem 1.5rem' }}>
+                    <GoogleIcon name="error_outline" size={48} style={{ color: 'var(--color-warning)' }} />
+                    <h3>Error al cargar el pizarrón</h3>
+                    <p style={{ marginBottom: '1rem' }}>
+                        Hubo un problema al cargar los componentes de Excalidraw. Esto suele ocurrir cuando el caché de desarrollo necesita refrescarse.
+                    </p>
+                    <button
+                        onClick={this.handleRetry}
+                        className="btn-new-project"
+                        style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}
+                    >
+                        <GoogleIcon name="refresh" size={18} /> Recargar Aplicación
+                    </button>
+                </div>
+            );
+        }
+
+        return this.props.children;
+    }
+}
+
 // Lazy-load Excalidraw component so it only loads when the tab is active.
 // When the tab unmounts or project changes, resources are released from memory.
 const ExcalidrawComponent = React.lazy(async () => {
-    const mod = await import("@excalidraw/excalidraw");
-    return { default: mod.Excalidraw };
+    try {
+        const mod = await import("@excalidraw/excalidraw");
+        return { default: mod.Excalidraw };
+    } catch (err) {
+        console.error("Failed to load Excalidraw module", err);
+        throw err;
+    }
 });
 
 interface ExcalidrawCanvasProps {
@@ -165,12 +217,14 @@ const ProjectPanelTabWhiteboard: React.FC<ProjectPanelTabWhiteboardProps> = ({ p
             </div>
 
             <div className="whiteboard-canvas-container">
-                <ExcalidrawCanvas
-                    projectId={projectId}
-                    initialData={initialData}
-                    onSave={handleSave}
-                    onSavingStatusChange={handleSavingStatusChange}
-                />
+                <ExcalidrawErrorBoundary>
+                    <ExcalidrawCanvas
+                        projectId={projectId}
+                        initialData={initialData}
+                        onSave={handleSave}
+                        onSavingStatusChange={handleSavingStatusChange}
+                    />
+                </ExcalidrawErrorBoundary>
             </div>
         </div>
     );

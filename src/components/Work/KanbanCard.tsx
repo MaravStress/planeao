@@ -108,21 +108,27 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ order, columnColor, onUp
 
             <div className="kanban-card-header">
                 {isEditingTitle ? (
-                    <input
-                        type="text"
+                    <textarea
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         onBlur={handleSaveTitle}
                         onKeyDown={(e) => {
-                            if (e.key === 'Enter') handleSaveTitle();
+                            e.stopPropagation();
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
+                                handleSaveTitle();
+                            }
                             if (e.key === 'Escape') {
                                 setTitle(order.title);
                                 setIsEditingTitle(false);
                             }
                         }}
+                        onKeyUp={(e) => e.stopPropagation()}
                         onPointerDown={(e) => e.stopPropagation()}
+                        onMouseDown={(e) => e.stopPropagation()}
                         onClick={(e) => e.stopPropagation()}
                         autoFocus
+                        rows={2}
                         className="kanban-card-title-input"
                     />
                 ) : (

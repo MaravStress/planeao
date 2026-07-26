@@ -89,12 +89,17 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
                             onChange={(e) => setColumnTitle(e.target.value)}
                             onBlur={handleSaveTitle}
                             onKeyDown={(e) => {
+                                e.stopPropagation();
                                 if (e.key === 'Enter') handleSaveTitle();
                                 if (e.key === 'Escape') {
                                     setColumnTitle(title);
                                     setIsEditingTitle(false);
                                 }
                             }}
+                            onKeyUp={(e) => e.stopPropagation()}
+                            onPointerDown={(e) => e.stopPropagation()}
+                            onMouseDown={(e) => e.stopPropagation()}
+                            onClick={(e) => e.stopPropagation()}
                             autoFocus
                             className="kanban-column-title-input"
                         />

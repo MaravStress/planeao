@@ -16,7 +16,8 @@ const WorkPage: React.FC = () => {
         addProject: addProjectContext,
         updateProject,
         deleteProject,
-        updateOrder
+        updateOrder,
+        toggleProjectPause
     } = useWork();
 
     const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
@@ -148,13 +149,13 @@ const WorkPage: React.FC = () => {
                         </div>
 
                         <button
-                            onClick={() => handleDeleteProject(activeProject.id, activeProject.name)}
+                            onClick={() => toggleProjectPause(activeProject.id)}
                             style={{
-                                background: 'hsla(0, 0%, 100%, 0.05)',
+                                background: activeProject.isPaused ? 'hsla(35, 75%, 55%, 0.15)' : 'hsla(0, 0%, 100%, 0.05)',
                                 backdropFilter: 'blur(10px)',
                                 WebkitBackdropFilter: 'blur(10px)',
-                                border: '1px solid hsla(0, 0%, 100%, 0.1)',
-                                color: 'var(--color-text-muted)',
+                                border: activeProject.isPaused ? '1px solid hsla(35, 75%, 55%, 0.3)' : '1px solid hsla(0, 0%, 100%, 0.1)',
+                                color: activeProject.isPaused ? 'var(--color-warning)' : 'var(--color-text-muted)',
                                 width: '38px',
                                 height: '38px',
                                 borderRadius: '50%',
@@ -165,21 +166,21 @@ const WorkPage: React.FC = () => {
                                 transition: 'all 0.2s ease',
                                 marginLeft: '0.5rem'
                             }}
-                            title="Eliminar este proyecto"
+                            title={activeProject.isPaused ? "Reanudar proyecto" : "Pausar proyecto"}
                             onMouseEnter={(e) => {
-                                e.currentTarget.style.background = 'hsla(0, 0%, 100%, 0.12)';
-                                e.currentTarget.style.borderColor = 'hsla(0, 0%, 100%, 0.2)';
-                                e.currentTarget.style.color = '#ffffff';
+                                e.currentTarget.style.background = activeProject.isPaused ? 'hsla(35, 75%, 55%, 0.25)' : 'hsla(0, 0%, 100%, 0.12)';
+                                e.currentTarget.style.borderColor = activeProject.isPaused ? 'hsla(35, 75%, 55%, 0.5)' : 'hsla(0, 0%, 100%, 0.2)';
+                                e.currentTarget.style.color = activeProject.isPaused ? 'var(--color-warning)' : '#ffffff';
                                 e.currentTarget.style.transform = 'scale(1.05)';
                             }}
                             onMouseLeave={(e) => {
-                                e.currentTarget.style.background = 'hsla(0, 0%, 100%, 0.05)';
-                                e.currentTarget.style.borderColor = 'hsla(0, 0%, 100%, 0.1)';
-                                e.currentTarget.style.color = 'var(--color-text-muted)';
+                                e.currentTarget.style.background = activeProject.isPaused ? 'hsla(35, 75%, 55%, 0.15)' : 'hsla(0, 0%, 100%, 0.05)';
+                                e.currentTarget.style.borderColor = activeProject.isPaused ? '1px solid hsla(35, 75%, 55%, 0.3)' : 'hsla(0, 0%, 100%, 0.1)';
+                                e.currentTarget.style.color = activeProject.isPaused ? 'var(--color-warning)' : 'var(--color-text-muted)';
                                 e.currentTarget.style.transform = 'scale(1)';
                             }}
                         >
-                            <GoogleIcon name="delete" size={20} />
+                            <GoogleIcon name={activeProject.isPaused ? "play_arrow" : "pause"} size={20} />
                         </button>
                     </div>
 

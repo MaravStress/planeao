@@ -252,19 +252,16 @@ const ProjectPanelTabInfo: React.FC<ProjectPanelTabInfoProps> = ({ activeProject
                     marginTop: '3rem',
                     padding: '1.25rem',
                     borderRadius: 'var(--radius-lg)',
-                    border: '1px solid hsla(0, 0%, 100%, 0.08)',
-                    background: 'hsla(0, 0%, 100%, 0.03)',
-                    backdropFilter: 'blur(10px)',
-                    WebkitBackdropFilter: 'blur(10px)',
+                    //border: '1px solid hsla(0, 0%, 100%, 0.08)',
+                    // background: 'hsla(0, 0%, 100%, 0.03)',
+                    //backdropFilter: 'blur(10px)',
+                    //WebkitBackdropFilter: 'blur(10px)',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center'
                 }}>
                     <div>
-                        <div style={{ fontWeight: 600, color: 'var(--color-text-main)', fontSize: '0.95rem' }}>Eliminar Proyecto</div>
-                        <div style={{ fontSize: '0.82rem', color: 'var(--color-text-muted)', marginTop: '0.2rem' }}>
-                            Eliminar este proyecto y borrar permanentemente sus listas y configuraciones.
-                        </div>
+
                     </div>
                     <button
                         onClick={onDeleteProject}

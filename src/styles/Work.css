@@ -625,13 +625,19 @@
     align-items: flex-start;
     gap: 0.5rem;
     margin-bottom: 0.5rem;
+    width: 100%;
 }
 
 .kanban-card-title {
+    flex: 1;
+    min-width: 0;
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--color-text-main);
     line-height: 1.4;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .kanban-card-edit-btn {
@@ -739,19 +745,28 @@
 
 .kanban-card-title-input {
     flex: 1;
+    min-width: 0;
+    width: 100%;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid var(--color-primary);
     border-radius: var(--radius-sm);
     color: var(--color-text-main);
     font-size: 0.9rem;
+    font-family: inherit;
     padding: 0.2rem 0.4rem;
     outline: none;
+    resize: vertical;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    line-height: 1.4;
 }
 
 .kanban-card-actions {
     display: flex;
     align-items: center;
     gap: 0.2rem;
+    flex-shrink: 0;
 }
 
 .kanban-card-action-btn {
