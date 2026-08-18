@@ -160,8 +160,59 @@ const ExcalidrawCanvas = React.memo<ExcalidrawCanvasProps>(({ projectId, initial
 const ProjectPanelTabWhiteboard: React.FC<ProjectPanelTabWhiteboardProps> = ({ project }) => {
     const { updateProjectWhiteboard } = useWork();
     const [saveStatus, setSaveStatus] = useState<'saved' | 'saving'>('saved');
+    const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     const projectId = project?.id;
+
+    // Sync fullscreen state with document fullscreen changes
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            const isCurrentlyFullscreen = !!(
+                document.fullscreenElement &&
+                containerRef.current &&
+                (document.fullscreenElement === containerRef.current || containerRef.current.contains(document.fullscreenElement))
+            );
+            setIsFullscreen(isCurrentlyFullscreen);
+        };
+
+        document.addEventListener("fullscreenchange", handleFullscreenChange);
+        document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+
+        return () => {
+            document.removeEventListener("fullscreenchange", handleFullscreenChange);
+            document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+        };
+    }, []);
+
+    const toggleFullscreen = useCallback(async () => {
+        if (!containerRef.current) return;
+
+        try {
+            if (!document.fullscreenElement) {
+                if (containerRef.current.requestFullscreen) {
+                    await containerRef.current.requestFullscreen();
+                } else if ((containerRef.current as any).webkitRequestFullscreen) {
+                    await (containerRef.current as any).webkitRequestFullscreen();
+                } else {
+                    // Fallback CSS fullscreen
+                    setIsFullscreen(prev => !prev);
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    await document.exitFullscreen();
+                } else if ((document as any).webkitExitFullscreen) {
+                    await (document as any).webkitExitFullscreen();
+                } else {
+                    setIsFullscreen(false);
+                }
+            }
+        } catch (err) {
+            console.error("Fullscreen toggle error:", err);
+            // Fallback to CSS toggle if Fullscreen API fails (e.g. permission or iframe)
+            setIsFullscreen(prev => !prev);
+        }
+    }, []);
 
     // Memoize initialData per project.id so it never changes reference during active drawing
     const initialData = useMemo(() => {
@@ -197,22 +248,37 @@ const ProjectPanelTabWhiteboard: React.FC<ProjectPanelTabWhiteboardProps> = ({ p
     }
 
     return (
-        <div className="whiteboard-tab-wrapper">
+        <div
+            ref={containerRef}
+            className={`whiteboard-tab-wrapper ${isFullscreen ? 'is-fullscreen' : ''}`}
+        >
             <div className="whiteboard-header-bar">
                 <div className="whiteboard-title-info">
                     <GoogleIcon name="draw" size={20} />
                     <span>Whiteboard de <strong>{project.name}</strong></span>
                 </div>
-                <div className="whiteboard-save-indicator">
-                    {saveStatus === 'saving' ? (
-                        <span className="save-status saving">
-                            <GoogleIcon name="sync" size={14} className="spin-icon" /> Guardando...
-                        </span>
-                    ) : (
-                        <span className="save-status saved">
-                            <GoogleIcon name="check_circle" size={14} /> Guardado
-                        </span>
-                    )}
+                <div className="whiteboard-header-actions">
+                    <div className="whiteboard-save-indicator">
+                        {saveStatus === 'saving' ? (
+                            <span className="save-status saving">
+                                <GoogleIcon name="sync" size={14} className="spin-icon" /> Guardando...
+                            </span>
+                        ) : (
+                            <span className="save-status saved">
+                                <GoogleIcon name="check_circle" size={14} /> Guardado
+                            </span>
+                        )}
+                    </div>
+                    <button
+                        type="button"
+                        className="whiteboard-fullscreen-btn"
+                        onClick={toggleFullscreen}
+                        title={isFullscreen ? "Salir de pantalla completa" : "Pantalla completa"}
+                        aria-label={isFullscreen ? "Salir de pantalla completa" : "Pantalla completa"}
+                    >
+                        <GoogleIcon name={isFullscreen ? "fullscreen_exit" : "fullscreen"} size={18} />
+                        <span>{isFullscreen ? "Salir" : "Pantalla completa"}</span>
+                    </button>
                 </div>
             </div>
 
