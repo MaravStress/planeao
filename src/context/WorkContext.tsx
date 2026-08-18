@@ -14,6 +14,7 @@ interface WorkContextType {
     deleteOrder: (projectId: string, orderId: string) => void;
     toggleProjectPause: (projectId: string) => void;
     updateProjectWhiteboard: (projectId: string, whiteboardData: any) => void;
+    reloadProjectsFromLocal: () => void;
     addProjectColumn: (projectId: string, title: string, color?: string) => void;
     deleteProjectColumn: (projectId: string, columnId: string) => void;
     updateProjectColumn: (projectId: string, columnId: string, title: string, color?: string) => void;
@@ -26,6 +27,11 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [projects, setProjects] = useState<Project[]>(() => {
         return loadFromLocal<Project[]>(STORAGE_KEYS.WORK_PROJECTS, []);
     });
+
+    const reloadProjectsFromLocal = () => {
+        const freshProjects = loadFromLocal<Project[]>(STORAGE_KEYS.WORK_PROJECTS, []);
+        setProjects(freshProjects);
+    };
 
     // Save to LocalStorage whenever projects change
     useEffect(() => {
@@ -49,7 +55,7 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const updateProject = (projectId: string, name: string, template: string[], defaultOrderDuration: number, description?: string) => {
         setProjects(projects.map(p =>
-            p.id === projectId ? { ...p, name, template, defaultOrderDuration, description } : p
+            p.id === projectId ? { ...p, name, template, defaultOrderDuration, description, updatedAt: Date.now() } : p
         ));
     };
 
@@ -59,7 +65,7 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const toggleProjectPause = (projectId: string) => {
         setProjects(projects.map(p => 
-            p.id === projectId ? { ...p, isPaused: !p.isPaused } : p
+            p.id === projectId ? { ...p, isPaused: !p.isPaused, updatedAt: Date.now() } : p
         ));
     };
 
@@ -83,7 +89,7 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         setProjects(prevProjects => prevProjects.map(p => {
             if (p.id === projectId) {
-                return { ...p, orders: [...(p.orders || []), newOrder] };
+                return { ...p, orders: [...(p.orders || []), newOrder], updatedAt: Date.now() };
             }
             return p;
         }));
@@ -96,7 +102,8 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             if (p.id === projectId) {
                 return {
                     ...p,
-                    orders: (p.orders || []).map(o => o.id === updatedOrder.id ? updatedOrder : o)
+                    orders: (p.orders || []).map(o => o.id === updatedOrder.id ? updatedOrder : o),
+                    updatedAt: Date.now()
                 };
             }
             return p;
@@ -108,7 +115,8 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             if (p.id === projectId) {
                 return {
                     ...p,
-                    orders: (p.orders || []).filter(o => o.id !== orderId)
+                    orders: (p.orders || []).filter(o => o.id !== orderId),
+                    updatedAt: Date.now()
                 };
             }
             return p;
@@ -116,8 +124,13 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     const updateProjectWhiteboard = (projectId: string, whiteboardData: any) => {
+        const now = Date.now();
+        const dataWithTimestamp = {
+            ...whiteboardData,
+            updatedAt: whiteboardData?.updatedAt || now
+        };
         setProjects(prevProjects => prevProjects.map(p =>
-            p.id === projectId ? { ...p, whiteboardData } : p
+            p.id === projectId ? { ...p, whiteboardData: dataWithTimestamp, updatedAt: now } : p
         ));
     };
 
@@ -132,7 +145,8 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 };
                 return {
                     ...p,
-                    columns: [...currentCols, newCol]
+                    columns: [...currentCols, newCol],
+                    updatedAt: Date.now()
                 };
             }
             return p;
@@ -157,7 +171,8 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 return {
                     ...p,
                     columns: updatedCols,
-                    orders: updatedOrders
+                    orders: updatedOrders,
+                    updatedAt: Date.now()
                 };
             }
             return p;
@@ -176,7 +191,8 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 });
                 return {
                     ...p,
-                    columns: updatedCols
+                    columns: updatedCols,
+                    updatedAt: Date.now()
                 };
             }
             return p;
@@ -197,7 +213,7 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 currentCols[index] = currentCols[targetIndex];
                 currentCols[targetIndex] = temp;
 
-                return { ...p, columns: currentCols };
+                return { ...p, columns: currentCols, updatedAt: Date.now() };
             }
             return p;
         }));
@@ -214,6 +230,7 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             deleteOrder,
             toggleProjectPause,
             updateProjectWhiteboard,
+            reloadProjectsFromLocal,
             addProjectColumn,
             deleteProjectColumn,
             updateProjectColumn,
@@ -222,6 +239,7 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             {children}
         </WorkContext.Provider>
     );
+
 };
 
 export const useWork = () => {

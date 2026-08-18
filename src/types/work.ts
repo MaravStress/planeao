@@ -34,9 +34,12 @@ export interface Project {
     columns?: KanbanColumnData[];
     orders: Order[];
     description?: string; // Project information in Markdown format
+    updatedAt?: number;
     whiteboardData?: {
         elements?: readonly any[];
         appState?: Record<string, any>;
         files?: Record<string, any>;
+        updatedAt?: number;
     };
 }
+

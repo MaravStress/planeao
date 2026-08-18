@@ -2,6 +2,9 @@ import React, { Suspense, useEffect, useRef, useState, useCallback, useMemo } fr
 import type { Project } from "../../types/work";
 import { useWork } from "../../context/WorkContext";
 import GoogleIcon from "../GoogleIcon";
+import { getOnlinePayload, saveToOnline } from "../../context/OnlineSave";
+import { getLocalPayload, setLocalPayload, STORAGE_KEYS } from "../../context/LocalSave";
+import { auth } from "../../firebase";
 import "@excalidraw/excalidraw/index.css";
 
 interface ProjectPanelTabWhiteboardProps {
@@ -75,7 +78,7 @@ interface ExcalidrawCanvasProps {
     onSavingStatusChange: (isSaving: boolean) => void;
 }
 
-// Memoized Canvas wrapper to isolate Excalidraw from re-renders caused by WorkContext updates while drawing
+// Canvas wrapper to isolate Excalidraw from re-renders caused by WorkContext updates while drawing
 const ExcalidrawCanvas = React.memo<ExcalidrawCanvasProps>(({ projectId, initialData, onSave, onSavingStatusChange }) => {
     const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const lastDataRef = useRef<any>(null);
@@ -155,15 +158,84 @@ const ExcalidrawCanvas = React.memo<ExcalidrawCanvasProps>(({ projectId, initial
             />
         </Suspense>
     );
-}, (prevProps, nextProps) => prevProps.projectId === nextProps.projectId);
+}, (prevProps, nextProps) => prevProps.projectId === nextProps.projectId && prevProps.initialData === nextProps.initialData);
 
 const ProjectPanelTabWhiteboard: React.FC<ProjectPanelTabWhiteboardProps> = ({ project }) => {
-    const { updateProjectWhiteboard } = useWork();
-    const [saveStatus, setSaveStatus] = useState<'saved' | 'saving'>('saved');
+    const { updateProjectWhiteboard, reloadProjectsFromLocal } = useWork();
+    const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'checking' | 'cloud_updated'>('saved');
+    const [whiteboardVersion, setWhiteboardVersion] = useState<number>(() => project?.whiteboardData?.updatedAt || 0);
 
     const projectId = project?.id;
 
-    // Memoize initialData per project.id so it never changes reference during active drawing
+    // Check cloud version on mount or project change to ensure the newest version is loaded
+    useEffect(() => {
+        if (!projectId) return;
+
+        let isMounted = true;
+
+        const checkCloudVersion = async () => {
+            const user = auth.currentUser;
+            if (!user) return;
+
+            setSaveStatus('checking');
+
+            try {
+                const onlinePayload = await getOnlinePayload<Project[]>(STORAGE_KEYS.WORK_PROJECTS);
+                const localPayload = getLocalPayload<Project[]>(STORAGE_KEYS.WORK_PROJECTS);
+
+                if (!isMounted) return;
+
+                const onlineTime = onlinePayload?._lastModified || 0;
+                const localTime = localPayload?._lastModified || 0;
+
+                const onlineProjects = Array.isArray(onlinePayload?._data) ? onlinePayload._data : [];
+                const onlineProject = onlineProjects.find((p: Project) => p.id === projectId);
+                const onlineWhiteboardTime = onlineProject?.whiteboardData?.updatedAt || 0;
+
+                const localProjects = Array.isArray(localPayload?._data) ? localPayload._data : [];
+                const localProject = localProjects.find((p: Project) => p.id === projectId);
+                const localWhiteboardTime = localProject?.whiteboardData?.updatedAt || 0;
+
+                // Priority: Cloud is newer if onlineTime > localTime OR onlineWhiteboardTime > localWhiteboardTime
+                const isCloudNewer = Boolean(
+                    onlinePayload && (
+                        !localPayload ||
+                        onlineTime > localTime ||
+                        onlineWhiteboardTime > localWhiteboardTime
+                    )
+                );
+
+                if (isCloudNewer && onlinePayload) {
+                    // Download cloud version and update local storage + context state
+                    setLocalPayload(STORAGE_KEYS.WORK_PROJECTS, onlinePayload);
+                    reloadProjectsFromLocal();
+                    const newVersion = onlineWhiteboardTime || onlineTime || Date.now();
+                    setWhiteboardVersion(newVersion);
+                    setSaveStatus('cloud_updated');
+                    setTimeout(() => {
+                        if (isMounted) setSaveStatus('saved');
+                    }, 3000);
+                } else if (localPayload && (!onlinePayload || localTime > onlineTime)) {
+                    // Local is newer: push local to online
+                    await saveToOnline(STORAGE_KEYS.WORK_PROJECTS, localPayload);
+                    setSaveStatus('saved');
+                } else {
+                    setSaveStatus('saved');
+                }
+            } catch (err) {
+                console.error("Error checking whiteboard cloud version:", err);
+                if (isMounted) setSaveStatus('saved');
+            }
+        };
+
+        checkCloudVersion();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [projectId, reloadProjectsFromLocal]);
+
+    // Memoize initialData per project.id & whiteboardVersion
     const initialData = useMemo(() => {
         return {
             elements: (project?.whiteboardData?.elements as any) || [],
@@ -174,7 +246,7 @@ const ProjectPanelTabWhiteboard: React.FC<ProjectPanelTabWhiteboardProps> = ({ p
             files: project?.whiteboardData?.files || {}
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [project?.id]);
+    }, [project?.id, whiteboardVersion]);
 
     const handleSave = useCallback((data: any) => {
         if (projectId) {
@@ -204,7 +276,15 @@ const ProjectPanelTabWhiteboard: React.FC<ProjectPanelTabWhiteboardProps> = ({ p
                     <span>Whiteboard de <strong>{project.name}</strong></span>
                 </div>
                 <div className="whiteboard-save-indicator">
-                    {saveStatus === 'saving' ? (
+                    {saveStatus === 'checking' ? (
+                        <span className="save-status saving" style={{ color: 'var(--color-primary-light, #60a5fa)' }}>
+                            <GoogleIcon name="cloud_sync" size={14} className="spin-icon" /> Verificando nube...
+                        </span>
+                    ) : saveStatus === 'cloud_updated' ? (
+                        <span className="save-status saved" style={{ color: '#10b981' }}>
+                            <GoogleIcon name="cloud_download" size={14} /> Versión de la nube cargada
+                        </span>
+                    ) : saveStatus === 'saving' ? (
                         <span className="save-status saving">
                             <GoogleIcon name="sync" size={14} className="spin-icon" /> Guardando...
                         </span>
@@ -219,6 +299,7 @@ const ProjectPanelTabWhiteboard: React.FC<ProjectPanelTabWhiteboardProps> = ({ p
             <div className="whiteboard-canvas-container">
                 <ExcalidrawErrorBoundary>
                     <ExcalidrawCanvas
+                        key={`${projectId}-${whiteboardVersion}`}
                         projectId={projectId}
                         initialData={initialData}
                         onSave={handleSave}
@@ -230,4 +311,4 @@ const ProjectPanelTabWhiteboard: React.FC<ProjectPanelTabWhiteboardProps> = ({ p
     );
 };
 
-export default ProjectPanelTabWhiteboard;
+export default ProjectPanelTabWhiteboard;
