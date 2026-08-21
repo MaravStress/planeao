@@ -38,6 +38,13 @@ const MainLayout: React.FC = () => {
             <span>Work</span>
           </NavLink>
           <NavLink
+            to="/habits"
+            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+          >
+            <GoogleIcon name="favorite" size={24} />
+            <span>Hábitos</span>
+          </NavLink>
+          <NavLink
             to="/pomodoro"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''} ${isTimerActive ? `mode-${mode}-text` : ''}`}
           >
@@ -85,6 +92,7 @@ const MainLayout: React.FC = () => {
             <GoogleIcon name="school" size={24} />
             <span>Progreso Uni</span>
           </NavLink>
+          
           <NavLink
             to="/settings"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
