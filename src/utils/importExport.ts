@@ -1,6 +1,6 @@
 import { saveToLocal, loadFromLocal, STORAGE_KEYS } from '../context/LocalSave';
 
-export const exportPageData = (page: 'work' | 'pomodoro' | 'finances' | 'ideas' | 'uni-progress') => {
+export const exportPageData = (page: 'work' | 'pomodoro' | 'finances' | 'ideas' | 'uni-progress' | 'habits') => {
     let data: any = {};
     let fileName = `planeao-${page}`;
 
@@ -42,6 +42,15 @@ export const exportPageData = (page: 'work' | 'pomodoro' | 'finances' | 'ideas' 
             version: 1,
             terms: loadFromLocal(STORAGE_KEYS.UNI_PROGRESS_TERMS, [])
         };
+    } else if (page === 'habits') {
+        const localSettings = loadFromLocal(STORAGE_KEYS.HABIT_SETTINGS, null) || loadFromLocal(STORAGE_KEYS.HABIT_SETTINGS_BACKUP, null);
+        const localMonths = loadFromLocal(STORAGE_KEYS.HABIT_MONTHS, null) || loadFromLocal(STORAGE_KEYS.HABIT_MONTHS_BACKUP, []);
+        data = {
+            type: 'planeao-habits',
+            version: 1,
+            settings: localSettings,
+            months: localMonths
+        };
     }
 
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -55,7 +64,7 @@ export const exportPageData = (page: 'work' | 'pomodoro' | 'finances' | 'ideas' 
     URL.revokeObjectURL(url);
 };
 
-export const importPageData = (page: 'work' | 'pomodoro' | 'finances' | 'ideas' | 'uni-progress', jsonText: string): boolean => {
+export const importPageData = (page: 'work' | 'pomodoro' | 'finances' | 'ideas' | 'uni-progress' | 'habits', jsonText: string): boolean => {
     try {
         const parsed = JSON.parse(jsonText);
         if (!parsed || typeof parsed !== 'object') {
@@ -108,6 +117,15 @@ export const importPageData = (page: 'work' | 'pomodoro' | 'finances' | 'ideas' 
                 alert('No se encontró progreso universitario válido.');
                 return false;
             }
+        } else if (page === 'habits') {
+            if (parsed.settings) {
+                saveToLocal(STORAGE_KEYS.HABIT_SETTINGS, parsed.settings);
+                saveToLocal(STORAGE_KEYS.HABIT_SETTINGS_BACKUP, parsed.settings);
+            }
+            if (Array.isArray(parsed.months)) {
+                saveToLocal(STORAGE_KEYS.HABIT_MONTHS, parsed.months);
+                saveToLocal(STORAGE_KEYS.HABIT_MONTHS_BACKUP, parsed.months);
+            }
         }
 
         return true;
@@ -134,7 +152,9 @@ export const exportAllData = () => {
             [STORAGE_KEYS.FINANCE_QUICK_EXPENSES]: loadFromLocal(STORAGE_KEYS.FINANCE_QUICK_EXPENSES, []),
             [STORAGE_KEYS.IDEAS]: loadFromLocal(STORAGE_KEYS.IDEAS, null) || loadFromLocal(STORAGE_KEYS.IDEAS_BACKUP, []),
             [STORAGE_KEYS.IDEA_SETTINGS]: loadFromLocal(STORAGE_KEYS.IDEA_SETTINGS, null) || loadFromLocal(STORAGE_KEYS.IDEA_SETTINGS_BACKUP, null),
-            [STORAGE_KEYS.UNI_PROGRESS_TERMS]: loadFromLocal(STORAGE_KEYS.UNI_PROGRESS_TERMS, [])
+            [STORAGE_KEYS.UNI_PROGRESS_TERMS]: loadFromLocal(STORAGE_KEYS.UNI_PROGRESS_TERMS, []),
+            [STORAGE_KEYS.HABIT_SETTINGS]: loadFromLocal(STORAGE_KEYS.HABIT_SETTINGS, null) || loadFromLocal(STORAGE_KEYS.HABIT_SETTINGS_BACKUP, null),
+            [STORAGE_KEYS.HABIT_MONTHS]: loadFromLocal(STORAGE_KEYS.HABIT_MONTHS, null) || loadFromLocal(STORAGE_KEYS.HABIT_MONTHS_BACKUP, [])
         }
     };
 
@@ -173,6 +193,10 @@ export const importAllData = (jsonText: string): boolean => {
                     saveToLocal(STORAGE_KEYS.IDEAS_BACKUP, val);
                 } else if (key === STORAGE_KEYS.IDEA_SETTINGS) {
                     saveToLocal(STORAGE_KEYS.IDEA_SETTINGS_BACKUP, val);
+                } else if (key === STORAGE_KEYS.HABIT_SETTINGS) {
+                    saveToLocal(STORAGE_KEYS.HABIT_SETTINGS_BACKUP, val);
+                } else if (key === STORAGE_KEYS.HABIT_MONTHS) {
+                    saveToLocal(STORAGE_KEYS.HABIT_MONTHS_BACKUP, val);
                 }
                 saveToLocal(key as any, val);
             }

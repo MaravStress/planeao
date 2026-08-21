@@ -21,7 +21,9 @@ export const STORAGE_KEYS = {
     IDEA_SETTINGS_BACKUP: 'planeao-idea-settings-backup',
     UNI_PROGRESS_TERMS: 'planeao-uni-progress',
     HABIT_SETTINGS: 'planeao-habit-settings',
-    HABIT_SETTINGS_BACKUP: 'planeao-habit-settings-backup'
+    HABIT_SETTINGS_BACKUP: 'planeao-habit-settings-backup',
+    HABIT_MONTHS: 'planeao-habit-months',
+    HABIT_MONTHS_BACKUP: 'planeao-habit-months-backup'
 } as const;
 
 export interface StoragePayload<T = any> {

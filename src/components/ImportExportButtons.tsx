@@ -3,7 +3,7 @@ import GoogleIcon from './GoogleIcon';
 import { exportPageData, importPageData, triggerImportFile } from '../utils/importExport';
 
 interface ImportExportButtonsProps {
-    page: 'work' | 'pomodoro' | 'finances' | 'ideas' | 'uni-progress';
+    page: 'work' | 'pomodoro' | 'finances' | 'ideas' | 'uni-progress' | 'habits';
     disabled?: boolean;
 }
 
