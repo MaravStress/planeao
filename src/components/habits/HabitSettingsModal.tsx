@@ -45,9 +45,13 @@ const HabitsSettingsModal: React.FC<HabitSettingsModalProps> = ({ onSave }) => {
 
     const handleSave = () => {
         const cleaned: HabitSettings = {
-            fields: localSettings.fields.map(f => (f.type === 'boolean'
-                ? { id: f.id, name: f.name, type: 'boolean' }
-                : { id: f.id, name: f.name, type: 'range', min: f.min ?? DEFAULT_MIN, max: f.max ?? DEFAULT_MAX }))
+            fields: localSettings.fields.map(f => {
+                if (f.type === 'boolean') return { id: f.id, name: f.name, type: 'boolean' as const };
+                if (f.type === 'range') return { id: f.id, name: f.name, type: 'range' as const, min: f.min ?? DEFAULT_MIN, max: f.max ?? DEFAULT_MAX };
+                if (f.type === 'progress') return { id: f.id, name: f.name, type: 'progress' as const };
+                if (f.type === 'mood') return { id: f.id, name: f.name, type: 'mood' as const };
+                return f;
+            })
         };
         updateSettings(cleaned);
         onSave();
@@ -64,7 +68,8 @@ const HabitsSettingsModal: React.FC<HabitSettingsModalProps> = ({ onSave }) => {
                 <div className="modal-body">
                     <p className="text-muted" style={{ fontSize: '0.88rem', margin: 0 }}>
                         Cada campo es un hábito a registrar. Puede tener un valor <strong>booleano</strong>
-                        (hecho / no hecho) o un valor <strong>numérico</strong> dentro de un rango (min – max).
+                        (hecho / no hecho), un valor <strong>numérico</strong> dentro de un rango (min – max),
+                        un <strong>progreso</strong> (bajo / igual / positivo) o un <strong>estado de ánimo</strong> (triste / normal / feliz).
                     </p>
 
                     <div className="habit-add-form">
@@ -80,10 +85,12 @@ const HabitsSettingsModal: React.FC<HabitSettingsModalProps> = ({ onSave }) => {
                             className="glass-input"
                             value={newType}
                             onChange={e => setNewType(e.target.value as HabitField['type'])}
-                            style={{ width: '110px', cursor: 'pointer' }}
+                            style={{ width: '160px', cursor: 'pointer' }}
                         >
                             <option value="boolean">Booleano</option>
                             <option value="range">Rango</option>
+                            <option value="progress">Progreso</option>
+                            <option value="mood">Estado de ánimo</option>
                         </select>
                         {newType === 'range' && (
                             <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center' }}>
@@ -132,10 +139,12 @@ const HabitsSettingsModal: React.FC<HabitSettingsModalProps> = ({ onSave }) => {
                                             max: type === 'range' ? (field.max ?? DEFAULT_MAX) : undefined
                                         });
                                     }}
-                                    style={{ width: '110px', cursor: 'pointer' }}
+                                    style={{ width: '160px', cursor: 'pointer' }}
                                 >
                                     <option value="boolean">Booleano</option>
                                     <option value="range">Rango</option>
+                                    <option value="progress">Progreso</option>
+                                    <option value="mood">Estado de ánimo</option>
                                 </select>
                                 {field.type === 'range' && (
                                     <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center' }}>

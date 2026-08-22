@@ -519,6 +519,88 @@
     color: #f1f5f9;
 }
 
+.habit-col-field-head.habit-progress-col-head {
+    width: 130px;
+}
+
+.habit-progress-col-head .vertical-header-text {
+    color: #fbbf24;
+}
+
+.habit-col-field-head.habit-mood-col-head {
+    width: 130px;
+}
+
+.habit-mood-col-head .vertical-header-text {
+    color: #c084fc;
+}
+
+/* Mood / Progress cell */
+.habit-cell-mood-progress {
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+    text-align: center;
+    padding: 2px 6px;
+    vertical-align: middle;
+    width: 130px;
+}
+
+.mood-progress-slider-container {
+    position: relative;
+    width: 100%;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.mood-progress-slider-track {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 1px;
+    pointer-events: none;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.mood-progress-slider-thumb {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #111219;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    transition: transform 0.1s ease, border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+    z-index: 1;
+}
+
+.mood-progress-slider-container:hover .mood-progress-slider-thumb {
+    transform: translate(-50%, -50%) scale(1.12);
+}
+
+.mood-progress-native-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    margin: 0;
+    z-index: 2;
+    pointer-events: auto;
+}
+
 /* Table body rows */
 .habit-day-row {
     height: 38px;
@@ -629,11 +711,11 @@
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 23px;
-    height: 23px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background: #111219;
-    border: 1.5px solid rgba(255, 255, 255, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -823,6 +905,18 @@
     border-radius: 4px;
     transition: all 0.2s;
     color: var(--color-text-muted);
+}
+
+/* Delete button in habit config items */
+.habit-config-item .text-danger {
+    opacity: 1;
+    color: var(--color-text-muted);
+}
+
+.habit-config-item .text-danger:hover {
+    color: var(--color-danger) !important;
+    background: rgba(239, 68, 68, 0.15) !important;
+    border-radius: 4px;
 }
 
 .text-muted {

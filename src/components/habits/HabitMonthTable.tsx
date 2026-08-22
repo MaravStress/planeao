@@ -60,12 +60,65 @@ const HabitRangeSlider: React.FC<HabitRangeSliderProps> = ({ min, max, value, on
     );
 };
 
+interface HabitMoodProgressSliderProps {
+    value: number; // -1 = none, 0 = left, 1 = middle, 2 = right
+    labels: string[];
+    colors: string[];
+    icons: string[];
+    onChange: (val: number | undefined) => void;
+}
+
+const HabitMoodProgressSlider: React.FC<HabitMoodProgressSliderProps> = ({ value, labels, colors, icons, onChange }) => {
+    const hasVal = value >= 0;
+    const currentVal = hasVal ? value : 1; // default to middle
+    const percent = ((currentVal) / 2) * 100;
+
+    const handleChange = (newVal: number) => {
+        if (value === newVal) {
+            onChange(undefined);
+        } else {
+            onChange(newVal);
+        }
+    };
+
+    const thumbColor = hasVal ? colors[value] : 'rgba(255,255,255,0.5)';
+
+    return (
+        <div className="mood-progress-slider-container">
+            <div className="mood-progress-slider-track" />
+            <div
+                className="mood-progress-slider-thumb"
+                style={{
+                    left: `calc(12px + (100% - 24px) * ${percent / 100})`,
+                    borderColor: thumbColor,
+                    background: hasVal ? `${thumbColor}22` : 'rgba(255,255,255,0.05)',
+                    boxShadow: hasVal ? `0 0 8px ${thumbColor}66` : 'none'
+                }}
+                title={hasVal ? labels[value] : ''}
+            >
+                {hasVal && <GoogleIcon name={icons[value]} size={14} />}
+            </div>
+            <input
+                type="range"
+                min={0}
+                max={2}
+                step={1}
+                value={currentVal}
+                className="mood-progress-native-input"
+                onChange={(e) => handleChange(Number(e.target.value))}
+            />
+        </div>
+    );
+};
+
 const HabitMonthTable: React.FC<HabitMonthTableProps> = ({ monthData, fields, onOpenSettings }) => {
     const { updateDayNote, updateDayValue, deleteMonth, months } = useHabits();
     const [isCollapsed, setIsCollapsed] = useState(false);
 
-    // Filter fields: first ranges, then booleans
+    // Filter fields: first ranges, then progress, then mood, then booleans
     const rangeFields = fields.filter((f) => f.type === 'range');
+    const progressFields = fields.filter((f) => f.type === 'progress');
+    const moodFields = fields.filter((f) => f.type === 'mood');
     const booleanFields = fields.filter((f) => f.type === 'boolean');
 
     const daysInMonth = getDaysInMonth(monthData.year, monthData.month);
@@ -84,7 +137,7 @@ const HabitMonthTable: React.FC<HabitMonthTableProps> = ({ monthData, fields, on
     };
 
     // Calculate completion stats
-    const totalPossibleChecks = daysInMonth * (booleanFields.length + rangeFields.length);
+    const totalPossibleChecks = daysInMonth * (booleanFields.length + rangeFields.length + progressFields.length + moodFields.length);
     let totalCompletedChecks = 0;
     daysArray.forEach((d) => {
         const entry = monthData.days[d];
@@ -94,6 +147,12 @@ const HabitMonthTable: React.FC<HabitMonthTableProps> = ({ monthData, fields, on
             });
             rangeFields.forEach((rf) => {
                 if (typeof entry.values?.[rf.id] === 'number') totalCompletedChecks++;
+            });
+            progressFields.forEach((pf) => {
+                if (typeof entry.values?.[pf.id] === 'number') totalCompletedChecks++;
+            });
+            moodFields.forEach((mf) => {
+                if (typeof entry.values?.[mf.id] === 'number') totalCompletedChecks++;
             });
         }
     });
@@ -174,12 +233,38 @@ const HabitMonthTable: React.FC<HabitMonthTableProps> = ({ monthData, fields, on
                                         </div>
                                     </th>
 
-                                    {/* Range field headers (First) */}
+                                    {/* Range field headers */}
                                     {rangeFields.map((field) => (
                                         <th
                                             key={field.id}
                                             className="habit-col-field-head habit-range-col-head"
                                             title={`${field.name} (${field.min ?? 0} – ${field.max ?? 10})`}
+                                        >
+                                            <div className="vertical-header-text">
+                                                <span>{field.name}</span>
+                                            </div>
+                                        </th>
+                                    ))}
+
+                                    {/* Progress field headers */}
+                                    {progressFields.map((field) => (
+                                        <th
+                                            key={field.id}
+                                            className="habit-col-field-head habit-progress-col-head"
+                                            title={`${field.name}: Bajo / Igual / Positivo`}
+                                        >
+                                            <div className="vertical-header-text">
+                                                <span>{field.name}</span>
+                                            </div>
+                                        </th>
+                                    ))}
+
+                                    {/* Mood field headers */}
+                                    {moodFields.map((field) => (
+                                        <th
+                                            key={field.id}
+                                            className="habit-col-field-head habit-mood-col-head"
+                                            title={`${field.name}: Triste / Normal / Feliz`}
                                         >
                                             <div className="vertical-header-text">
                                                 <span>{field.name}</span>
@@ -241,6 +326,46 @@ const HabitMonthTable: React.FC<HabitMonthTableProps> = ({ monthData, fields, on
                                                             onChange={(val) => {
                                                                 updateDayValue(monthData.id, day, field.id, val);
                                                             }}
+                                                        />
+                                                    </td>
+                                                );
+                                            })}
+
+                                            {/* Progress field cells */}
+                                            {progressFields.map((field) => {
+                                                const val = typeof entry.values?.[field.id] === 'number' ? entry.values[field.id] as number : -1;
+                                                const labels = ['Bajo', 'Igual', 'Positivo'];
+                                                const colors = ['#ef4444', '#f59e0b', '#22c55e'];
+                                                const icons = ['trending_down', 'horizontal_rule', 'trending_up'];
+
+                                                return (
+                                                    <td key={field.id} className="habit-cell-mood-progress">
+                                                        <HabitMoodProgressSlider
+                                                            value={val}
+                                                            labels={labels}
+                                                            colors={colors}
+                                                            icons={icons}
+                                                            onChange={(v) => updateDayValue(monthData.id, day, field.id, v)}
+                                                        />
+                                                    </td>
+                                                );
+                                            })}
+
+                                            {/* Mood field cells */}
+                                            {moodFields.map((field) => {
+                                                const val = typeof entry.values?.[field.id] === 'number' ? entry.values[field.id] as number : -1;
+                                                const labels = ['Triste', 'Normal', 'Feliz'];
+                                                const colors = ['#6366f1', '#a78bfa', '#ec4899'];
+                                                const icons = ['sentiment_dissatisfied', 'sentiment_neutral', 'sentiment_satisfied'];
+
+                                                return (
+                                                    <td key={field.id} className="habit-cell-mood-progress">
+                                                        <HabitMoodProgressSlider
+                                                            value={val}
+                                                            labels={labels}
+                                                            colors={colors}
+                                                            icons={icons}
+                                                            onChange={(v) => updateDayValue(monthData.id, day, field.id, v)}
                                                         />
                                                     </td>
                                                 );

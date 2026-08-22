@@ -1,4 +1,4 @@
-export type HabitFieldType = 'range' | 'boolean';
+export type HabitFieldType = 'range' | 'boolean' | 'progress' | 'mood';
 
 export interface HabitChecklistItem {
     id: string;
