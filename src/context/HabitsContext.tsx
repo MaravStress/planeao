@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import type { HabitField, HabitSettings, HabitMonthData } from '../types/habits';
+import type { HabitField, HabitSettings, HabitMonthData, HabitChecklistItem } from '../types/habits';
 import { loadFromLocal, saveToLocal, getLocalPayload, removeFromLocal, STORAGE_KEYS } from './LocalSave';
 import { getOnlinePayload } from './OnlineSave';
 import { auth } from '../firebase';
@@ -21,6 +21,10 @@ interface HabitsContextType {
     deleteMonth: (monthId: string) => void;
     updateDayNote: (monthId: string, day: number, note: string) => void;
     updateDayValue: (monthId: string, day: number, fieldId: string, value: boolean | number | undefined) => void;
+    addChecklistItem: (monthId: string, text: string) => void;
+    toggleChecklistItem: (monthId: string, itemId: string) => void;
+    removeChecklistItem: (monthId: string, itemId: string) => void;
+    reorderChecklist: (monthId: string, fromIndex: number, toIndex: number) => void;
     isLoaded: boolean;
     loadHabits: () => Promise<void>;
     unloadHabits: () => void;
@@ -219,6 +223,66 @@ export const HabitsProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         );
     };
 
+    const addChecklistItem = (monthId: string, text: string) => {
+        const trimmed = text.trim();
+        if (!trimmed) return;
+        setMonths((prev) =>
+            prev.map((m) => {
+                if (m.id !== monthId) return m;
+                const item: HabitChecklistItem = {
+                    id: crypto.randomUUID(),
+                    text: trimmed,
+                    completed: false
+                };
+                return {
+                    ...m,
+                    checklist: [...(m.checklist || []), item]
+                };
+            })
+        );
+    };
+
+    const toggleChecklistItem = (monthId: string, itemId: string) => {
+        setMonths((prev) =>
+            prev.map((m) => {
+                if (m.id !== monthId) return m;
+                return {
+                    ...m,
+                    checklist: (m.checklist || []).map((item) =>
+                        item.id === itemId ? { ...item, completed: !item.completed } : item
+                    )
+                };
+            })
+        );
+    };
+
+    const removeChecklistItem = (monthId: string, itemId: string) => {
+        setMonths((prev) =>
+            prev.map((m) => {
+                if (m.id !== monthId) return m;
+                return {
+                    ...m,
+                    checklist: (m.checklist || []).filter((item) => item.id !== itemId)
+                };
+            })
+        );
+    };
+
+    const reorderChecklist = (monthId: string, fromIndex: number, toIndex: number) => {
+        setMonths((prev) =>
+            prev.map((m) => {
+                if (m.id !== monthId) return m;
+                const list = [...(m.checklist || [])];
+                if (fromIndex < 0 || fromIndex >= list.length || toIndex < 0 || toIndex >= list.length) {
+                    return m;
+                }
+                const [moved] = list.splice(fromIndex, 1);
+                list.splice(toIndex, 0, moved);
+                return { ...m, checklist: list };
+            })
+        );
+    };
+
     return (
         <HabitsContext.Provider
             value={{
@@ -232,6 +296,10 @@ export const HabitsProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                 deleteMonth,
                 updateDayNote,
                 updateDayValue,
+                addChecklistItem,
+                toggleChecklistItem,
+                removeChecklistItem,
+                reorderChecklist,
                 isLoaded,
                 loadHabits,
                 unloadHabits

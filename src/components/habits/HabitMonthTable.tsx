@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { HabitField, HabitMonthData } from '../../types/habits';
 import { useHabits } from '../../context/HabitsContext';
 import GoogleIcon from '../GoogleIcon';
+import HabitChecklist from './HabitChecklist';
 
 interface HabitMonthTableProps {
     monthData: HabitMonthData;
@@ -13,6 +14,13 @@ const MONTH_NAMES_ES = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
 ];
+
+const getDaysInMonth = (year: number, month: number): number => {
+    const y = Number.isFinite(year) ? Math.floor(year) : 2000;
+    const m = Number.isFinite(month) ? Math.floor(month) : 1;
+    // JS Date is 1-indexed for months, so day 0 = last day of the previous month.
+    return new Date(y, m, 0).getDate();
+};
 
 interface HabitRangeSliderProps {
     min: number;
@@ -60,7 +68,7 @@ const HabitMonthTable: React.FC<HabitMonthTableProps> = ({ monthData, fields, on
     const rangeFields = fields.filter((f) => f.type === 'range');
     const booleanFields = fields.filter((f) => f.type === 'boolean');
 
-    const daysInMonth = new Date(monthData.year, monthData.month, 0).getDate();
+    const daysInMonth = getDaysInMonth(monthData.year, monthData.month);
     const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
     const now = new Date();
@@ -138,16 +146,21 @@ const HabitMonthTable: React.FC<HabitMonthTableProps> = ({ monthData, fields, on
 
             {/* Body of the Month Container */}
             {!isCollapsed && (
-                <div className="habit-table-responsive-container">
-                    {fields.length === 0 ? (
-                        <div className="habit-empty-fields-notice">
-                            <GoogleIcon name="tune" size={32} style={{ color: 'var(--color-primary)' }} />
-                            <p>No tienes hábitos configurados para este mes.</p>
-                            <button className="btn-primary" onClick={onOpenSettings} style={{ marginTop: '0.5rem' }}>
-                                Configurar Hábitos
-                            </button>
-                        </div>
-                    ) : (
+                <>
+                    <div className="habit-checklist-wrapper">
+                        <HabitChecklist monthData={monthData} />
+                    </div>
+
+                    <div className="habit-table-responsive-container">
+                        {fields.length === 0 ? (
+                            <div className="habit-empty-fields-notice">
+                                <GoogleIcon name="tune" size={32} style={{ color: 'var(--color-primary)' }} />
+                                <p>No tienes hábitos configurados para este mes.</p>
+                                <button className="btn-primary" onClick={onOpenSettings} style={{ marginTop: '0.5rem' }}>
+                                    Configurar Hábitos
+                                </button>
+                            </div>
+                        ) : (
                         <table className="habit-wireframe-table">
                             <thead>
                                 <tr className="habit-header-row">
@@ -256,7 +269,8 @@ const HabitMonthTable: React.FC<HabitMonthTableProps> = ({ monthData, fields, on
                             </tbody>
                         </table>
                     )}
-                </div>
+                    </div>
+                </>
             )}
         </div>
     );

@@ -1,5 +1,11 @@
 export type HabitFieldType = 'range' | 'boolean';
 
+export interface HabitChecklistItem {
+    id: string;
+    text: string;
+    completed: boolean;
+}
+
 export interface HabitField {
     id: string;
     name: string;
@@ -22,5 +28,6 @@ export interface HabitMonthData {
     year: number;
     month: number; // 1 to 12
     days: Record<number, HabitDayEntry>; // 1..31 -> { note, values }
+    checklist?: HabitChecklistItem[];
     createdAt?: number;
 }

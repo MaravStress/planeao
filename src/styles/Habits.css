@@ -111,7 +111,7 @@
     background: radial-gradient(circle at 50% 0%, #161720 0%, #0c0d12 100%);
     border: 1.5px solid rgba(255, 255, 255, 0.18);
     border-radius: 20px;
-    padding: 1.5rem 1.75rem;
+    padding: 0;
     box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
     display: flex;
     flex-direction: column;
@@ -126,6 +126,7 @@
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+    margin: 1rem 1rem;
     gap: 1rem;
     padding-bottom: 0.5rem;
 }
@@ -214,6 +215,199 @@
     color: var(--color-text-muted);
 }
 
+/* Checklist */
+.habit-checklist-wrapper {
+    margin: 1rem;
+}
+
+.habit-checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.habit-checklist-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.habit-checklist-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--color-text-main);
+}
+
+.habit-checklist-title .material-symbols-outlined {
+    color: var(--color-secondary);
+}
+
+.habit-checklist-count {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    background: rgba(255, 255, 255, 0.06);
+    padding: 0.15rem 0.6rem;
+    border-radius: 12px;
+}
+
+.habit-checklist-input-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.habit-checklist-input {
+    flex: 1;
+    padding: 0.55rem 0.9rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--color-text-main);
+    outline: none;
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: all var(--transition-fast);
+}
+
+.habit-checklist-input:focus {
+    border-color: var(--color-secondary);
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.habit-checklist-input::placeholder {
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+.habit-checklist-add-btn {
+    width: 40px;
+    border-radius: var(--radius-sm);
+    background: var(--color-secondary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    border: none;
+    cursor: pointer;
+}
+
+.habit-checklist-add-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+    box-shadow: var(--shadow-sm);
+}
+
+.habit-checklist-empty {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-style: italic;
+    font-size: 0.85rem;
+    opacity: 0.6;
+    margin: 0;
+}
+
+.habit-checklist-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.habit-checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 0.6rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    transition: all var(--transition-fast);
+}
+
+.habit-checklist-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.habit-checklist-item.dragging {
+    opacity: 0.4;
+    border: 2px dashed rgba(255, 255, 255, 0.4);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.habit-checklist-item.completed {
+    opacity: 0.6;
+    background: transparent;
+}
+
+.habit-checklist-item.completed .habit-checklist-text {
+    text-decoration: line-through;
+    color: var(--color-text-muted);
+}
+
+.habit-checklist-drag {
+    color: var(--color-text-muted);
+}
+
+.habit-checklist-toggle {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    border-radius: 4px;
+    transition: color var(--transition-fast);
+}
+
+.habit-checklist-toggle:hover {
+    color: var(--color-secondary);
+}
+
+.habit-checklist-item.completed .habit-checklist-toggle {
+    color: var(--color-success);
+}
+
+.habit-checklist-text {
+    flex: 1;
+    word-break: break-word;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: var(--color-text-main);
+}
+
+.habit-checklist-delete {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    opacity: 0;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.habit-checklist-item:hover .habit-checklist-delete {
+    opacity: 1;
+}
+
+.habit-checklist-delete:hover {
+    color: var(--color-danger);
+    background: rgba(239, 68, 68, 0.1);
+}
+
 /* Table Responsive Container */
 .habit-table-responsive-container {
     width: 100%;
@@ -244,7 +438,7 @@
 .habit-wireframe-table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: auto;
+    table-layout: fixed;
     font-family: inherit;
 }
 
@@ -258,13 +452,11 @@
     padding: 0;
     vertical-align: bottom;
     position: relative;
-    background: rgba(255, 255, 255, 0.02);
 }
 
 .habit-col-day-head {
     width: 44px;
-    min-width: 44px;
-    max-width: 48px;
+    max-width: 44px;
     text-align: center;
     font-size: 0.85rem;
     color: var(--color-text-muted);
@@ -275,7 +467,6 @@
 
 .habit-col-notes-head {
     min-width: 260px;
-    width: 45%;
     text-align: left;
     padding: 0 0.8rem 0.6rem 0.8rem !important;
     border-right: 2px solid rgba(255, 255, 255, 0.35) !important;
@@ -291,8 +482,6 @@
 /* Vertical rotated header columns */
 .habit-col-field-head {
     width: 44px;
-    min-width: 44px;
-    max-width: 48px;
     text-align: center;
     border-right: 1px solid rgba(255, 255, 255, 0.15);
     padding: 0.5rem 0.2rem !important;
@@ -300,14 +489,10 @@
 
 .habit-col-field-head.habit-range-col-head {
     width: 90px;
-    min-width: 85px;
-    max-width: 105px;
 }
 
 .habit-col-field-head.habit-boolean-col-head {
     width: 44px;
-    min-width: 44px;
-    max-width: 48px;
 }
 
 .vertical-header-text {
@@ -418,8 +603,6 @@
     padding: 0 4px;
     vertical-align: middle;
     width: 90px;
-    min-width: 85px;
-    max-width: 105px;
 }
 
 .habit-slider-container {
