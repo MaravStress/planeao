@@ -290,9 +290,12 @@ const HabitMonthTable: React.FC<HabitMonthTableProps> = ({ monthData, fields, on
                                 {daysArray.map((day) => {
                                     const entry = monthData.days[day] || { values: {} };
                                     const isToday = isCurrentMonth && day === currentDay;
+                                    // Day of week: 0=Sun, 6=Sat → weekend
+                                    const dayOfWeek = new Date(monthData.year, monthData.month - 1, day).getDay();
+                                    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
 
                                     return (
-                                        <tr key={day} className={`habit-day-row ${isToday ? 'is-today-row' : ''}`}>
+                                        <tr key={day} className={`habit-day-row ${isToday ? 'is-today-row' : ''} ${isWeekend ? 'is-weekend-row' : ''}`}>
                                             {/* Column 1: Day Number */}
                                             <td className="habit-cell-day">
                                                 <span className={`day-number-label ${isToday ? 'today-badge' : ''}`}>

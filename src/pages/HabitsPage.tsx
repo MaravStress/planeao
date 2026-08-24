@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import GoogleIcon from '../components/GoogleIcon';
 import HabitSettingsModal from '../components/habits/HabitSettingsModal';
 import AddPastMonthModal from '../components/habits/AddPastMonthModal';
 import HabitMonthTable from '../components/habits/HabitMonthTable';
+import DailyRegister from '../components/habits/DailyRegister';
 import ImportExportButtons from '../components/ImportExportButtons';
 import { useHabits } from '../context/HabitsContext';
 import '../styles/Habits.css';
 import '../styles/Ideas.css';
 
 const HabitsPage: React.FC = () => {
-    const { settings, months, isLoaded, loadHabits, unloadHabits } = useHabits();
+    const { settings, months, isLoaded, loadHabits, unloadHabits, updateDayNote, updateDayValue } = useHabits();
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isAddMonthOpen, setIsAddMonthOpen] = useState(false);
+    const [slideIndex, setSlideIndex] = useState(0);
 
     useEffect(() => {
         loadHabits();
@@ -19,6 +21,11 @@ const HabitsPage: React.FC = () => {
             unloadHabits();
         };
     }, []);
+
+    // Reset slide index when months change
+    useEffect(() => {
+        setSlideIndex(0);
+    }, [months.length]);
 
     const fields = settings?.fields ?? [];
 
@@ -30,6 +37,16 @@ const HabitsPage: React.FC = () => {
             }
         }, 100);
     };
+
+    const goToPrevSlide = useCallback(() => {
+        setSlideIndex((prev) => Math.max(0, prev - 1));
+    }, []);
+
+    const goToNextSlide = useCallback(() => {
+        setSlideIndex((prev) => Math.min(months.length - 1, prev + 1));
+    }, [months.length]);
+
+    const currentMonth = months[slideIndex];
 
     return (
         <div className="page-container habits-page">
@@ -63,37 +80,74 @@ const HabitsPage: React.FC = () => {
                 </div>
             </header>
 
-            {/* Quick Month Jumper (if more than 1 month exists) */}
-            {months.length > 1 && (
-                <div className="habits-month-nav">
-                    <span className="month-nav-label">Meses registrados:</span>
-                    <div className="month-nav-pills">
-                        {months.map((m) => (
-                            <button
-                                key={m.id}
-                                className="month-nav-pill-btn"
-                                onClick={() => {
-                                    const el = document.getElementById(`month-${m.id}`);
-                                    el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                }}
-                            >
-                                {m.month} - {m.year}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            )}
+            {/* Daily Register — Centered in the middle of the screen */}
+            <div className="habits-center-section">
+                <DailyRegister
+                    months={months}
+                    fields={fields}
+                    onUpdateNote={updateDayNote}
+                    onUpdateValue={updateDayValue}
+                />
+            </div>
 
-            {/* List of Month Cards */}
-            <div className="habits-months-list">
-                {months.map((monthData) => (
-                    <HabitMonthTable
-                        key={monthData.id}
-                        monthData={monthData}
-                        fields={fields}
-                        onOpenSettings={() => setIsSettingsOpen(true)}
-                    />
-                ))}
+            {/* Months Slide — At the bottom */}
+            <div className="habits-slide-section">
+                {months.length > 0 && (
+                    <>
+                        {/* Slide navigation */}
+                        <div className="habits-slide-top">
+                            <span className="habits-slide-label">
+                                <GoogleIcon name="calendar_view_month" size={16} />
+                                Historial de meses
+                            </span>
+                            <div className="habits-slide-dots">
+                                {months.map((m, idx) => (
+                                    <button
+                                        key={m.id}
+                                        className={`habits-slide-dot ${idx === slideIndex ? 'active' : ''}`}
+                                        onClick={() => setSlideIndex(idx)}
+                                        title={`${m.month} - ${m.year}`}
+                                    />
+                                ))}
+                            </div>
+                            <div className="habits-slide-arrows">
+                                <button
+                                    className="habits-slide-arrow"
+                                    onClick={goToPrevSlide}
+                                    disabled={slideIndex === 0}
+                                >
+                                    <GoogleIcon name="chevron_left" size={20} />
+                                </button>
+                                <span className="habits-slide-counter">
+                                    {slideIndex + 1} / {months.length}
+                                </span>
+                                <button
+                                    className="habits-slide-arrow"
+                                    onClick={goToNextSlide}
+                                    disabled={slideIndex === months.length - 1}
+                                >
+                                    <GoogleIcon name="chevron_right" size={20} />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Slide viewport with the current month */}
+                        <div className="habits-slide-viewport">
+                            <HabitMonthTable
+                                key={currentMonth.id}
+                                monthData={currentMonth}
+                                fields={fields}
+                                onOpenSettings={() => setIsSettingsOpen(true)}
+                            />
+                        </div>
+                    </>
+                )}
+
+                {months.length === 0 && (
+                    <div className="habits-slide-empty">
+                        <p>Aún no hay meses registrados. Agrega uno para empezar.</p>
+                    </div>
+                )}
             </div>
 
             {/* Modals */}
