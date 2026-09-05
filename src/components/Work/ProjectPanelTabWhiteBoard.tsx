@@ -5,7 +5,6 @@ import GoogleIcon from "../GoogleIcon";
 import { getOnlinePayload, saveToOnline } from "../../context/OnlineSave";
 import { getLocalPayload, setLocalPayload, STORAGE_KEYS } from "../../context/LocalSave";
 import { auth } from "../../firebase";
-import "@excalidraw/excalidraw/index.css";
 
 interface ProjectPanelTabWhiteboardProps {
     project?: Project;
