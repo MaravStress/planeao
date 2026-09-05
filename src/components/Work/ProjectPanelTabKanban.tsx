@@ -19,6 +19,7 @@ import type { Order, KanbanColumnData } from '../../types/work';
 import { DEFAULT_KANBAN_COLUMNS } from '../../types/work';
 import { KanbanColumn } from './KanbanColumn';
 import { KanbanCard } from './KanbanCard';
+import OrderModal from './OrderModal';
 import Timeline from './Timeline';
 import { useWork } from '../../context/WorkContext';
 import GoogleIcon from '../GoogleIcon';
@@ -63,6 +64,7 @@ export const ProjectPanelTabKanban: React.FC<ProjectPanelTabKanbanProps> = ({
     const [activeId, setActiveId] = useState<string | null>(null);
     const [isCreatingColumn, setIsCreatingColumn] = useState(false);
     const [newColumnTitle, setNewColumnTitle] = useState('');
+    const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
 
     const currentProject = projects.find(p => p.id === projectId);
     const columns: KanbanColumnData[] = (currentProject?.columns && currentProject.columns.length > 0)
@@ -166,6 +168,16 @@ export const ProjectPanelTabKanban: React.FC<ProjectPanelTabKanbanProps> = ({
         moveProjectColumn(projectId, columnId, direction);
     }, [projectId, moveProjectColumn]);
 
+    const handleOpenOrderModal = useCallback((order: Order) => {
+        setSelectedOrderId(order.id);
+    }, []);
+
+    const handleCloseOrderModal = useCallback(() => {
+        setSelectedOrderId(null);
+    }, []);
+
+    const selectedOrder = selectedOrderId ? orders.find(o => o.id === selectedOrderId) : null;
+
     return (
         <div className="kanban-wrapper">
             <Timeline projectId={projectId} />
@@ -250,6 +262,7 @@ export const ProjectPanelTabKanban: React.FC<ProjectPanelTabKanbanProps> = ({
                                 onUpdateColumnTitle={handleUpdateColumnTitle}
                                 onDeleteColumn={handleDeleteColumn}
                                 onMoveColumn={handleMoveColumn}
+                                onOpenOrderModal={handleOpenOrderModal}
                             />
                         );
                     })}
@@ -276,6 +289,17 @@ export const ProjectPanelTabKanban: React.FC<ProjectPanelTabKanbanProps> = ({
                     ) : null}
                 </DragOverlay>
             </DndContext>
+
+            {selectedOrder && (
+                <OrderModal
+                    order={selectedOrder}
+                    columnTitle={columns.find(c => c.id === selectedOrder.status)?.title}
+                    columnColor={columns.find(c => c.id === selectedOrder.status)?.color}
+                    onUpdateOrder={handleUpdateOrder}
+                    onDeleteOrder={handleDeleteOrder}
+                    onClose={handleCloseOrderModal}
+                />
+            )}
         </div>
     );
 };

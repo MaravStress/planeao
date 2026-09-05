@@ -9,9 +9,10 @@ interface KanbanCardProps {
     columnColor?: string;
     onUpdateOrder?: (updatedOrder: Order) => void;
     onDeleteOrder?: (orderId: string) => void;
+    onClickCard?: (order: Order) => void;
 }
 
-export const KanbanCard: React.FC<KanbanCardProps> = ({ order, columnColor, onUpdateOrder, onDeleteOrder }) => {
+export const KanbanCard: React.FC<KanbanCardProps> = ({ order, columnColor, onUpdateOrder, onDeleteOrder, onClickCard }) => {
     const {
         attributes,
         listeners,
@@ -103,6 +104,12 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ order, columnColor, onUp
             className={`kanban-card ${isDragging ? 'is-dragging' : ''}`}
             {...attributes}
             {...listeners}
+            onClick={() => {
+                // Only trigger if clicking the card body itself, not interactive elements
+                if (onClickCard && !isEditingTitle) {
+                    onClickCard(order);
+                }
+            }}
         >
             <div className={`kanban-card-accent ${status}`} style={columnColor ? { backgroundColor: columnColor } : undefined} />
 

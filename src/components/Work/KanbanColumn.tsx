@@ -19,6 +19,7 @@ interface KanbanColumnProps {
     onUpdateColumnTitle?: (columnId: string, newTitle: string) => void;
     onDeleteColumn?: (columnId: string) => void;
     onMoveColumn?: (columnId: string, direction: 'left' | 'right') => void;
+    onOpenOrderModal?: (order: Order) => void;
 }
 
 export const KanbanColumn: React.FC<KanbanColumnProps> = ({
@@ -34,7 +35,8 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
     onAddOrder,
     onUpdateColumnTitle,
     onDeleteColumn,
-    onMoveColumn
+    onMoveColumn,
+    onOpenOrderModal
 }) => {
     const { setNodeRef, isOver } = useDroppable({
         id,
@@ -171,6 +173,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
                             columnColor={color}
                             onUpdateOrder={onUpdateOrder}
                             onDeleteOrder={onDeleteOrder}
+                            onClickCard={onOpenOrderModal}
                         />
                     ))}
                 </SortableContext>

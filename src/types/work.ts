@@ -23,6 +23,7 @@ export interface Order {
     startDate: string; // ISO date string
     endDate: string; // ISO date string
     status?: string; // Column ID
+    description?: string; // Markdown content for the card details
 }
 
 export interface Project {
