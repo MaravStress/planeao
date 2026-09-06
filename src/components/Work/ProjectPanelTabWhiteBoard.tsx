@@ -30,6 +30,7 @@ class ExcalidrawErrorBoundary extends React.Component<
     }
 
     handleRetry = () => {
+        sessionStorage.removeItem("excalidraw_chunk_retry");
         this.setState({ hasError: false, error: null });
         window.location.reload();
     };
@@ -63,9 +64,15 @@ class ExcalidrawErrorBoundary extends React.Component<
 const ExcalidrawComponent = React.lazy(async () => {
     try {
         const mod = await import("@excalidraw/excalidraw");
+        sessionStorage.removeItem("excalidraw_chunk_retry");
         return { default: mod.Excalidraw };
     } catch (err) {
         console.error("Failed to load Excalidraw module", err);
+        const hasRetried = sessionStorage.getItem("excalidraw_chunk_retry");
+        if (!hasRetried) {
+            sessionStorage.setItem("excalidraw_chunk_retry", "true");
+            window.location.reload();
+        }
         throw err;
     }
 });
