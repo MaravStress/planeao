@@ -80,6 +80,11 @@ export const HabitsProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         if (!Array.isArray(loadedMonths) || loadedMonths.length === 0) {
             loadedMonths = [defaultM];
         }
+        // Normalize months to ensure each has a days property
+        loadedMonths = loadedMonths.map((m) => ({
+            ...m,
+            days: m.days || {}
+        }));
         saveToLocal(STORAGE_KEYS.HABIT_MONTHS, loadedMonths);
         setMonths(loadedMonths);
 
@@ -104,8 +109,13 @@ export const HabitsProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                 const localMonthsTime = localMonthsPayload?._lastModified || 0;
 
                 if (onlineMonthsPayload && onlineMonthsPayload._lastModified > localMonthsTime) {
-                    const onlineMonths = onlineMonthsPayload._data;
+                    let onlineMonths = onlineMonthsPayload._data;
                     if (Array.isArray(onlineMonths) && onlineMonths.length > 0) {
+                        // Normalize months to ensure each has a days property
+                        onlineMonths = onlineMonths.map((m: HabitMonthData) => ({
+                            ...m,
+                            days: m.days || {}
+                        }));
                         saveToLocal(STORAGE_KEYS.HABIT_MONTHS, onlineMonths);
                         saveToLocal(STORAGE_KEYS.HABIT_MONTHS_BACKUP, onlineMonths);
                         setMonths(onlineMonths);
