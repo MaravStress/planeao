@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Timeline from '../components/Work/Timeline';
 import ProjectCard from '../components/Work/ProjectCard';
 import type { Order } from '../types/work';
@@ -9,6 +9,7 @@ import ProjectPanelTabKanban from '../components/Work/ProjectPanelTabKanban';
 import '../styles/Work.css';
 import ProjectPanelTabWhiteboard from '../components/Work/ProjectPanelTabWhiteBoard';
 import ProjectPanelTabInfo from '../components/Work/ProjectPanelTabInfo';
+import { useSearchParams } from 'react-router-dom';
 
 const WorkPage: React.FC = () => {
     const {
@@ -20,8 +21,23 @@ const WorkPage: React.FC = () => {
         toggleProjectPause
     } = useWork();
 
-    const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
-    const [activeTab, setActiveTab] = useState<'info' | 'whiteboard' | 'kanban'>('info');
+    // Deep link support: /?project=<id>&tab=<info|whiteboard|kanban> (used by the Whiteboards page)
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [activeProjectId, setActiveProjectId] = useState<string | null>(() => {
+        return new URLSearchParams(window.location.hash.split('?')[1] || '').get('project');
+    });
+    const [activeTab, setActiveTab] = useState<'info' | 'whiteboard' | 'kanban'>(() => {
+        const tab = new URLSearchParams(window.location.hash.split('?')[1] || '').get('tab');
+        return tab === 'info' || tab === 'whiteboard' || tab === 'kanban' ? tab : 'info';
+    });
+
+    useEffect(() => {
+        // Remove the deep link params from the URL once consumed
+        if (searchParams.has('project') || searchParams.has('tab')) {
+            setSearchParams({}, { replace: true });
+        }
+    }, [searchParams, setSearchParams]);
+
     const [isEditingTitle, setIsEditingTitle] = useState(false);
     const [titleInput, setTitleInput] = useState('');
 

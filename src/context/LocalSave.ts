@@ -8,7 +8,8 @@ import { saveToOnline } from './OnlineSave';
 export const STORAGE_KEYS = {
     POMODORO_TASKS: 'pomodoro-tasks',
     WORK_PROJECTS: 'work-projects',
-    POMODORO_SETTINGS: 'pomodoro-settings'
+    POMODORO_SETTINGS: 'pomodoro-settings',
+    STANDALONE_WHITEBOARDS: 'standalone-whiteboards'
 } as const;
 
 export interface StoragePayload<T = any> {

@@ -1,0 +1,313 @@
+/* Whiteboards.css - Styling for the Whiteboards page */
+
+.whiteboards-section {
+    margin-bottom: 2.5rem;
+}
+
+.whiteboards-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.whiteboards-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+}
+
+.whiteboards-section-title .count-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.6rem;
+    border-radius: 12px;
+    background: hsla(var(--primary-h), var(--primary-s), var(--primary-l), 0.15);
+    color: var(--color-primary);
+}
+
+.whiteboards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+
+@media (max-width: 1200px) {
+    .whiteboards-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .whiteboards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .whiteboards-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Whiteboard Card */
+.whiteboard-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-bg-card);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid hsla(0, 0%, 100%, 0.05);
+    transition: all var(--transition-normal);
+    cursor: pointer;
+    height: 100%;
+}
+
+.whiteboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+    border-color: hsla(var(--primary-h), var(--primary-s), var(--primary-l), 0.3);
+    background: var(--color-bg-card-hover);
+}
+
+.whiteboard-card-image {
+    width: 100%;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    position: relative;
+}
+
+.whiteboard-card-image .card-corner-icon {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.75rem;
+    opacity: 0.7;
+}
+
+.whiteboard-card-content {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.whiteboard-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: var(--color-text-main);
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.whiteboard-card-subtitle {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.whiteboard-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 1rem;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
+
+/* Status pills (self-contained so the page doesn't depend on Work.css) */
+.whiteboards-section .project-status {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+}
+
+.whiteboards-section .project-status.status-active {
+    background: hsla(145, 65%, 45%, 0.1);
+    color: var(--color-success);
+    border: 1px solid hsla(145, 65%, 45%, 0.2);
+}
+
+.whiteboards-section .project-status.status-paused {
+    background: hsla(35, 75%, 55%, 0.1);
+    color: var(--color-warning);
+    border: 1px solid hsla(35, 75%, 55%, 0.2);
+}
+
+/* New whiteboard dashed card */
+.whiteboard-card-new {
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    background: transparent;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+    color: var(--color-text-muted);
+    gap: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.whiteboard-card-new:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: rgba(255, 255, 255, 0.02);
+    transform: translateY(-5px);
+}
+
+/* Empty state for sections */
+.whiteboards-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 2.5rem 1.5rem;
+    border: 1px dashed hsla(0, 0%, 100%, 0.12);
+    border-radius: var(--radius-lg);
+    color: var(--color-text-muted);
+    text-align: center;
+    grid-column: 1 / -1;
+}
+
+.whiteboards-empty-state p {
+    font-size: 0.9rem;
+    max-width: 420px;
+}
+
+/* Shared pieces defined in Work.css, duplicated here so this page is self-contained */
+.btn-new-project {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--color-primary);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-sm);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-new-project:hover {
+    background: var(--color-primary-hover);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-2px);
+}
+
+.back-button {
+    background: var(--color-bg-card);
+    border: 1px solid hsla(0, 0%, 100%, 0.05);
+    color: var(--color-text-main);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.back-button:hover {
+    background: hsla(0, 0%, 100%, 0.1);
+    color: var(--color-primary-light);
+    transform: translateX(-3px);
+}
+
+/* Standalone whiteboard detail view */
+.whiteboard-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.whiteboard-detail-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+    cursor: pointer;
+}
+
+.whiteboard-detail-title-input {
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-primary);
+    color: var(--color-text-main);
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    outline: none;
+    width: 320px;
+}
+
+.whiteboard-detail-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.btn-icon-danger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid hsla(0, 100%, 60%, 0.25);
+    background: hsla(0, 100%, 60%, 0.1);
+    color: var(--color-danger);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-icon-danger:hover {
+    background: hsla(0, 100%, 60%, 0.2);
+    border-color: hsla(0, 100%, 60%, 0.45);
+    transform: scale(1.05);
+}
+
+.whiteboard-editor-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: 420px;
+    border: 1px dashed hsla(0, 0%, 100%, 0.15);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-card);
+    color: var(--color-text-muted);
+    text-align: center;
+    padding: 2rem;
+}
+
+.whiteboard-editor-placeholder h3 {
+    color: var(--color-text-main);
+    font-size: 1.1rem;
+}
+
+.whiteboard-editor-placeholder p {
+    font-size: 0.9rem;
+    max-width: 460px;
+}

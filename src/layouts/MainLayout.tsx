@@ -81,7 +81,7 @@ const MainLayout: React.FC = () => {
             to="/whiteboards"
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
-            <GoogleIcon name="dashboard" size={24} />
+            <GoogleIcon name="draw" size={24} />
             <span>Whiteboards</span>
           </NavLink>
           

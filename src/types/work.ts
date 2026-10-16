@@ -26,6 +26,21 @@ export interface Order {
     description?: string; // Markdown content for the card details
 }
 
+export interface WhiteboardData {
+    elements?: readonly Record<string, unknown>[];
+    appState?: Record<string, unknown>;
+    files?: Record<string, unknown>;
+    updatedAt?: number;
+}
+
+export interface StandaloneWhiteboard {
+    id: string;
+    name: string;
+    createdAt: number;
+    updatedAt: number;
+    whiteboardData?: WhiteboardData;
+}
+
 export interface Project {
     id: string;
     name: string;
@@ -36,11 +51,6 @@ export interface Project {
     orders: Order[];
     description?: string; // Project information in Markdown format
     updatedAt?: number;
-    whiteboardData?: {
-        elements?: readonly any[];
-        appState?: Record<string, any>;
-        files?: Record<string, any>;
-        updatedAt?: number;
-    };
+    whiteboardData?: WhiteboardData;
 }
 

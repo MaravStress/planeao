@@ -11,6 +11,7 @@ import HabitsPage from './pages/HabitsPage';
 
 import { PomodoroProvider } from './context/PomodoroContext';
 import { WorkProvider } from './context/WorkContext';
+import { WhiteboardsProvider } from './context/WhiteboardsContext';
 
 import { auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -42,22 +43,24 @@ function App() {
   }, []);
   return (
     <WorkProvider>
-      <PomodoroProvider>
-        <HashRouter>
-          <Routes>
-            <Route path="/" element={<MainLayout />}>
-              <Route index element={<WorkPage />} />
-              <Route path="pomodoro" element={<PomodoroPage />} />
-              <Route path="finances" element={<FinancesPage />} />
-              <Route path="habits" element={<HabitsPage />} />
-              <Route path="whiteboards" element={<WhiteboardsPage />} />
-              <Route path="settings" element={<SettingsPage />} />
-              {/* Redirect any unknown routes to home */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Route>
-          </Routes>
-        </HashRouter>
-      </PomodoroProvider>
+      <WhiteboardsProvider>
+        <PomodoroProvider>
+          <HashRouter>
+            <Routes>
+              <Route path="/" element={<MainLayout />}>
+                <Route index element={<WorkPage />} />
+                <Route path="pomodoro" element={<PomodoroPage />} />
+                <Route path="finances" element={<FinancesPage />} />
+                <Route path="habits" element={<HabitsPage />} />
+                <Route path="whiteboards" element={<WhiteboardsPage />} />
+                <Route path="settings" element={<SettingsPage />} />
+                {/* Redirect any unknown routes to home */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Route>
+            </Routes>
+          </HashRouter>
+        </PomodoroProvider>
+      </WhiteboardsProvider>
     </WorkProvider>
   );
 }

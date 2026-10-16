@@ -1,6 +1,6 @@
 import { saveToLocal, loadFromLocal, STORAGE_KEYS } from '../context/LocalSave';
 
-export const exportPageData = (page: 'work' | 'pomodoro') => {
+export const exportPageData = (page: 'work' | 'pomodoro' | 'whiteboards') => {
     let data: any = {};
     let fileName = `planeao-${page}`;
 
@@ -16,6 +16,12 @@ export const exportPageData = (page: 'work' | 'pomodoro') => {
             version: 1,
             tasks: loadFromLocal(STORAGE_KEYS.POMODORO_TASKS, [])
         };
+    } else if (page === 'whiteboards') {
+        data = {
+            type: 'planeao-whiteboards',
+            version: 1,
+            whiteboards: loadFromLocal(STORAGE_KEYS.STANDALONE_WHITEBOARDS, [])
+        };
     }
 
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -29,7 +35,7 @@ export const exportPageData = (page: 'work' | 'pomodoro') => {
     URL.revokeObjectURL(url);
 };
 
-export const importPageData = (page: 'work' | 'pomodoro', jsonText: string): boolean => {
+export const importPageData = (page: 'work' | 'pomodoro' | 'whiteboards', jsonText: string): boolean => {
     try {
         const parsed = JSON.parse(jsonText);
         if (!parsed || typeof parsed !== 'object') {
@@ -59,6 +65,13 @@ export const importPageData = (page: 'work' | 'pomodoro', jsonText: string): boo
                 alert('No se encontraron tareas de pomodoro válidas.');
                 return false;
             }
+        } else if (page === 'whiteboards') {
+            if (Array.isArray(parsed.whiteboards)) {
+                saveToLocal(STORAGE_KEYS.STANDALONE_WHITEBOARDS, parsed.whiteboards);
+            } else {
+                alert('No se encontraron whiteboards válidos.');
+                return false;
+            }
         }
 
         return true;
@@ -76,7 +89,8 @@ export const exportAllData = () => {
         timestamp: Date.now(),
         data: {
             [STORAGE_KEYS.POMODORO_TASKS]: loadFromLocal(STORAGE_KEYS.POMODORO_TASKS, []),
-            [STORAGE_KEYS.WORK_PROJECTS]: loadFromLocal(STORAGE_KEYS.WORK_PROJECTS, [])
+            [STORAGE_KEYS.WORK_PROJECTS]: loadFromLocal(STORAGE_KEYS.WORK_PROJECTS, []),
+            [STORAGE_KEYS.STANDALONE_WHITEBOARDS]: loadFromLocal(STORAGE_KEYS.STANDALONE_WHITEBOARDS, [])
         }
     };
 
