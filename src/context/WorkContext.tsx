@@ -49,22 +49,22 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             orders: []
         };
 
-        setProjects([...projects, newProject]);
+        setProjects(prev => [...prev, newProject]);
         return newProject;
     };
 
     const updateProject = (projectId: string, name: string, template: string[], defaultOrderDuration: number, description?: string) => {
-        setProjects(projects.map(p =>
+        setProjects(prev => prev.map(p =>
             p.id === projectId ? { ...p, name, template, defaultOrderDuration, description, updatedAt: Date.now() } : p
         ));
     };
 
     const deleteProject = (projectId: string) => {
-        setProjects(projects.filter(p => p.id !== projectId));
+        setProjects(prev => prev.filter(p => p.id !== projectId));
     };
 
     const toggleProjectPause = (projectId: string) => {
-        setProjects(projects.map(p => 
+        setProjects(prev => prev.map(p => 
             p.id === projectId ? { ...p, isPaused: !p.isPaused, updatedAt: Date.now() } : p
         ));
     };
@@ -98,7 +98,7 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     const updateOrder = (projectId: string, updatedOrder: Order) => {
-        setProjects(projects.map(p => {
+        setProjects(prev => prev.map(p => {
             if (p.id === projectId) {
                 return {
                     ...p,
@@ -111,7 +111,7 @@ export const WorkProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     const deleteOrder = (projectId: string, orderId: string) => {
-        setProjects(projects.map(p => {
+        setProjects(prev => prev.map(p => {
             if (p.id === projectId) {
                 return {
                     ...p,

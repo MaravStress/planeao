@@ -1,0 +1,50 @@
+- generic [ref=e189]:
+  - complementary [ref=e190]:
+    - heading "P" [level=2] [ref=e192]
+    - navigation [ref=e193]:
+      - link "work Work" [ref=e194] [cursor=pointer]:
+        - /url: "#/"
+        - generic [ref=e195]: work
+        - generic: Work
+      - link "favorite Hábitos" [ref=e196] [cursor=pointer]:
+        - /url: "#/habits"
+        - generic [ref=e197]: favorite
+        - generic: Hábitos
+      - link "timer Pomodoro" [ref=e198] [cursor=pointer]:
+        - /url: "#/pomodoro"
+        - generic [ref=e199]: timer
+        - generic: Pomodoro
+      - link "attach_money Finanzas" [ref=e201] [cursor=pointer]:
+        - /url: "#/finances"
+        - generic [ref=e202]: attach_money
+        - generic: Finanzas
+      - link "draw Whiteboards" [ref=e203] [cursor=pointer]:
+        - /url: "#/whiteboards"
+        - generic [ref=e204]: draw
+        - generic: Whiteboards
+      - link "settings Ajustes" [ref=e205] [cursor=pointer]:
+        - /url: "#/settings"
+        - generic [ref=e206]: settings
+        - generic: Ajustes
+  - main [ref=e207]:
+    - generic [ref=e208]:
+      - generic [ref=e249]:
+        - button "arrow_back" [ref=e250] [cursor=pointer]
+        - heading "Nuevo Whiteboard" [level=2] [ref=e252] [cursor=pointer]
+        - generic [ref=e253]:
+          - generic [ref=e254]:
+            - button "upload Importar" [ref=e255] [cursor=pointer]:
+              - generic [ref=e256]: upload
+              - generic [ref=e257]: Importar
+            - button "download Exportar" [ref=e258] [cursor=pointer]:
+              - generic [ref=e259]: download
+              - generic [ref=e260]: Exportar
+          - button "delete" [ref=e261] [cursor=pointer]
+      - generic [ref=e263]:
+        - generic [ref=e264]: draw
+        - heading "Editor en camino" [level=3] [ref=e265]
+        - paragraph [ref=e266]:
+          - text: El lienzo de Excalidraw para este whiteboard se integrará en la próxima iteración. Por ahora, el whiteboard
+          - strong [ref=e267]: Nuevo Whiteboard
+          - text: existe y se guarda, pero todavía no puedes dibujar en él.
+        - generic [ref=e268]: Creado el 16 oct 2026

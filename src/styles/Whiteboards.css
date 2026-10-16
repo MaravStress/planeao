@@ -287,27 +287,173 @@
     transform: scale(1.05);
 }
 
-.whiteboard-editor-placeholder {
+/* ===== Standalone whiteboard editor (mirrors Work.css so this page stays self-contained) ===== */
+.whiteboard-detail-page {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.whiteboard-tab-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 200px);
+    min-height: 550px;
+    width: 100%;
+    background: var(--color-bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid hsla(0, 0%, 100%, 0.08);
+    overflow: hidden;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.whiteboard-tab-wrapper:fullscreen,
+.whiteboard-tab-wrapper:-webkit-full-screen,
+.whiteboard-tab-wrapper.is-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100vh !important;
+    width: 100vw !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    border: none !important;
+    background: var(--color-bg-main, #121212) !important;
+    z-index: 99999;
+}
+
+.whiteboard-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 1.2rem;
+    background: hsla(0, 0%, 0%, 0.2);
+    border-bottom: 1px solid hsla(0, 0%, 100%, 0.06);
+    flex-shrink: 0;
+}
+
+.whiteboard-tab-wrapper:fullscreen .whiteboard-header-bar,
+.whiteboard-tab-wrapper:-webkit-full-screen .whiteboard-header-bar,
+.whiteboard-tab-wrapper.is-fullscreen .whiteboard-header-bar {
+    background: rgba(18, 18, 22, 0.95);
+    backdrop-filter: blur(12px);
+    padding: 0.75rem 1.5rem;
+    z-index: 10;
+    border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
+}
+
+.whiteboard-title-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-text-main);
+    font-size: 0.95rem;
+}
+
+.whiteboard-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.whiteboard-save-indicator .save-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+}
+
+.whiteboard-save-indicator .save-status.saved {
+    color: var(--color-success);
+    background: hsla(145, 65%, 45%, 0.1);
+}
+
+.whiteboard-save-indicator .save-status.saving {
+    color: var(--color-warning);
+    background: hsla(35, 75%, 55%, 0.1);
+}
+
+.whiteboard-fullscreen-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: hsla(0, 0%, 100%, 0.06);
+    border: 1px solid hsla(0, 0%, 100%, 0.12);
+    color: var(--color-text-main);
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-md, 8px);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-normal, 0.2s ease);
+}
+
+.whiteboard-fullscreen-btn:hover {
+    background: hsla(0, 0%, 100%, 0.12);
+    border-color: var(--color-primary-light, #a5b4fc);
+    color: var(--color-primary-light, #a5b4fc);
+    transform: translateY(-1px);
+}
+
+.whiteboard-fullscreen-btn:active {
+    transform: translateY(0);
+}
+
+.whiteboard-canvas-container {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.whiteboard-loading-state {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;
-    min-height: 420px;
-    border: 1px dashed hsla(0, 0%, 100%, 0.15);
-    border-radius: var(--radius-lg);
-    background: var(--color-bg-card);
+    height: 100%;
+    gap: 1rem;
     color: var(--color-text-muted);
+}
+
+@keyframes whiteboards-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.spin-icon {
+    animation: whiteboards-spin 1.2s linear infinite;
+}
+
+/* Empty / error states used by the Excalidraw error boundary in this page */
+.empty-tab-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    padding: 2rem;
+    padding: 6rem 2rem;
+    background: var(--color-bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px dashed hsla(0, 0%, 100%, 0.05);
+    color: var(--color-text-muted);
 }
 
-.whiteboard-editor-placeholder h3 {
+.empty-tab-state h3 {
+    margin: 1rem 0 0.5rem 0;
     color: var(--color-text-main);
-    font-size: 1.1rem;
+    font-size: 1.3rem;
 }
 
-.whiteboard-editor-placeholder p {
-    font-size: 0.9rem;
-    max-width: 460px;
+.empty-tab-state p {
+    margin: 0;
+    max-width: 400px;
+    font-size: 0.95rem;
+    line-height: 1.5;
 }

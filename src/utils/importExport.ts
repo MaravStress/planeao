@@ -14,7 +14,8 @@ export const exportPageData = (page: 'work' | 'pomodoro' | 'whiteboards') => {
         data = {
             type: 'planeao-pomodoro',
             version: 1,
-            tasks: loadFromLocal(STORAGE_KEYS.POMODORO_TASKS, [])
+            tasks: loadFromLocal(STORAGE_KEYS.POMODORO_TASKS, []),
+            settings: loadFromLocal(STORAGE_KEYS.POMODORO_SETTINGS, { focusDuration: 50, restDuration: 10 })
         };
     } else if (page === 'whiteboards') {
         data = {
@@ -65,6 +66,9 @@ export const importPageData = (page: 'work' | 'pomodoro' | 'whiteboards', jsonTe
                 alert('No se encontraron tareas de pomodoro válidas.');
                 return false;
             }
+            if (parsed.settings && typeof parsed.settings === 'object') {
+                saveToLocal(STORAGE_KEYS.POMODORO_SETTINGS, parsed.settings);
+            }
         } else if (page === 'whiteboards') {
             if (Array.isArray(parsed.whiteboards)) {
                 saveToLocal(STORAGE_KEYS.STANDALONE_WHITEBOARDS, parsed.whiteboards);
@@ -89,6 +93,7 @@ export const exportAllData = () => {
         timestamp: Date.now(),
         data: {
             [STORAGE_KEYS.POMODORO_TASKS]: loadFromLocal(STORAGE_KEYS.POMODORO_TASKS, []),
+            [STORAGE_KEYS.POMODORO_SETTINGS]: loadFromLocal(STORAGE_KEYS.POMODORO_SETTINGS, { focusDuration: 50, restDuration: 10 }),
             [STORAGE_KEYS.WORK_PROJECTS]: loadFromLocal(STORAGE_KEYS.WORK_PROJECTS, []),
             [STORAGE_KEYS.STANDALONE_WHITEBOARDS]: loadFromLocal(STORAGE_KEYS.STANDALONE_WHITEBOARDS, [])
         }

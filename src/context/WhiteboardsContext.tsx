@@ -37,18 +37,18 @@ export const WhiteboardsProvider: React.FC<{ children: ReactNode }> = ({ childre
             updatedAt: now
         };
 
-        setWhiteboards([...whiteboards, newWhiteboard]);
+        setWhiteboards(prev => [...prev, newWhiteboard]);
         return newWhiteboard;
     };
 
     const renameWhiteboard = (id: string, name: string) => {
-        setWhiteboards(whiteboards.map(wb =>
+        setWhiteboards(prev => prev.map(wb =>
             wb.id === id ? { ...wb, name, updatedAt: Date.now() } : wb
         ));
     };
 
     const deleteWhiteboard = (id: string) => {
-        setWhiteboards(whiteboards.filter(wb => wb.id !== id));
+        setWhiteboards(prev => prev.filter(wb => wb.id !== id));
     };
 
     const updateWhiteboard = (id: string, whiteboardData: WhiteboardData) => {
@@ -57,7 +57,7 @@ export const WhiteboardsProvider: React.FC<{ children: ReactNode }> = ({ childre
             ...whiteboardData,
             updatedAt: whiteboardData?.updatedAt || now
         };
-        setWhiteboards(whiteboards.map(wb =>
+        setWhiteboards(prev => prev.map(wb =>
             wb.id === id ? { ...wb, whiteboardData: dataWithTimestamp, updatedAt: now } : wb
         ));
     };

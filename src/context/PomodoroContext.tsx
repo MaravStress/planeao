@@ -1,4 +1,12 @@
 import React, { createContext, useContext, useState, useEffect, useRef, type ReactNode } from 'react';
+import { saveToLocal, loadFromLocal, STORAGE_KEYS } from './LocalSave';
+
+interface PomodoroSettings {
+    focusDuration: number;
+    restDuration: number;
+}
+
+const DEFAULT_SETTINGS: PomodoroSettings = { focusDuration: 50, restDuration: 10 };
 
 interface PomodoroContextType {
     timeLeft: number;
@@ -18,9 +26,17 @@ interface PomodoroContextType {
 const PomodoroContext = createContext<PomodoroContextType | undefined>(undefined);
 
 export const PomodoroProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    // Settings (in minutes)
-    const [focusDuration, setFocusDuration] = useState(50);
-    const [restDuration, setRestDuration] = useState(10);
+    // Settings (in minutes), persisted to local + Firebase
+    const [settings, setSettings] = useState<PomodoroSettings>(() => {
+        const loaded = loadFromLocal<PomodoroSettings>(STORAGE_KEYS.POMODORO_SETTINGS, DEFAULT_SETTINGS);
+        return {
+            focusDuration: loaded?.focusDuration ?? DEFAULT_SETTINGS.focusDuration,
+            restDuration: loaded?.restDuration ?? DEFAULT_SETTINGS.restDuration
+        };
+    });
+
+    const focusDuration = settings.focusDuration;
+    const restDuration = settings.restDuration;
 
     // Timer State
     const [timeLeft, setTimeLeft] = useState(focusDuration * 60);
@@ -154,13 +170,25 @@ export const PomodoroProvider: React.FC<{ children: ReactNode }> = ({ children }
     };
 
     const handleUpdateSettings = (newFocus: number, newRest: number) => {
-        setFocusDuration(newFocus);
-        setRestDuration(newRest);
+        setSettings({ focusDuration: newFocus, restDuration: newRest });
         if (!isActive) {
             if (mode === 'focus') setTimeLeft(newFocus * 60);
             else setTimeLeft(newRest * 60);
         }
     };
+
+    const setFocusDuration = (duration: number) => {
+        setSettings(prev => ({ ...prev, focusDuration: duration }));
+    };
+
+    const setRestDuration = (duration: number) => {
+        setSettings(prev => ({ ...prev, restDuration: duration }));
+    };
+
+    // Persist settings to LocalStorage (and online) whenever they change
+    useEffect(() => {
+        saveToLocal(STORAGE_KEYS.POMODORO_SETTINGS, settings);
+    }, [settings]);
 
     // Derived state for progress
     const totalTime = mode === 'focus' ? focusDuration * 60 : restDuration * 60;

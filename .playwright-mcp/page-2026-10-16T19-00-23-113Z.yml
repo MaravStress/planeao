@@ -1,0 +1,64 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - heading "P" [level=2] [ref=e6]
+    - navigation [ref=e7]:
+      - link "work Work" [ref=e8] [cursor=pointer]:
+        - /url: "#/"
+        - generic [ref=e9]: work
+        - generic: Work
+      - link "favorite Hábitos" [ref=e10] [cursor=pointer]:
+        - /url: "#/habits"
+        - generic [ref=e11]: favorite
+        - generic: Hábitos
+      - link "timer Pomodoro" [ref=e12] [cursor=pointer]:
+        - /url: "#/pomodoro"
+        - generic [ref=e13]: timer
+        - generic: Pomodoro
+      - link "attach_money Finanzas" [ref=e15] [cursor=pointer]:
+        - /url: "#/finances"
+        - generic [ref=e16]: attach_money
+        - generic: Finanzas
+      - link "draw Whiteboards" [ref=e17] [cursor=pointer]:
+        - /url: "#/whiteboards"
+        - generic [ref=e18]: draw
+        - generic: Whiteboards
+      - link "settings Ajustes" [ref=e19] [cursor=pointer]:
+        - /url: "#/settings"
+        - generic [ref=e20]: settings
+        - generic: Ajustes
+  - main [ref=e21]:
+    - generic [ref=e22]:
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - heading "Whiteboards" [level=1] [ref=e25]
+          - paragraph [ref=e26]: Tus pizarrones de proyectos y los que creas sueltos.
+        - generic [ref=e27]:
+          - button "upload Importar" [ref=e28] [cursor=pointer]:
+            - generic [ref=e29]: upload
+            - generic [ref=e30]: Importar
+          - button "download Exportar" [ref=e31] [cursor=pointer]:
+            - generic [ref=e32]: download
+            - generic [ref=e33]: Exportar
+      - generic [ref=e34]:
+        - heading "folder Whiteboards de Proyectos 0" [level=2] [ref=e36]:
+          - generic [ref=e37]: folder
+          - text: Whiteboards de Proyectos
+          - generic [ref=e38]: "0"
+        - generic [ref=e39]:
+          - generic [ref=e40]: folder_open
+          - paragraph [ref=e41]: Aún no tienes proyectos. Crea uno en la sección de Work para tener su whiteboard.
+          - button "work Ir a Work" [ref=e42] [cursor=pointer]:
+            - generic [ref=e43]: work
+            - text: Ir a Work
+      - generic [ref=e44]:
+        - generic [ref=e45]:
+          - heading "gesture Mis Whiteboards 0" [level=2] [ref=e46]:
+            - generic [ref=e47]: gesture
+            - text: Mis Whiteboards
+            - generic [ref=e48]: "0"
+          - button "add Nuevo Whiteboard" [ref=e49] [cursor=pointer]:
+            - generic [ref=e50]: add
+            - text: Nuevo Whiteboard
+        - generic [ref=e52] [cursor=pointer]:
+          - generic [ref=e53]: add
+          - generic [ref=e54]: Nuevo Whiteboard
