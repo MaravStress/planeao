@@ -127,8 +127,7 @@ const SettingsPage: React.FC = () => {
                     </div>
 
                     <p className="settings-description">
-                        Inicia sesión con Google para respaldar automáticamente tus tareas,
-                        proyectos, finanzas e ideas en la nube de forma segura. Si no tienes conexión,
+                        Inicia sesión con Google para respaldar automáticamente tus tareas y proyectos en la nube de forma segura. Si no tienes conexión,
                         los datos se guardarán localmente.
                     </p>
 
@@ -196,7 +195,7 @@ const SettingsPage: React.FC = () => {
                     </div>
 
                     <p className="settings-description" style={{ marginBottom: '1.5rem', paddingBottom: '1.5rem' }}>
-                        Exporta o importa una copia de seguridad local de toda tu base de datos (proyectos, tareas, finanzas, ideas y progreso universitario) en un único archivo JSON.
+                        Exporta o importa una copia de seguridad local de toda tu base de datos (proyectos y tareas) en un único archivo JSON.
                     </p>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

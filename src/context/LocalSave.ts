@@ -8,22 +8,7 @@ import { saveToOnline } from './OnlineSave';
 export const STORAGE_KEYS = {
     POMODORO_TASKS: 'pomodoro-tasks',
     WORK_PROJECTS: 'work-projects',
-    POMODORO_SETTINGS: 'pomodoro-settings',
-    FINANCE_TRANSACTIONS: 'finance-transactions',
-    FINANCE_EXCHANGE_RATE: 'finance-exchange-rate',
-    FINANCE_RECURRING: 'finance-recurring',
-    FINANCE_RECURRING_INCOMES: 'finance-recurring-incomes',
-    FINANCE_INCOMES: 'finance-incomes',
-    FINANCE_QUICK_EXPENSES: 'finance-quick-expenses',
-    IDEAS: 'planeao-ideas',
-    IDEA_SETTINGS: 'planeao-idea-settings',
-    IDEAS_BACKUP: 'planeao-ideas-backup',
-    IDEA_SETTINGS_BACKUP: 'planeao-idea-settings-backup',
-    UNI_PROGRESS_TERMS: 'planeao-uni-progress',
-    HABIT_SETTINGS: 'planeao-habit-settings',
-    HABIT_SETTINGS_BACKUP: 'planeao-habit-settings-backup',
-    HABIT_MONTHS: 'planeao-habit-months',
-    HABIT_MONTHS_BACKUP: 'planeao-habit-months-backup'
+    POMODORO_SETTINGS: 'pomodoro-settings'
 } as const;
 
 export interface StoragePayload<T = any> {

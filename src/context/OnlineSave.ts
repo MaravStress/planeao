@@ -3,8 +3,6 @@ import { database, auth } from "../firebase";
 import { STORAGE_KEYS, type StoragePayload, getLocalPayload, setLocalPayload } from "./LocalSave";
 
 const getFirebaseKey = (key: string): string => {
-    if (key === STORAGE_KEYS.IDEAS_BACKUP) return STORAGE_KEYS.IDEAS;
-    if (key === STORAGE_KEYS.IDEA_SETTINGS_BACKUP) return STORAGE_KEYS.IDEA_SETTINGS;
     return key;
 };
 
@@ -66,9 +64,7 @@ export const syncData = async (): Promise<boolean> => {
     const user = auth.currentUser;
     if (!user) return false;
 
-    const keysToSync = Object.values(STORAGE_KEYS).filter(
-        key => key !== STORAGE_KEYS.IDEAS && key !== STORAGE_KEYS.IDEA_SETTINGS
-    );
+    const keysToSync = Object.values(STORAGE_KEYS);
     let updatedLocal = false;
 
     for (const key of keysToSync) {
@@ -115,9 +111,7 @@ export const forcePullFromOnline = async () => {
     const user = auth.currentUser;
     if (!user) return;
 
-    const keysToSync = Object.values(STORAGE_KEYS).filter(
-        key => key !== STORAGE_KEYS.IDEAS && key !== STORAGE_KEYS.IDEA_SETTINGS
-    );
+    const keysToSync = Object.values(STORAGE_KEYS);
 
     for (const key of keysToSync) {
         try {
@@ -138,9 +132,7 @@ export const forcePushToOnline = async () => {
     const user = auth.currentUser;
     if (!user) return;
 
-    const keysToSync = Object.values(STORAGE_KEYS).filter(
-        key => key !== STORAGE_KEYS.IDEAS && key !== STORAGE_KEYS.IDEA_SETTINGS
-    );
+    const keysToSync = Object.values(STORAGE_KEYS);
 
     for (const key of keysToSync) {
         try {

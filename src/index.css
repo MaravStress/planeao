@@ -291,14 +291,6 @@ a:hover {
   letter-spacing: -0.02em;
 }
 
-.ideas-page-title {
-  background: linear-gradient(135deg, #f97316 0%, #facc15 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  letter-spacing: -0.02em;
-}
-
 .pomodoro-page-title {
   background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%) !important;
   -webkit-background-clip: text !important;
@@ -307,8 +299,16 @@ a:hover {
   letter-spacing: -0.02em;
 }
 
-.uni-page-title {
-  background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%) !important;
+.finances-page-title {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  letter-spacing: -0.02em;
+}
+
+.whiteboards-page-title {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;

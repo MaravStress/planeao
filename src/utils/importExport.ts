@@ -1,6 +1,6 @@
 import { saveToLocal, loadFromLocal, STORAGE_KEYS } from '../context/LocalSave';
 
-export const exportPageData = (page: 'work' | 'pomodoro' | 'finances' | 'ideas' | 'uni-progress' | 'habits') => {
+export const exportPageData = (page: 'work' | 'pomodoro') => {
     let data: any = {};
     let fileName = `planeao-${page}`;
 
@@ -16,41 +16,6 @@ export const exportPageData = (page: 'work' | 'pomodoro' | 'finances' | 'ideas' 
             version: 1,
             tasks: loadFromLocal(STORAGE_KEYS.POMODORO_TASKS, [])
         };
-    } else if (page === 'finances') {
-        data = {
-            type: 'planeao-finances',
-            version: 1,
-            transactions: loadFromLocal(STORAGE_KEYS.FINANCE_TRANSACTIONS, []),
-            exchangeRate: loadFromLocal(STORAGE_KEYS.FINANCE_EXCHANGE_RATE, 60),
-            recurring: loadFromLocal(STORAGE_KEYS.FINANCE_RECURRING, []),
-            fixedIncomes: loadFromLocal(STORAGE_KEYS.FINANCE_RECURRING_INCOMES, []),
-            incomes: loadFromLocal(STORAGE_KEYS.FINANCE_INCOMES, []),
-            quickExpenses: loadFromLocal(STORAGE_KEYS.FINANCE_QUICK_EXPENSES, [])
-        };
-    } else if (page === 'ideas') {
-        const localIdeas = loadFromLocal(STORAGE_KEYS.IDEAS, null) || loadFromLocal(STORAGE_KEYS.IDEAS_BACKUP, []);
-        const localSettings = loadFromLocal(STORAGE_KEYS.IDEA_SETTINGS, null) || loadFromLocal(STORAGE_KEYS.IDEA_SETTINGS_BACKUP, null);
-        data = {
-            type: 'planeao-ideas',
-            version: 1,
-            ideas: localIdeas,
-            settings: localSettings
-        };
-    } else if (page === 'uni-progress') {
-        data = {
-            type: 'planeao-uni-progress',
-            version: 1,
-            terms: loadFromLocal(STORAGE_KEYS.UNI_PROGRESS_TERMS, [])
-        };
-    } else if (page === 'habits') {
-        const localSettings = loadFromLocal(STORAGE_KEYS.HABIT_SETTINGS, null) || loadFromLocal(STORAGE_KEYS.HABIT_SETTINGS_BACKUP, null);
-        const localMonths = loadFromLocal(STORAGE_KEYS.HABIT_MONTHS, null) || loadFromLocal(STORAGE_KEYS.HABIT_MONTHS_BACKUP, []);
-        data = {
-            type: 'planeao-habits',
-            version: 1,
-            settings: localSettings,
-            months: localMonths
-        };
     }
 
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -64,7 +29,7 @@ export const exportPageData = (page: 'work' | 'pomodoro' | 'finances' | 'ideas' 
     URL.revokeObjectURL(url);
 };
 
-export const importPageData = (page: 'work' | 'pomodoro' | 'finances' | 'ideas' | 'uni-progress' | 'habits', jsonText: string): boolean => {
+export const importPageData = (page: 'work' | 'pomodoro', jsonText: string): boolean => {
     try {
         const parsed = JSON.parse(jsonText);
         if (!parsed || typeof parsed !== 'object') {
@@ -94,38 +59,6 @@ export const importPageData = (page: 'work' | 'pomodoro' | 'finances' | 'ideas' 
                 alert('No se encontraron tareas de pomodoro válidas.');
                 return false;
             }
-        } else if (page === 'finances') {
-            if (parsed.transactions) saveToLocal(STORAGE_KEYS.FINANCE_TRANSACTIONS, parsed.transactions);
-            if (parsed.exchangeRate !== undefined) saveToLocal(STORAGE_KEYS.FINANCE_EXCHANGE_RATE, parsed.exchangeRate);
-            if (parsed.recurring) saveToLocal(STORAGE_KEYS.FINANCE_RECURRING, parsed.recurring);
-            if (parsed.fixedIncomes) saveToLocal(STORAGE_KEYS.FINANCE_RECURRING_INCOMES, parsed.fixedIncomes);
-            if (parsed.incomes) saveToLocal(STORAGE_KEYS.FINANCE_INCOMES, parsed.incomes);
-            if (parsed.quickExpenses) saveToLocal(STORAGE_KEYS.FINANCE_QUICK_EXPENSES, parsed.quickExpenses);
-        } else if (page === 'ideas') {
-            if (parsed.ideas) {
-                saveToLocal(STORAGE_KEYS.IDEAS, parsed.ideas);
-                saveToLocal(STORAGE_KEYS.IDEAS_BACKUP, parsed.ideas);
-            }
-            if (parsed.settings) {
-                saveToLocal(STORAGE_KEYS.IDEA_SETTINGS, parsed.settings);
-                saveToLocal(STORAGE_KEYS.IDEA_SETTINGS_BACKUP, parsed.settings);
-            }
-        } else if (page === 'uni-progress') {
-            if (Array.isArray(parsed.terms)) {
-                saveToLocal(STORAGE_KEYS.UNI_PROGRESS_TERMS, parsed.terms);
-            } else {
-                alert('No se encontró progreso universitario válido.');
-                return false;
-            }
-        } else if (page === 'habits') {
-            if (parsed.settings) {
-                saveToLocal(STORAGE_KEYS.HABIT_SETTINGS, parsed.settings);
-                saveToLocal(STORAGE_KEYS.HABIT_SETTINGS_BACKUP, parsed.settings);
-            }
-            if (Array.isArray(parsed.months)) {
-                saveToLocal(STORAGE_KEYS.HABIT_MONTHS, parsed.months);
-                saveToLocal(STORAGE_KEYS.HABIT_MONTHS_BACKUP, parsed.months);
-            }
         }
 
         return true;
@@ -143,18 +76,7 @@ export const exportAllData = () => {
         timestamp: Date.now(),
         data: {
             [STORAGE_KEYS.POMODORO_TASKS]: loadFromLocal(STORAGE_KEYS.POMODORO_TASKS, []),
-            [STORAGE_KEYS.WORK_PROJECTS]: loadFromLocal(STORAGE_KEYS.WORK_PROJECTS, []),
-            [STORAGE_KEYS.FINANCE_TRANSACTIONS]: loadFromLocal(STORAGE_KEYS.FINANCE_TRANSACTIONS, []),
-            [STORAGE_KEYS.FINANCE_EXCHANGE_RATE]: loadFromLocal(STORAGE_KEYS.FINANCE_EXCHANGE_RATE, 60),
-            [STORAGE_KEYS.FINANCE_RECURRING]: loadFromLocal(STORAGE_KEYS.FINANCE_RECURRING, []),
-            [STORAGE_KEYS.FINANCE_RECURRING_INCOMES]: loadFromLocal(STORAGE_KEYS.FINANCE_RECURRING_INCOMES, []),
-            [STORAGE_KEYS.FINANCE_INCOMES]: loadFromLocal(STORAGE_KEYS.FINANCE_INCOMES, []),
-            [STORAGE_KEYS.FINANCE_QUICK_EXPENSES]: loadFromLocal(STORAGE_KEYS.FINANCE_QUICK_EXPENSES, []),
-            [STORAGE_KEYS.IDEAS]: loadFromLocal(STORAGE_KEYS.IDEAS, null) || loadFromLocal(STORAGE_KEYS.IDEAS_BACKUP, []),
-            [STORAGE_KEYS.IDEA_SETTINGS]: loadFromLocal(STORAGE_KEYS.IDEA_SETTINGS, null) || loadFromLocal(STORAGE_KEYS.IDEA_SETTINGS_BACKUP, null),
-            [STORAGE_KEYS.UNI_PROGRESS_TERMS]: loadFromLocal(STORAGE_KEYS.UNI_PROGRESS_TERMS, []),
-            [STORAGE_KEYS.HABIT_SETTINGS]: loadFromLocal(STORAGE_KEYS.HABIT_SETTINGS, null) || loadFromLocal(STORAGE_KEYS.HABIT_SETTINGS_BACKUP, null),
-            [STORAGE_KEYS.HABIT_MONTHS]: loadFromLocal(STORAGE_KEYS.HABIT_MONTHS, null) || loadFromLocal(STORAGE_KEYS.HABIT_MONTHS_BACKUP, [])
+            [STORAGE_KEYS.WORK_PROJECTS]: loadFromLocal(STORAGE_KEYS.WORK_PROJECTS, [])
         }
     };
 
@@ -189,15 +111,6 @@ export const importAllData = (jsonText: string): boolean => {
         Object.entries(dataObj).forEach(([key, val]) => {
             const isValidKey = Object.values(STORAGE_KEYS).includes(key as any);
             if (isValidKey) {
-                if (key === STORAGE_KEYS.IDEAS) {
-                    saveToLocal(STORAGE_KEYS.IDEAS_BACKUP, val);
-                } else if (key === STORAGE_KEYS.IDEA_SETTINGS) {
-                    saveToLocal(STORAGE_KEYS.IDEA_SETTINGS_BACKUP, val);
-                } else if (key === STORAGE_KEYS.HABIT_SETTINGS) {
-                    saveToLocal(STORAGE_KEYS.HABIT_SETTINGS_BACKUP, val);
-                } else if (key === STORAGE_KEYS.HABIT_MONTHS) {
-                    saveToLocal(STORAGE_KEYS.HABIT_MONTHS_BACKUP, val);
-                }
                 saveToLocal(key as any, val);
             }
         });

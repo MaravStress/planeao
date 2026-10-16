@@ -6,16 +6,11 @@ import FinancesPage from './pages/FinancesPage';
 import SettingsPage from './pages/SettingsPage';
 
 import WorkPage from './pages/WorkPage';
-import IdeasPage from './pages/IdeasPage';
-import UniProgressPage from './pages/UniProgressPage';
+import WhiteboardsPage from './pages/WhiteboardsPage';
 import HabitsPage from './pages/HabitsPage';
 
 import { PomodoroProvider } from './context/PomodoroContext';
 import { WorkProvider } from './context/WorkContext';
-import { IdeasProvider } from './context/IdeasContext';
-import { UniProgressProvider } from './context/UniProgressContext';
-import { FinancesProvider } from './context/FinancesContext';
-import { HabitsProvider } from './context/HabitsContext';
 
 import { auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -46,33 +41,24 @@ function App() {
     return () => unsubscribe();
   }, []);
   return (
-    <FinancesProvider>
-    <IdeasProvider>
-      <WorkProvider>
-        <PomodoroProvider>
-          <HashRouter>
-            <UniProgressProvider>
-              <HabitsProvider>
-                <Routes>
-                <Route path="/" element={<MainLayout />}>
-                  <Route index element={<WorkPage />} />
-                  <Route path="pomodoro" element={<PomodoroPage />} />
-                  <Route path="finances" element={<FinancesPage />} />
-                  <Route path="ideas" element={<IdeasPage />} />
-                  <Route path="uni-progress" element={<UniProgressPage />} />
-                  <Route path="habits" element={<HabitsPage />} />
-                  <Route path="settings" element={<SettingsPage />} />
-                  {/* Redirect any unknown routes to home */}
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Route>
-                </Routes>
-            </HabitsProvider>
-            </UniProgressProvider>
-          </HashRouter>
-        </PomodoroProvider>
-      </WorkProvider>
-    </IdeasProvider>
-    </FinancesProvider>
+    <WorkProvider>
+      <PomodoroProvider>
+        <HashRouter>
+          <Routes>
+            <Route path="/" element={<MainLayout />}>
+              <Route index element={<WorkPage />} />
+              <Route path="pomodoro" element={<PomodoroPage />} />
+              <Route path="finances" element={<FinancesPage />} />
+              <Route path="habits" element={<HabitsPage />} />
+              <Route path="whiteboards" element={<WhiteboardsPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              {/* Redirect any unknown routes to home */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Route>
+          </Routes>
+        </HashRouter>
+      </PomodoroProvider>
+    </WorkProvider>
   );
 }
 
